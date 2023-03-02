@@ -1,0 +1,19 @@
+/* General */
+body,
+html {
+	background-color: black;
+	color: white;
+	height: 100vh;
+	padding: 0;
+	margin: 0;
+}
+
+canvas {
+	display: block;
+}
+
+/* Variables */
+:root {
+	--spawnHeight: 0;
+	--boardBorderWidth: 5px;
+}
