@@ -15,7 +15,7 @@ document.addEventListener("keydown", (event) => {
         INPUTS.right = true;
     } else if (event.code === "ArrowDown") {
         INPUTS.down = true;
-    } else if (event.code === "LeftShift") {
+    } else if (event.code === "ShiftLeft") {
         INPUTS.shift = true;
     }
 });
@@ -29,7 +29,7 @@ document.addEventListener("keyup", (event) => {
         INPUTS.right = false;
     } else if (event.code === "ArrowDown") {
         INPUTS.down = false;
-    } else if (event.code === "LeftShift") {
+    } else if (event.code === "ShiftLeft") {
         INPUTS.shift = false;
     }
 });

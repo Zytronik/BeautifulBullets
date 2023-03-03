@@ -9,6 +9,7 @@ export class Challenger {
         this.sprite.src = CHALLENGER_SPRITE.url;
         this.size = CHALLENGER_SPRITE.radius;
         this.speed = 10;
+        this.shiftSpeed = 2.5;
     }
     move() {
         let xSpeed = 0;
@@ -20,19 +21,10 @@ export class Challenger {
         ySpeed = INPUTS.up ? ySpeed - 1 : ySpeed;
 
         if (xSpeed != 0 || ySpeed != 0) {
-
-            console.log("this.x", this.x)
-            console.log("this.y", this.y)
-
-
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
-
-            console.log("normalize", normalize)
-            console.log("xSpeed / normalize", xSpeed / normalize)
-            console.log("ySpeed / normalize", ySpeed / normalize)
-
-            this.x += (xSpeed / normalize) * this.speed;
-            this.y += (ySpeed / normalize) * this.speed;
+            let applySpeed = INPUTS.shift ? this.shiftSpeed : this.speed;
+            this.x += (xSpeed / normalize) * applySpeed;
+            this.y += (ySpeed / normalize) * applySpeed;
         }
     }
 }
