@@ -2,29 +2,37 @@ import { CHALLENGER_SPRITE } from "./spriteSettings.js";
 import { INPUTS } from "./inputSettings.js";
 
 export class Challenger {
-    constructor(x, y){
+    constructor(x, y) {
         this.x = x;
         this.y = y;
         this.sprite = new Image()
         this.sprite.src = CHALLENGER_SPRITE.url;
         this.size = CHALLENGER_SPRITE.radius;
-        this.speed = 0.2;
+        this.speed = 10;
     }
-    move(){
+    move() {
         let xSpeed = 0;
-        xSpeed = INPUTS.right ? xSpeed + this.speed : xSpeed;
-        xSpeed = INPUTS.left ? xSpeed - this.speed : xSpeed;
-        
-        let ySpeed = 0;
-        ySpeed = INPUTS.down ? xSpeed + this.speed : ySpeed;
-        ySpeed = INPUTS.up ? xSpeed - this.speed : ySpeed;
-        
-        console.log("INPUTS.down", INPUTS.down)
-        console.log("xSpeed", xSpeed)
-        console.log("ySpeed", ySpeed)
+        xSpeed = INPUTS.right ? xSpeed + 1 : xSpeed;
+        xSpeed = INPUTS.left ? xSpeed - 1 : xSpeed;
 
-        let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
-        this.x += (xSpeed / normalize);
-        this.y += (ySpeed / normalize);
+        let ySpeed = 0;
+        ySpeed = INPUTS.down ? ySpeed + 1 : ySpeed;
+        ySpeed = INPUTS.up ? ySpeed - 1 : ySpeed;
+
+        if (xSpeed != 0 || ySpeed != 0) {
+
+            console.log("this.x", this.x)
+            console.log("this.y", this.y)
+
+
+            let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
+
+            console.log("normalize", normalize)
+            console.log("xSpeed / normalize", xSpeed / normalize)
+            console.log("ySpeed / normalize", ySpeed / normalize)
+
+            this.x += (xSpeed / normalize) * this.speed;
+            this.y += (ySpeed / normalize) * this.speed;
+        }
     }
 }

@@ -2,6 +2,7 @@ import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
+import { INPUTS } from "./inputSettings.js";
 
 let challenger;
 let boss;
