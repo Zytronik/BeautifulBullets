@@ -8,12 +8,46 @@ html {
 	margin: 0;
 }
 
-canvas {
-	display: block;
+main {
+	height: 100%;
 }
 
 /* Variables */
 :root {
-	--spawnHeight: 0;
-	--boardBorderWidth: 5px;
+	/* --spawnHeight: 0;
+	--boardBorderWidth: 5px; */
 }
+
+/* Game */
+
+canvas {
+	display: block;
+	background-color: red;
+}
+
+article {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+article section {
+	width: 50%;
+	height: 100%;
+}
+
+article section:last-of-type {
+	border-left: 2px dotted white;
+}
+
+.player {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.player .canvas {
+	height: 90%;
+}
+

@@ -4,7 +4,14 @@
 	<meta charset="utf-8">
 	<title>BeautifulBullets</title>
 	<script type="module" src='js/main.js'></script>
-	<script type="module" src='js/todo.js'></script>
+	<script type="module" src='js/canvas.js'></script>
+	<script type="module" src='js/boss.js'></script>
+	<script type="module" src='js/challenger.js'></script>
+	<script type="module" src='js/bullet.js'></script>
+	<script type="module" src='js/bulletFunctions.js'></script>
+	<script type="module" src='js/gameSettings.js'></script>
+	<script type="module" src='js/level.js'></script>
+	<script type="module" src='js/spriteSettings.js'></script>
 	<link href='css/style.css' rel='stylesheet' />
 </head>
 
@@ -12,6 +19,14 @@
 	<main>
 		<article>
 			<section>
+				<div class="challenger player">
+					<div class="challengerCanvas canvas"></div>
+				</div>
+			</section>
+			<section>
+				<div class="boss player">
+					<div class="bossCanvas canvas"></div>
+				</div>
 			</section>
 		</article>
 	</main>
