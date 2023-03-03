@@ -1,6 +1,6 @@
 export const CHALLENGER_SPRITE = {
-    url: "",
-    //frame coordinates
+    url: "../img/challenger.png",
+    radius: "30",
 };
 
 export const BULLET_SPRITE = {
