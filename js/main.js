@@ -3,12 +3,15 @@ import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { INPUTS } from "./inputSettings.js";
+import { setupBulleFunction } from "./bulletFunctions.js";
 
 let challenger;
 let boss;
 let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
+    setupBulleFunction();
+
     challenger = new Challenger(10, 10);
     boss = new Boss(10, 10);
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
