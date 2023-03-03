@@ -1,3 +1,7 @@
-function pattern1() {
-    
+
+
+window.onload = function () {
+    document.getElementById("attack").addEventListener("click", () => {
+        console.log("sss");
+    });
 }
