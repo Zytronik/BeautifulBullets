@@ -1,8 +1,15 @@
 import { GameCanvas } from "./canvas.js";
+import { Challenger } from "./challenger.js";
 
 window.onload = function () {
-    var challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
-    var bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
+    var challenger = new Challenger(10, 10);
+    var challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger);
+    var bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger);  
+    
+    challenger.sprite.onload = function(){
+        challengerCanvas.updateCanvas();
+        bossCanvas.updateCanvas();
+    }
 };
 
 let lastRenderTime = 0;

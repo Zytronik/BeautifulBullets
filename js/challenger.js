@@ -1,10 +1,11 @@
 import { CHALLENGER_SPRITE } from "./spriteSettings.js";
 
-class Challenger {
+export class Challenger {
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.sprite = CHALLENGER_SPRITE.url
-        this.size = 
+        this.sprite = new Image()
+        this.sprite.src = CHALLENGER_SPRITE.url;
+        this.size = CHALLENGER_SPRITE.radius;
     }
 }
