@@ -1,4 +1,4 @@
-export const inputs = {
+export const INPUTS = {
     left: false,
     right: false,
     down: false,
@@ -8,28 +8,28 @@ export const inputs = {
 
 document.addEventListener("keydown", (event) => {
     if (event.code === "ArrowLeft") {
-        inputs.left = true;
+        INPUTS.left = true;
     } else if (event.code === "ArrowUp") {
-        inputs.up = true;
+        INPUTS.up = true;
     } else if (event.code === "ArrowRight") {
-        inputs.right = true;
+        INPUTS.right = true;
     } else if (event.code === "ArrowDown") {
-        inputs.down = true;
+        INPUTS.down = true;
     } else if (event.code === "LeftShift") {
-        inputs.shift = true;
+        INPUTS.shift = true;
     }
 });
 
 document.addEventListener("keyup", (event) => {
     if (event.code === "ArrowLeft") {
-        inputs.left = false;
+        INPUTS.left = false;
     } else if (event.code === "ArrowUp") {
-        inputs.up = false;
+        INPUTS.up = false;
     } else if (event.code === "ArrowRight") {
-        inputs.right = false;
+        INPUTS.right = false;
     } else if (event.code === "ArrowDown") {
-        inputs.down = false;
+        INPUTS.down = false;
     } else if (event.code === "LeftShift") {
-        inputs.shift = false;
+        INPUTS.shift = false;
     }
 });

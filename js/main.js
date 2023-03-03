@@ -1,37 +1,43 @@
 import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
+import { FPS } from "./gameSettings.js";
 
+let challenger;
+let boss;
 window.onload = function () {
-    var challenger = new Challenger(10, 10);
-    var challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger);
-    var bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger);  
+    challenger = new Challenger(10, 10);
+    boss = new Boss(10, 10);
+    let challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
+    let bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger, boss);  
     
+    //make more pretty
+    //https://stackoverflow.com/questions/37854355/wait-for-image-loading-to-complete-in-javascript
     challenger.sprite.onload = function(){
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
     }
+    
+    boss.sprite.onload = function(){
+        challengerCanvas.updateCanvas();
+        bossCanvas.updateCanvas();
+    }
+
+    requestAnimationFrame(gameLoop);
 };
 
-let lastRenderTime = 0;
 
+let lastRenderTime = 0;
 function gameLoop(currentTime) {
-    // Calculate the time since the last frame
     const timeSinceLastRender = currentTime - lastRenderTime;
 
-    // Only draw the frame if the time since the last frame is greater than or equal to 16.6ms (60fps)
-    if (timeSinceLastRender >= 16.6) {
-        // Update lastRenderTime to the current time
+    if (timeSinceLastRender >= 1000/FPS) {
         lastRenderTime = currentTime;
 
         // Call your draw function here
         //todoDraw();
-        updateKeyInputs();
 
     }
 
     // Call requestAnimationFrame() again to schedule the next frame
     requestAnimationFrame(gameLoop);
 }
-
-// Call requestAnimationFrame() for the first time to start the loop
-requestAnimationFrame(gameLoop);
