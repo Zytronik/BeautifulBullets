@@ -1,5 +1,6 @@
 import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
+import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 
 let challenger;
@@ -33,11 +34,10 @@ function gameLoop(currentTime) {
     if (timeSinceLastRender >= 1000/FPS) {
         lastRenderTime = currentTime;
 
-        // Call your draw function here
-        //todoDraw();
+        challengerCanvas.updateCanvas();
+        bossCanvas.updateCanvas();
 
     }
 
-    // Call requestAnimationFrame() again to schedule the next frame
     requestAnimationFrame(gameLoop);
 }
