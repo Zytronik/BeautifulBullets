@@ -3,6 +3,11 @@ export const CHALLENGER_SPRITE = {
     radius: "30",
 };
 
+export const BOSS_SPRITE = {
+    url: "./img/boss.png",
+    radius: "50",
+};
+
 export const BULLET_SHAPE = {
     CIRCLE: "circle",
     RECTANGLE: "rectangle",
