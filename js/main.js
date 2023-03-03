@@ -1,6 +1,5 @@
 import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
-import { inputs } from "./inputSettings.js";
 
 window.onload = function () {
     var challenger = new Challenger(10, 10);
