@@ -11,14 +11,20 @@ export class Challenger {
         this.speed = 0.2;
     }
     move(){
-        let xSpeed = INPUTS.right ? xSpeed + speed : xSpeed;
-        xSpeed = INPUTS.left ? xSpeed - speed : xSpeed;
-
-        let ySpeed = INPUTS.down ? xSpeed + speed : ySpeed;
-        ySpeed = INPUTS.up ? xSpeed - speed : ySpeed;
+        let xSpeed = 0;
+        xSpeed = INPUTS.right ? xSpeed + this.speed : xSpeed;
+        xSpeed = INPUTS.left ? xSpeed - this.speed : xSpeed;
+        
+        let ySpeed = 0;
+        ySpeed = INPUTS.down ? xSpeed + this.speed : ySpeed;
+        ySpeed = INPUTS.up ? xSpeed - this.speed : ySpeed;
+        
+        console.log("INPUTS.down", INPUTS.down)
+        console.log("xSpeed", xSpeed)
+        console.log("ySpeed", ySpeed)
 
         let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
-        x += (xSpeed / normalize);
-        y += (ySpeed / normalize);
+        this.x += (xSpeed / normalize);
+        this.y += (ySpeed / normalize);
     }
 }

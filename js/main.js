@@ -5,13 +5,15 @@ import { FPS } from "./gameSettings.js";
 
 let challenger;
 let boss;
+let challengerCanvas;
+let bossCanvas;
 window.onload = function () {
     challenger = new Challenger(10, 10);
     boss = new Boss(10, 10);
-    let challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
-    let bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger, boss);  
+    challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
+    bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger, boss);  
     
-    //make more pretty
+    //TODO: make more pretty
     //https://stackoverflow.com/questions/37854355/wait-for-image-loading-to-complete-in-javascript
     challenger.sprite.onload = function(){
         challengerCanvas.updateCanvas();
@@ -26,7 +28,6 @@ window.onload = function () {
     requestAnimationFrame(gameLoop);
 };
 
-
 let lastRenderTime = 0;
 function gameLoop(currentTime) {
     const timeSinceLastRender = currentTime - lastRenderTime;
@@ -37,7 +38,14 @@ function gameLoop(currentTime) {
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
 
+        gameLogic();
+
     }
 
     requestAnimationFrame(gameLoop);
+}
+
+
+function gameLogic() {
+    challenger.move()
 }
