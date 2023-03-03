@@ -1,5 +1,6 @@
 import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
+import { inputs } from "./inputSettings.js";
 
 window.onload = function () {
     var challenger = new Challenger(10, 10);
@@ -35,54 +36,3 @@ function gameLoop(currentTime) {
 
 // Call requestAnimationFrame() for the first time to start the loop
 requestAnimationFrame(gameLoop);
-
-let playerSpeed = 5;
-let moveLeft = false;
-let moveUp = false;
-let moveRight = false;
-let moveDown = false;
-
-//challenger
-document.addEventListener("keydown", (event) => {
-    if (event.code === "ArrowLeft") {
-        moveLeft = true;
-    } else if (event.code === "ArrowUp") {
-        moveUp = true;
-    } else if (event.code === "ArrowRight") {
-        moveRight = true;
-    } else if (event.code === "ArrowDown") {
-        moveDown = true;
-    }
-});
-
-document.addEventListener("keyup", (event) => {
-    if (event.code === "ArrowLeft") {
-        moveLeft = false;
-    } else if (event.code === "ArrowUp") {
-        moveUp = false;
-    } else if (event.code === "ArrowRight") {
-        moveRight = false;
-    } else if (event.code === "ArrowDown") {
-        moveDown = false;
-    }
-});
-
-// Update player position based on movement variables
-function updateKeyInputs() {
-    if (moveLeft) {
-        playerX -= playerSpeed;
-    }
-    if (moveUp) {
-        playerY -= playerSpeed;
-    }
-    if (moveRight) {
-        playerX += playerSpeed;
-    }
-    if (moveDown) {
-        playerY += playerSpeed;
-    }
-
-    // Update player position on screen
-    /* document.getElementById("player").style.left = playerX + "px";
-    document.getElementById("player").style.top = playerY + "px"; */
-}
