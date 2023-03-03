@@ -11,8 +11,8 @@ let bossCanvas;
 window.onload = function () {
     setupBulletFunction();
 
-    challenger = new Challenger(10, 10);
-    boss = new Boss(10, 10);
+    challenger = new Challenger(100, 300);
+    boss = new Boss(100, 100);
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
     bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger, boss);  
     

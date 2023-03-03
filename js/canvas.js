@@ -1,3 +1,5 @@
+import { INPUTS } from "./inputSettings.js"
+
 export class GameCanvas {
     constructor(container, challenger, boss) {
         this.canvas = document.createElement("canvas");
@@ -19,13 +21,20 @@ export class GameCanvas {
         this.canvas.classList.add("gameCanvas");
         this.updateCanvas();
     }
-    #getContainerHeight(){
+    #getContainerHeight() {
         return this.container.offsetHeight;
     }
-    #drawChallenger(){
-        this.ctx.drawImage(this.challenger.sprite, this.challenger.x, this.challenger.y, this.challenger.sprite.width / 8, this.challenger.sprite.height / 8);
+    #drawChallenger() {
+        //TODO: make more pretty
+        this.ctx.drawImage(this.challenger.sprite, this.challenger.x - this.challenger.sprite.width / 16, this.challenger.y  - this.challenger.sprite.height / 16, this.challenger.sprite.width / 8, this.challenger.sprite.height / 8);
+        if(INPUTS.shift){
+            this.ctx.beginPath();
+            this.ctx.arc(this.challenger.x, this.challenger.y, 5, 0, 2 * Math.PI);
+            this.ctx.fillStyle = 'red';
+            this.ctx.fill(); 
+        }
     }
-    #drawBoss(){
-        this.ctx.drawImage(this.boss.sprite, this.boss.x, this.boss.y, this.boss.sprite.width / 6, this.boss.sprite.height / 6);
+    #drawBoss() {
+        this.ctx.drawImage(this.boss.sprite, this.boss.x, this.boss.y, this.boss.sprite.width / 7, this.boss.sprite.height / 7);
     }
 }
