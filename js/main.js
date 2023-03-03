@@ -2,15 +2,14 @@ import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
-import { INPUTS } from "./inputSettings.js";
-import { setupBulleFunction } from "./bulletFunctions.js";
+import { setupBulletFunction } from "./bulletFunctions.js";
 
 let challenger;
 let boss;
 let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
-    setupBulleFunction();
+    setupBulletFunction();
 
     challenger = new Challenger(10, 10);
     boss = new Boss(10, 10);
@@ -33,10 +32,12 @@ window.onload = function () {
 };
 
 let lastRenderTime = 0;
+let deltaTime = 0;
 function gameLoop(currentTime) {
     const timeSinceLastRender = currentTime - lastRenderTime;
 
     if (timeSinceLastRender >= 1000/FPS) {
+        deltaTime = timeSinceLastRender;
         lastRenderTime = currentTime;
 
         challengerCanvas.updateCanvas();
