@@ -5,12 +5,10 @@ import { FPS } from "./gameSettings.js";
 import { setupBulletFunction } from "./bulletFunctions.js";
 
 let challenger;
-let boss;
+export let boss;
 let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
-    setupBulletFunction();
-
     challenger = new Challenger(100, 300);
     boss = new Boss(100, 100);
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
@@ -27,7 +25,7 @@ window.onload = function () {
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
     }
-
+    setupBulletFunction();
     requestAnimationFrame(gameLoop);
 };
 

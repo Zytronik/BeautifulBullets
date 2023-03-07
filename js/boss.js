@@ -11,6 +11,6 @@ export class Boss {
     }
 
     getPosition() {
-        
+        return {x: this.x, y: this.y};
     }
 }
