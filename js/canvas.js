@@ -1,4 +1,5 @@
 import { INPUTS } from "./inputSettings.js"
+import {BULLET_SPRITESHEET} from "./spriteSettings.js";
 
 export class GameCanvas {
     constructor(container, challenger, boss) {
@@ -36,5 +37,14 @@ export class GameCanvas {
     }
     #drawBoss() {
         this.ctx.drawImage(this.boss.sprite, this.boss.x, this.boss.y, this.boss.sprite.width / 7, this.boss.sprite.height / 7);
+    }
+    drawBullet(bullet) {
+        this.updateCanvas()
+        this.ctx.beginPath();
+        console.log(bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
+        this.ctx.rect(bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
+        this.ctx.fillStyle = 'green';
+        this.ctx.fill();
+        this.ctx.drawImage(BULLET_SPRITESHEET, bullet.spriteRef.x,  bullet.spriteRef.y, bullet.sizeX, bullet.sizeY, bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
     }
 }

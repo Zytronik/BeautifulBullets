@@ -6,7 +6,7 @@ import { setupBulletFunction } from "./bulletFunctions.js";
 
 let challenger;
 export let boss;
-let challengerCanvas;
+export let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
     challenger = new Challenger(100, 300);
@@ -25,7 +25,6 @@ window.onload = function () {
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
     }
-    setupBulletFunction();
     requestAnimationFrame(gameLoop);
 };
 
@@ -40,7 +39,7 @@ function gameLoop(currentTime) {
 
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
-
+        setupBulletFunction();
         gameLogic();
 
     }

@@ -13,9 +13,22 @@ export const BULLET_SHAPE = {
     RECTANGLE: "rectangle",
 }
 
-export const BULLET_SPRITE = {
-    url: "",
-    sizeX: 1,
-    sizeY: 1,
-    shape: BULLET_SHAPE.CIRCLE,
-}
+export let BULLET_SPRITESHEET = new Image();
+BULLET_SPRITESHEET.src = "./img/bullets.png";
+
+export const BULLET_SPRITES = {
+    "testBullet": {
+        "x": 6,
+        "y": 466,
+        "sizeX": 62,
+        "sizeY": 62,
+        "shape": BULLET_SHAPE.CIRCLE,
+    },
+    "testBullet2": {
+        "x": 123,
+        "y": 456,
+        "sizeX": 200,
+        "sizeY": 200,
+        "shape": BULLET_SHAPE.CIRCLE,
+    },
+};
