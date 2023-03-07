@@ -9,4 +9,8 @@ export class Boss {
         this.size = BOSS_SPRITE.radius;
         this.speed = 0.2;
     }
+
+    getPosition() {
+        
+    }
 }

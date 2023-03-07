@@ -1,4 +1,4 @@
-class bullet {
+class Bullet {
     constructor(x, y, orientation, spriteRef, trajectory, lifetime) {
         this.x = x;
         this.y = y;
@@ -10,5 +10,4 @@ class bullet {
         this.lifetime = lifetime;
         this.framesAlive = 0;
     }
-
 }
