@@ -10,5 +10,5 @@ export const BOSS_SPRITE = {
 
 export const BULLET_SPRITE1 = {
     url: "./img/bullet.png",
-    radius: 50,
+    radius: 10,
 };

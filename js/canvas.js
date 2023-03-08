@@ -40,9 +40,9 @@ export class GameCanvas {
         bullets.forEach(bullet => {
             this.ctx.beginPath();
             this.ctx.fillStyle = 'green';
-            this.ctx.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
+            this.ctx.arc(bullet.x, bullet.y, bullet.radius/2, 0, 2 * Math.PI);
             this.ctx.fill();
-            // this.ctx.drawImage(bullet.sprite, bullet.spriteRef.x, bullet.spriteRef.y, bullet.sizeX, bullet.sizeY, bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
+            this.ctx.drawImage(bullet.sprite, bullet.x, bullet.y, bullet.radius, bullet.radius);
         });
     }
 }
