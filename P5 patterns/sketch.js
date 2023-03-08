@@ -94,4 +94,5 @@ function pattern3() {
     // trajectory[i][0] = sin(360/pointsPos.length*i+i)
   }
   counter%0.1;
+  
 }
