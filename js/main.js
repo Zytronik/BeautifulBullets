@@ -2,15 +2,21 @@ import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
-import { setupBulletFunction } from "./bulletFunctions.js";
+import { Bullet } from "./bullet.js";
+import { BULLET_SPRITE1 } from "./spriteSettings.js";
 
-let challenger;
+export let challenger;
 export let boss;
-export let challengerCanvas;
+export let bullets;
+let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
     challenger = new Challenger(100, 300);
     boss = new Boss(100, 100);
+    bullets = [];
+
+    bullets.push(new Bullet(300, 500, BULLET_SPRITE1, bro, 50));
+
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
     bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger, boss);  
     
@@ -39,7 +45,6 @@ function gameLoop(currentTime) {
 
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
-        setupBulletFunction();
         gameLogic();
 
     }
@@ -49,5 +54,34 @@ function gameLoop(currentTime) {
 
 
 function gameLogic() {
+    /*
+    1. move everything
+    2. spawn bullets
+    3. collision detection
+        (is the character in i-frames?)
+        just got hit for example
+
+        reversed, bullet just spawned
+        no active hitbox yet
+
+        performance? check all bullets? only nearest bullets, parallelization
+        x-difference^2 + y-difference^2 < (bulletsize + playersize)^2
+
+        health
+    
+    
+    */
     challenger.move()
+    boss.move()
+    bullets.forEach(function(bullet, index) {
+        bullet.nextPos();
+        if (bullet.hasBulletFaded()) {
+            bullets.splice(index, 1);
+        }
+    });
+}
+
+function bro(framesAlive){
+    console.log("ligmaballs xd", framesAlive);
+    return [0.005*framesAlive**2, 3]
 }

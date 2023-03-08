@@ -1,5 +1,5 @@
 import { CHALLENGER_SPRITE } from "./spriteSettings.js";
-import { INPUTS } from "./inputSettings.js";
+import { INPUTS_CHALLENGER } from "./inputSettings.js";
 
 export class Challenger {
     constructor(x, y) {
@@ -13,16 +13,16 @@ export class Challenger {
     }
     move() {
         let xSpeed = 0;
-        xSpeed = INPUTS.right ? xSpeed + 1 : xSpeed;
-        xSpeed = INPUTS.left ? xSpeed - 1 : xSpeed;
+        xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
+        xSpeed = INPUTS_CHALLENGER.left ? xSpeed - 1 : xSpeed;
 
         let ySpeed = 0;
-        ySpeed = INPUTS.down ? ySpeed + 1 : ySpeed;
-        ySpeed = INPUTS.up ? ySpeed - 1 : ySpeed;
+        ySpeed = INPUTS_CHALLENGER.down ? ySpeed + 1 : ySpeed;
+        ySpeed = INPUTS_CHALLENGER.up ? ySpeed - 1 : ySpeed;
 
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
-            let applySpeed = INPUTS.shift ? this.shiftSpeed : this.speed;
+            let applySpeed = INPUTS_CHALLENGER.shift ? this.shiftSpeed : this.speed;
             this.x += (xSpeed / normalize) * applySpeed;
             this.y += (ySpeed / normalize) * applySpeed;
         }
