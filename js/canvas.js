@@ -1,50 +1,48 @@
-import { INPUTS } from "./inputSettings.js"
-import {BULLET_SPRITESHEET} from "./spriteSettings.js";
+import { INPUTS_CHALLENGER } from "./inputSettings.js"
+import { challenger, boss, bullets } from "./main.js";
 
 export class GameCanvas {
-    constructor(container, challenger, boss) {
+    constructor(container) {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
         this.container = container;
-        this.challenger = challenger;
-        this.boss = boss;
         this.#createCanvas();
     }
     updateCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.#drawChallenger();
         this.#drawBoss();
+        this.#drawBullets();
     }
     #createCanvas() {
-        this.canvas.height = this.#getContainerHeight();
+        this.canvas.height = this.container.offsetHeight;
         this.canvas.width = this.canvas.height / 3 * 2;
         this.container.appendChild(this.canvas);
         this.canvas.classList.add("gameCanvas");
         this.updateCanvas();
     }
-    #getContainerHeight() {
-        return this.container.offsetHeight;
-    }
     #drawChallenger() {
         //TODO: make more pretty
-        this.ctx.drawImage(this.challenger.sprite, this.challenger.x - this.challenger.sprite.width / 16, this.challenger.y  - this.challenger.sprite.height / 16, this.challenger.sprite.width / 8, this.challenger.sprite.height / 8);
-        if(INPUTS.shift){
+        //drawImage(image, canvasX, canvasY, canvasWidth, canvasHeight)
+        //drawImage(image, spriteSheetX, spriteSheetY, spriteSheetWidth, spriteSheetHeight, canvasX, canvasY, canvasWidth, canvasHeight)
+        this.ctx.drawImage(challenger.sprite, challenger.x - challenger.sprite.width / 16, challenger.y - challenger.sprite.height / 16, challenger.sprite.width / 8, challenger.sprite.height / 8);
+        if (INPUTS_CHALLENGER.shift) {
             this.ctx.beginPath();
-            this.ctx.arc(this.challenger.x, this.challenger.y, 5, 0, 2 * Math.PI);
+            this.ctx.arc(challenger.x, challenger.y, 5, 0, 2 * Math.PI);
             this.ctx.fillStyle = 'red';
-            this.ctx.fill(); 
+            this.ctx.fill();
         }
     }
     #drawBoss() {
-        this.ctx.drawImage(this.boss.sprite, this.boss.x, this.boss.y, this.boss.sprite.width / 7, this.boss.sprite.height / 7);
+        this.ctx.drawImage(boss.sprite, boss.x, boss.y, boss.sprite.width / 7, boss.sprite.height / 7);
     }
-    drawBullet(bullet) {
-        this.updateCanvas()
-        this.ctx.beginPath();
-        console.log(bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
-        this.ctx.rect(bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
-        this.ctx.fillStyle = 'green';
-        this.ctx.fill();
-        this.ctx.drawImage(BULLET_SPRITESHEET, bullet.spriteRef.x,  bullet.spriteRef.y, bullet.sizeX, bullet.sizeY, bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
+    #drawBullets() {
+        bullets.forEach(bullet => {
+            this.ctx.beginPath();
+            this.ctx.fillStyle = 'green';
+            this.ctx.arc(bullet.x, bullet.y, 5, 0, 2 * Math.PI);
+            this.ctx.fill();
+            // this.ctx.drawImage(bullet.sprite, bullet.spriteRef.x, bullet.spriteRef.y, bullet.sizeX, bullet.sizeY, bullet.x, bullet.y, bullet.sizeX, bullet.sizeY);
+        });
     }
 }
