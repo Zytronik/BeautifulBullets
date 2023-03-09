@@ -34,6 +34,11 @@ window.onload = function () {
     requestAnimationFrame(gameLoop);
 };
 
+window.onresize = function () {
+    challengerCanvas.resizeCanvas();
+    bossCanvas.resizeCanvas();
+}
+
 let lastRenderTime = 0;
 let deltaTime = 0;
 function gameLoop(currentTime) {
