@@ -49,7 +49,13 @@ export class GameCanvas {
         let bossRatio = boss.sprite.width / boss.sprite.height;
         let bossWidth = this.canvasUnit * boss.sprite.width * bossRatio * boss.size;
         let bossHeight = this.canvasUnit * boss.sprite.height * boss.size;
-        this.ctx.drawImage(boss.sprite, boss.x, boss.y, bossWidth, bossHeight);
+        this.ctx.drawImage(
+            boss.sprite,
+            boss.x - bossWidth / 2,
+            boss.y - bossHeight / 2, 
+            bossWidth, 
+            bossHeight
+        );
     }
     #drawBullets() {
         bullets.forEach(bullet => {
