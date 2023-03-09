@@ -8,7 +8,7 @@ export class Boss {
         this.sprite = new Image()
         this.sprite.src = BOSS_SPRITE.url;
         this.radius = BOSS_SPRITE.radius;
-        this.size = BOSS_SPRITE.size;
+        this.sizeFactor = BOSS_SPRITE.sizeFactor;
         this.speed = 3;
     }
     getPosition() {

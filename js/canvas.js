@@ -34,8 +34,8 @@ export class GameCanvas {
     }
     #drawChallenger() {
         let challengerRatio = challenger.sprite.width / challenger.sprite.height;
-        let challengerWidth = this.canvasUnit * challenger.size * challengerRatio;
-        let challengerHeight = this.canvasUnit * challenger.size;
+        let challengerWidth = this.canvasUnit * challenger.sizeFactor * challengerRatio;
+        let challengerHeight = this.canvasUnit * challenger.sizeFactor;
         this.ctx.drawImage(
             challenger.sprite,
             challenger.x - challengerWidth / 2,
@@ -52,8 +52,8 @@ export class GameCanvas {
     }
     #drawBoss() {
         let bossRatio = boss.sprite.width / boss.sprite.height;
-        let bossWidth = this.canvasUnit * boss.sprite.width * bossRatio * boss.size;
-        let bossHeight = this.canvasUnit * boss.sprite.height * boss.size;
+        let bossWidth = this.canvasUnit * boss.sprite.width * bossRatio * boss.sizeFactor;
+        let bossHeight = this.canvasUnit * boss.sprite.height * boss.sizeFactor;
         this.ctx.drawImage(
             boss.sprite,
             boss.x - bossWidth / 2,
@@ -65,10 +65,17 @@ export class GameCanvas {
     #drawBullets() {
         bullets.forEach(bullet => {
             this.ctx.beginPath();
-            this.ctx.fillStyle = 'green';
-            this.ctx.arc(bullet.x, bullet.y, bullet.radius / 2, 0, 2 * Math.PI);
+            this.ctx.fillStyle = 'red';
+            var bulletRadius = bullet.radius * this.canvasUnit
+            this.ctx.arc(
+                bullet.x + bulletRadius / 2,
+                bullet.y + bulletRadius / 2,
+                bulletRadius / 2, 
+                0, 
+                2 * Math.PI
+            );
             this.ctx.fill();
-            this.ctx.drawImage(bullet.sprite, bullet.x, bullet.y, bullet.radius, bullet.radius);
+            this.ctx.drawImage(bullet.sprite, bullet.x, bullet.y, bulletRadius, bulletRadius);
         });
     }
 }
