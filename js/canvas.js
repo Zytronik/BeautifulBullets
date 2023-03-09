@@ -75,7 +75,6 @@ export class GameCanvas {
                 2 * Math.PI
             );
             this.ctx.fill();
-            this.ctx.drawImage(bullet.sprite, bullet.x, bullet.y, bulletRadius, bulletRadius);
         });
     }
 }

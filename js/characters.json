@@ -1,0 +1,42 @@
+{
+    "characters": {
+        "johnCena": {
+            "name": "John Cena",
+            "challenger": {
+                "spriteUrl": "./img/challenger.png",
+                "sizeFactor": 30,
+                "radius": 2,
+                "hitboxColor": "red",
+                "health": 5,
+                "homing": 1,
+                "fireRate": 1,
+                "bulletDamage": 1,
+                "bulletSpeed": 1,
+                "speed": 10,
+                "shiftSpeed": 2.5,
+                "specialChargeRequired": 50,
+                "specialChargeSpeed": 1,
+                "specialPassiveChargeSpeed": 0.1,
+                "specialDuration": 0,
+                "bullet": {
+                    "radius": 2,
+                    "color": "red",
+                },
+            },
+            "boss": {
+                "spriteUrl": "./img/boss.png",
+                "sizeFactor": 0.05,
+                "radius": 300,
+                "bullet": {
+                    "radius": 2,
+                    "color": "white",
+                },
+            }
+        },
+        "maxMuster": {
+            "name": "",
+            "challenger": {},
+            "boss": {}
+        }
+    }
+}

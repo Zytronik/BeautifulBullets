@@ -2,7 +2,7 @@ import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
-import { BulletFunctions } from "./bulletFunctions.js";
+import { BulletFunctions } from "./bulletSpawner.js";
 
 export let challenger;
 export let boss;

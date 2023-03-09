@@ -4,6 +4,7 @@ export const INPUTS_CHALLENGER = {
     down: false,
     up: false,
     shift: false,
+    special: false,
 }
 export const INPUTS_BOSS = {
     left: false,
@@ -23,6 +24,8 @@ document.addEventListener("keydown", (event) => {
     } else if (event.code === "ArrowDown" || event.code === "KeyS") {
         INPUTS_CHALLENGER.down = true;
     } else if (event.code === "ShiftLeft") {
+        INPUTS_CHALLENGER.shift = true;
+    } else if (event.code === "KeyF") {
         INPUTS_CHALLENGER.shift = true;
     }
 
@@ -49,6 +52,8 @@ document.addEventListener("keyup", (event) => {
     } else if (event.code === "ArrowDown" || event.code === "KeyS") {
         INPUTS_CHALLENGER.down = false;
     } else if (event.code === "ShiftLeft") {
+        INPUTS_CHALLENGER.shift = false;
+    } else if (event.code === "KeyF") {
         INPUTS_CHALLENGER.shift = false;
     }
 

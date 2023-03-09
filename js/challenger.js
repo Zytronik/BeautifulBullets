@@ -1,18 +1,44 @@
 import { CHALLENGER_SPRITE } from "./spriteSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
+import { CHARACTER_NAME } from "./characters.js";
+
+export const CHARACTER_STATS_MAP = new Map();
+BULLET_SPAWNER_MAP.set(CHARACTER_NAME.JOHN, []);
 
 export class Challenger {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.sprite = new Image()
-        this.sprite.src = CHALLENGER_SPRITE.url;
-        this.radius = CHALLENGER_SPRITE.radius;
-        this.sizeFactor = CHALLENGER_SPRITE.sizeFactor;
-        this.speed = 10;
-        this.hitboxColor = CHALLENGER_SPRITE.hitboxColor;
-        this.shiftSpeed = 2.5;
+    constructor(challengerData, specialAbility) {
+        this.x;
+        this.y;
+
+        this.sprite = new Image();
+        this.sprite.src = challengerData.SpriteUrl;
+        this.sizeFactor = challengerData.sizeFactor;
+        this.radius = challengerData.radius;
+        this.hitboxColor = challengerData.hitboxColor;
+
+        this.health = challengerData.health;
+
+        this.homing = challengerData.homing;
+        this.fireRate = challengerData.fireRate;
+        this.bulletDamage = challengerData.bulletDamage;
+        this.bulletSpeed = challengerData.bulletSpeed;
+
+        this.speed = challengerData.speed;
+        this.shiftSpeed = challengerData.shiftSpeed;
+
+        this.specialCharge = 0;
+        this.specialChargeRequired = challengerData.specialChargeRequired;
+        this.specialMaxCharge = 100;
+        this.specialChargeSpeed = challengerData.specialChargeSpeed;
+        this.specialPassiveChargeSpeed = challengerData.specialPassiveChargeSpeed;
+        
+        this.specialDuration = challengerData.specialDuration;
+        this.specialActiveFor = 0;
+        this.specialActive = false;
+
+        this.useSpecialAbility = specialAbility;
     }
+
     move() {
         let xSpeed = 0;
         xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
@@ -28,5 +54,23 @@ export class Challenger {
             this.x += (xSpeed / normalize) * applySpeed;
             this.y += (ySpeed / normalize) * applySpeed;
         }
+
+        if (INPUTS_CHALLENGER.special || this.specialActive) {
+            this.useSpecialAbility();
+        }
+
+        this.#shootBullets();
+    }
+
+    takeDamage(){
+
+    }
+
+    gainCharge() {
+
+    }
+
+    #shootBullets() {
+
     }
 }
