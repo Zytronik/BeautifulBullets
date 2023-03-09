@@ -1,7 +1,7 @@
 /* General */
 body,
 html {
-	background-color: grey;
+	background-color: rgb(65, 65, 65);
 	color: white;
 	height: 100vh;
 	padding: 0;
@@ -20,9 +20,21 @@ main {
 
 /* Game */
 
-canvas {
+.gameCanvas {
 	display: block;
 	border: 1px solid red;
+	position: relative;
+	z-index: 2;
+}
+
+.bulletCanvas {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
 }
 
 article {
@@ -49,5 +61,20 @@ article section:last-of-type {
 
 .player .canvas {
 	height: 90%;
+	position: relative;
+	background-image: url("../img/bg.png");
+	background-repeat: repeat;
+	background-size: 10%;
 }
 
+.player .canvas::after {
+	content: "";
+	background-color: rgba(0, 0, 0, 0.6);
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
