@@ -1,5 +1,6 @@
 import { CHALLENGER_SPRITE } from "./spriteSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
+import { challengerCanvas } from "./main.js"
 
 export class Challenger {
     constructor(x, y) {
@@ -9,9 +10,9 @@ export class Challenger {
         this.sprite.src = CHALLENGER_SPRITE.url;
         this.radius = CHALLENGER_SPRITE.radius;
         this.sizeFactor = CHALLENGER_SPRITE.sizeFactor;
-        this.speed = 10;
+        this.speed = 4;
         this.hitboxColor = CHALLENGER_SPRITE.hitboxColor;
-        this.shiftSpeed = 2.5;
+        this.shiftSpeed = 1;
     }
     move() {
         let xSpeed = 0;
@@ -25,8 +26,8 @@ export class Challenger {
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
             let applySpeed = INPUTS_CHALLENGER.shift ? this.shiftSpeed : this.speed;
-            this.x += (xSpeed / normalize) * applySpeed;
-            this.y += (ySpeed / normalize) * applySpeed;
+            this.x += (xSpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
+            this.y += (ySpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
         }
     }
 }
