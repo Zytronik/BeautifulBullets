@@ -11,9 +11,6 @@ export class Boss {
         this.sizeFactor = BOSS_SPRITE.sizeFactor;
         this.speed = 3;
     }
-    getPosition() {
-        return { x: this.x, y: this.y };
-    }
     move() {
         let xSpeed = 0;
         xSpeed = INPUTS_BOSS.right ? xSpeed + 1 : xSpeed;

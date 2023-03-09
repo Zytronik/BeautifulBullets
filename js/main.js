@@ -9,7 +9,7 @@ import { BulletFunctions } from "./bulletFunctions.js";
 export let challenger;
 export let boss;
 export let bullets;
-let challengerCanvas;
+export let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
     challenger = new Challenger(100, 300);
@@ -91,7 +91,7 @@ function gameLogic() {
     // console.log(bullets)
     bullets.forEach(function(bullet, index) {
         bullet.nextPos();
-        if (bullet.hasBulletFaded()) {
+        if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
             bullets.splice(index, 1);
         }
     });
