@@ -4,6 +4,7 @@ import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { Bullet } from "./bullet.js";
 import { BULLET_SPRITE1 } from "./spriteSettings.js";
+import { BulletFunctions } from "./bulletFunctions.js";
 
 export let challenger;
 export let boss;
@@ -15,7 +16,16 @@ window.onload = function () {
     boss = new Boss(100, 100);
     bullets = [];
 
-    bullets.push(new Bullet(300, 500, BULLET_SPRITE1, bro, 50));
+    // bullets.push(new Bullet(300, 500, BULLET_SPRITE1, bro, 50));
+    let bf = new BulletFunctions();
+    // bf.pattern1(50);
+    setInterval(function () {
+        bf.pattern1(50)
+    }, 2000);
+
+    setInterval(function () {
+        console.log(bullets);
+    }, 1000);
 
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
     bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"), challenger, boss);  
@@ -73,6 +83,7 @@ function gameLogic() {
     */
     challenger.move()
     boss.move()
+    // console.log(bullets)
     bullets.forEach(function(bullet, index) {
         bullet.nextPos();
         if (bullet.hasBulletFaded()) {

@@ -2,7 +2,7 @@ const bossPosX = 225;
 const bossPosY = 80;
 let pointsPos = [];
 let trajectory = [];
-let points = 25;
+let points = 50;
 let counter = 0.2;
 let switcherino = true;
 let translation;
@@ -14,13 +14,15 @@ function setup() {
   background(220, 10);
   angleMode(DEGREES);
   pattern1();
-  setInterval(pattern1,200)
+  setInterval(consLog,250);
+  setInterval(pattern1,500)
 }
 
 function draw() {
-  background(220, 80);
+  background(220);
   circle(bossPosX+translation, bossPosY, 30);
   // circle(mouseX, mouseY, 30);
+  // pattern2();
   pattern3();
   
   colorMode(RGB);
@@ -93,9 +95,8 @@ function pattern2() {
 
 function pattern3() {
   let border = 50;
-  // console.log(pointsPos.length)
   strokeWeight(5)
-  counter += 0.2;
+  counter += 0.1;
   // console.log(pointsPos);
   for(let i = 0; i <= pointsPos.length-1; i++) {
     // console.log(pointsPos[i][0])
@@ -119,9 +120,13 @@ function pattern3() {
     }
     // trajectory[i][0] = sin(360/pointsPos.length*i+i)
   }
-  counter%0.2;
+  counter%0.1;
 }
 
-function patter4() {
+function pattern4() {
+  
+}
 
+function consLog() {
+  console.log(pointsPos.length);
 }

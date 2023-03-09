@@ -7,7 +7,7 @@ const BULLET_IMAGE_MAP = new Map();
 BULLET_IMAGE_MAP.set(BULLET_SPRITE1, BULLET_SPRITE1_IMAGE)
 
 export class Bullet {
-    constructor(x, y, sprite, trajectoryFunction, lifetime) {
+    constructor(x, y, sprite, trajectoryFunction, lifetime, bulletNumba, switcherino) {
         this.initX = x;
         this.initY = y;
         this.x = x;
@@ -17,13 +17,22 @@ export class Bullet {
         this.trajectoryFunction = trajectoryFunction;
         this.lifetime = lifetime;
         this.framesAlive = 0;
+        this.bulletNumba = bulletNumba;
+        this.switcherino = switcherino;
     }
     nextPos() {
-        let xyShift = this.trajectoryFunction(this.framesAlive);
+        let xyShift = this.trajectoryFunction(this.bulletNumba, 50, this.framesAlive/this.lifetime);
         this.x += xyShift[0];
         this.y += xyShift[1];
         this.framesAlive++;
     }
+    // nextPos() {
+    //     let xyShift = this.trajectoryFunction(this.framesAlive);
+    //     this.x += xyShift[0];
+    //     this.y += xyShift[1];
+    //     this.framesAlive++;
+    // }
+
     hasBulletFaded(){
         return this.framesAlive >= this.lifetime;
     }
