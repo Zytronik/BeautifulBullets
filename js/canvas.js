@@ -5,20 +5,22 @@ export class GameCanvas {
     constructor(container) {
         this.canvas = document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.container = container;
+        this.container = container;        
+        this.bulletCanvas = document.createElement("canvas");
+        this.bulletCtx = this.bulletCanvas.getContext("2d");
         this.#createCanvas();
         this.canvasUnit = this.canvas.width / 200;
+        this.#createBulletCanvas();
     }
     updateCanvas() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.#drawChallenger();
         this.#drawBoss();
+        this.#updateBulletCanvas();
+    }
+    #updateBulletCanvas() {
+        this.bulletCtx.clearRect(0, 0, this.bulletCanvas.width, this.bulletCanvas.height);
         this.#drawBullets();
-
-        /* this.ctx.beginPath(); TODOOO lösche nur test gsi
-        this.ctx.arc(100, 400, 40, 0, 2 * Math.PI);
-        this.ctx.fillStyle = "rgba(50, 168, 82, 0.1)";
-        this.ctx.fill(); */
     }
     #createCanvas() {
         this.canvas.height = this.container.offsetHeight;
@@ -26,6 +28,13 @@ export class GameCanvas {
         this.container.appendChild(this.canvas);
         this.canvas.classList.add("gameCanvas");
         this.updateCanvas();
+    }
+    #createBulletCanvas() {
+        this.bulletCanvas.height = this.container.offsetHeight;
+        this.bulletCanvas.width = this.canvas.height / 3 * 2;
+        this.container.appendChild(this.bulletCanvas);
+        this.bulletCanvas.classList.add("bulletCanvas");
+        this.#updateBulletCanvas();
     }
     resizeCanvas(){
         this.canvas.height = this.container.offsetHeight;
@@ -64,17 +73,21 @@ export class GameCanvas {
     }
     #drawBullets() {
         bullets.forEach(bullet => {
-            this.ctx.beginPath();
-            this.ctx.fillStyle = 'red';
+            this.bulletCtx.beginPath();
+            this.bulletCtx.fillStyle = 'red';
             var bulletRadius = bullet.radius * this.canvasUnit
-            this.ctx.arc(
+            this.bulletCtx.arc(
                 bullet.x + bulletRadius / 2,
                 bullet.y + bulletRadius / 2,
                 bulletRadius / 2, 
                 0, 
                 2 * Math.PI
             );
+<<<<<<< HEAD
             this.ctx.fill();
+=======
+            this.bulletCtx.fill();
+>>>>>>> 9dc661c983ffde8067ca2ae1e7ffb81c158cb696
         });
     }
 }

@@ -21,7 +21,7 @@ window.onload = function () {
     }, 2000);
 
     setInterval(function () {
-        console.log(bullets);
+        //console.log(bullets);
     }, 1000);
 
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"), challenger, boss);
