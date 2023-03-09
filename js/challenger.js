@@ -8,7 +8,7 @@ export class Challenger {
         this.sprite = new Image()
         this.sprite.src = CHALLENGER_SPRITE.url;
         this.radius = CHALLENGER_SPRITE.radius;
-        this.size = CHALLENGER_SPRITE.size;
+        this.sizeFactor = CHALLENGER_SPRITE.sizeFactor;
         this.speed = 10;
         this.hitboxColor = CHALLENGER_SPRITE.hitboxColor;
         this.shiftSpeed = 2.5;
