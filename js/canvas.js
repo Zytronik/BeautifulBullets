@@ -83,11 +83,7 @@ export class GameCanvas {
                 0, 
                 2 * Math.PI
             );
-<<<<<<< HEAD
-            this.ctx.fill();
-=======
             this.bulletCtx.fill();
->>>>>>> 9dc661c983ffde8067ca2ae1e7ffb81c158cb696
         });
     }
 }
