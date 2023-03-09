@@ -1,6 +1,5 @@
 import { boss, bullets } from "./main.js";
 import { Bullet } from "./bullet.js";
-import { BULLET_SPRITE1 } from "./spriteSettings.js";
 
 export const BULLET_SPAWNER_MAP = new Map();
 BULLET_SPAWNER_MAP.set();

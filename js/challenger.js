@@ -1,9 +1,5 @@
-import { CHALLENGER_SPRITE } from "./spriteSettings.js";
+import { canvasUnit } from "./canvas.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
-import { CHARACTER_NAME } from "./characters.js";
-
-export const CHARACTER_STATS_MAP = new Map();
-BULLET_SPAWNER_MAP.set(CHARACTER_NAME.JOHN, []);
 
 export class Challenger {
     constructor(challengerData, specialAbility) {
@@ -12,7 +8,7 @@ export class Challenger {
 
         this.sprite = new Image();
         this.sprite.src = challengerData.SpriteUrl;
-        this.sizeFactor = challengerData.sizeFactor;
+        this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;
         this.hitboxColor = challengerData.hitboxColor;
 
@@ -51,8 +47,8 @@ export class Challenger {
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
             let applySpeed = INPUTS_CHALLENGER.shift ? this.shiftSpeed : this.speed;
-            this.x += (xSpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
-            this.y += (ySpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
+            this.x += (xSpeed / normalize) * applySpeed * canvasUnit;
+            this.y += (ySpeed / normalize) * applySpeed * canvasUnit;
         }
 
         if (INPUTS_CHALLENGER.special || this.specialActive) {

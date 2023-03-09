@@ -1,6 +1,5 @@
-import { BOSS_SPRITE } from "./spriteSettings.js";
+import { canvasUnit } from "./canvas.js";
 import { INPUTS_BOSS } from "./inputSettings.js";
-import { challengerCanvas } from "./main.js"
 
 export class Boss {
     constructor(x, y) {
@@ -9,7 +8,7 @@ export class Boss {
         this.sprite = new Image()
         this.sprite.src = BOSS_SPRITE.url;
         this.radius = BOSS_SPRITE.radius;
-        this.sizeFactor = BOSS_SPRITE.sizeFactor;
+        this.spriteScaling = BOSS_SPRITE.spriteScaling;
         this.speed = 3;
     }
     move() {
@@ -24,8 +23,8 @@ export class Boss {
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
             let applySpeed = INPUTS_BOSS.shift ? this.shiftSpeed : this.speed;
-            this.x += (xSpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
-            this.y += (ySpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
+            this.x += (xSpeed / normalize) * applySpeed * canvasUnit;
+            this.y += (ySpeed / normalize) * applySpeed * canvasUnit;
         }
     }
 }

@@ -4,7 +4,7 @@
             "name": "John Cena",
             "challenger": {
                 "spriteUrl": "./img/challenger.png",
-                "sizeFactor": 30,
+                "spriteScaling": 30,
                 "radius": 2,
                 "hitboxColor": "red",
                 "health": 5,
@@ -20,17 +20,17 @@
                 "specialDuration": 0,
                 "bullet": {
                     "radius": 2,
-                    "color": "red",
-                },
+                    "color": "red"
+                }
             },
             "boss": {
                 "spriteUrl": "./img/boss.png",
-                "sizeFactor": 0.05,
+                "spriteScaling": 0.05,
                 "radius": 300,
                 "bullet": {
                     "radius": 2,
-                    "color": "white",
-                },
+                    "color": "white"
+                }
             }
         },
         "maxMuster": {

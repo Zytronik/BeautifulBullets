@@ -20,7 +20,7 @@ main {
 
 /* Game */
 
-.gameCanvas {
+.characterCanvas {
 	display: block;
 	border: 1px solid red;
 	position: relative;
