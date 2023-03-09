@@ -27,6 +27,11 @@ export class GameCanvas {
         this.canvas.classList.add("gameCanvas");
         this.updateCanvas();
     }
+    resizeCanvas(){
+        this.canvas.height = this.container.offsetHeight;
+        this.canvas.width = this.canvas.height / 3 * 2;
+        this.canvasUnit = this.canvas.width / 200;
+    }
     #drawChallenger() {
         let challengerRatio = challenger.sprite.width / challenger.sprite.height;
         let challengerWidth = this.canvasUnit * challenger.size * challengerRatio;
