@@ -2,8 +2,6 @@ import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
-import { Bullet } from "./bullet.js";
-import { BULLET_SPRITE1 } from "./spriteSettings.js";
 import { BulletFunctions } from "./bulletFunctions.js";
 
 export let challenger;
@@ -16,7 +14,6 @@ window.onload = function () {
     boss = new Boss(100, 100);
     bullets = [];
 
-    // bullets.push(new Bullet(300, 500, BULLET_SPRITE1, bro, 50));
     let bf = new BulletFunctions();
     // bf.pattern1(50);
     setInterval(function () {
@@ -67,7 +64,6 @@ function gameLoop(currentTime) {
     requestAnimationFrame(gameLoop);
 }
 
-
 function gameLogic() {
     /*
     1. move everything
@@ -83,8 +79,6 @@ function gameLogic() {
         x-difference^2 + y-difference^2 < (bulletsize + playersize)^2
 
         health
-    
-    
     */
     challenger.move()
     boss.move()
@@ -95,9 +89,4 @@ function gameLogic() {
             bullets.splice(index, 1);
         }
     });
-}
-
-function bro(framesAlive){
-    console.log("ligmaballs xd", framesAlive);
-    return [0.005*framesAlive**2, 3]
 }

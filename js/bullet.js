@@ -14,7 +14,6 @@ export class Bullet {
         this.x = x;
         this.y = y;
         this.radius = sprite.radius;
-        this.sprite = BULLET_IMAGE_MAP.get(sprite);
         this.trajectoryFunction = trajectoryFunction;
         this.lifetime = lifetime;
         this.framesAlive = 0;
@@ -27,12 +26,6 @@ export class Bullet {
         this.y += xyShift[1];
         this.framesAlive++;
     }
-    // nextPos() {
-    //     let xyShift = this.trajectoryFunction(this.framesAlive);
-    //     this.x += xyShift[0];
-    //     this.y += xyShift[1];
-    //     this.framesAlive++;
-    // }
 
     hasBulletFaded(){
         return this.framesAlive >= this.lifetime;
