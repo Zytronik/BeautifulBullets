@@ -2,16 +2,17 @@ import { BOSS_SPRITE } from "./spriteSettings.js";
 import { INPUTS_BOSS } from "./inputSettings.js";
 
 export class Boss {
-    constructor(x, y){
+    constructor(x, y) {
         this.x = x;
         this.y = y;
         this.sprite = new Image()
         this.sprite.src = BOSS_SPRITE.url;
-        this.size = BOSS_SPRITE.radius;
+        this.radius = BOSS_SPRITE.radius;
+        this.size = BOSS_SPRITE.size;
         this.speed = 3;
     }
     getPosition() {
-        return {x: this.x, y: this.y};
+        return { x: this.x, y: this.y };
     }
     move() {
         let xSpeed = 0;
