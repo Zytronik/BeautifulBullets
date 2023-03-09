@@ -1,11 +1,4 @@
-import { BULLET_SPRITE1 } from "./spriteSettings.js";
 import { challengerCanvas } from "./main.js";
-
-const BULLET_SPRITE1_IMAGE = new Image()
-BULLET_SPRITE1_IMAGE.src = BULLET_SPRITE1.url;
-
-const BULLET_IMAGE_MAP = new Map();
-BULLET_IMAGE_MAP.set(BULLET_SPRITE1, BULLET_SPRITE1_IMAGE)
 
 export class Bullet {
     constructor(x, y, sprite, trajectoryFunction, lifetime, bulletNumba, switcherino) {
