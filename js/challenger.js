@@ -1,19 +1,40 @@
-import { CHALLENGER_SPRITE } from "./spriteSettings.js";
+import { canvasUnit } from "./canvas.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
-import { challengerCanvas } from "./main.js"
 
 export class Challenger {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.sprite = new Image()
-        this.sprite.src = CHALLENGER_SPRITE.url;
-        this.radius = CHALLENGER_SPRITE.radius;
-        this.sizeFactor = CHALLENGER_SPRITE.sizeFactor;
-        this.speed = 4;
-        this.hitboxColor = CHALLENGER_SPRITE.hitboxColor;
-        this.shiftSpeed = 1;
+    constructor(challengerData, specialAbility) {
+        this.x = 100;
+        this.y = 100;
+
+        this.sprite = new Image();
+        this.sprite.src = challengerData.spriteUrl;
+        this.spriteScaling = challengerData.spriteScaling;
+        this.radius = challengerData.radius;
+        this.hitboxColor = challengerData.hitboxColor;
+
+        this.health = challengerData.health;
+
+        this.homing = challengerData.homing;
+        this.fireRate = challengerData.fireRate;
+        this.bulletDamage = challengerData.bulletDamage;
+        this.bulletSpeed = challengerData.bulletSpeed;
+
+        this.speed = challengerData.speed;
+        this.shiftSpeed = challengerData.shiftSpeed;
+
+        this.specialCharge = 0;
+        this.specialChargeRequired = challengerData.specialChargeRequired;
+        this.specialMaxCharge = 100;
+        this.specialChargeSpeed = challengerData.specialChargeSpeed;
+        this.specialPassiveChargeSpeed = challengerData.specialPassiveChargeSpeed;
+        
+        this.specialDuration = challengerData.specialDuration;
+        this.specialActiveFor = 0;
+        this.specialActive = false;
+
+        this.useSpecialAbility = specialAbility;
     }
+
     move() {
         let xSpeed = 0;
         xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
@@ -26,8 +47,26 @@ export class Challenger {
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
             let applySpeed = INPUTS_CHALLENGER.shift ? this.shiftSpeed : this.speed;
-            this.x += (xSpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
-            this.y += (ySpeed / normalize) * applySpeed * challengerCanvas.canvasUnit;
+            this.x += (xSpeed / normalize) * applySpeed * canvasUnit;
+            this.y += (ySpeed / normalize) * applySpeed * canvasUnit;
         }
+
+        if (INPUTS_CHALLENGER.special || this.specialActive) {
+            this.useSpecialAbility();
+        }
+
+        this.#shootBullets();
+    }
+
+    takeDamage(){
+
+    }
+
+    gainCharge() {
+
+    }
+
+    #shootBullets() {
+
     }
 }
