@@ -11,7 +11,7 @@ export class BulletSpawner {
 
     pattern1(bulletAmount) {
         for (let i = 0; i < bulletAmount; i++) {
-            bullets.push(new Bullet(boss.x, boss.y, BULLET_SPRITE1, this.#trajectory, 500, i, false));
+            bullets.push(new Bullet(boss.x, boss.y, this.#trajectory, 500, i, false));
         }
     }
 

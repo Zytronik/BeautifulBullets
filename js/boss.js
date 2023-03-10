@@ -2,13 +2,15 @@ import { canvasUnit } from "./canvas.js";
 import { INPUTS_BOSS } from "./inputSettings.js";
 
 export class Boss {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.sprite = new Image()
-        this.sprite.src = BOSS_SPRITE.url;
-        this.radius = BOSS_SPRITE.radius;
-        this.spriteScaling = BOSS_SPRITE.spriteScaling;
+    constructor(bossData) {
+        this.x;
+        this.y;
+
+        this.sprite = new Image();
+        this.sprite.src = bossData.spriteUrl;
+        this.spriteScaling = bossData.spriteScaling;
+        this.radius = bossData.radius;
+
         this.speed = 3;
     }
     move() {

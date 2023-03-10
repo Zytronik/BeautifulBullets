@@ -1,10 +1,12 @@
+import { canvasHeight, canvasWidth } from "./canvas.js";
+
 export class Bullet {
     constructor(x, y, trajectoryFunction, lifetime, bulletNumba, switcherino) {
         this.initX = x;
         this.initY = y;
         this.x = x;
         this.y = y;
-        this.radius = sprite.radius;
+        this.radius = 5;
         this.trajectoryFunction = trajectoryFunction;
         this.lifetime = lifetime;
         this.framesAlive = 0;
@@ -26,8 +28,8 @@ export class Bullet {
 
     isBulletOutOfFrame(){
         let border = this.radius*2;
-        let withinX = this.x <= -border || this.x >= challengerCanvas.canvas.width+border;
-        let withinY = this.y <= -border || this.y >= challengerCanvas.canvas.height+border;
+        let withinX = this.x <= -border || this.x >= canvasWidth+border;
+        let withinY = this.y <= -border || this.y >= canvasHeight+border;
         return withinX && withinY;
     }
 }

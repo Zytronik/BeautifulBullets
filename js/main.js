@@ -1,52 +1,45 @@
-import { GameCanvas } from "./canvas.js";
+import { canvasHeight, canvasWidth, GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { BulletSpawner } from "./bulletSpawner.js";
 
+export let CHARACTER_DATA;
 export let challenger;
 export let boss;
-export let bullets;
+export let bullets = [];
 let challengerCanvas;
 let bossCanvas;
 window.onload = function () {
-    fetch("./characters.json")
+    fetch("js/characters.json")
         .then(response => {
             return response.json();
         })
         .then(data => {
-            CHARACTER_DATA = data
-            console.log(CHARACTER_DATA);
+            CHARACTER_DATA = data;
+            challenger = new Challenger(CHARACTER_DATA.johnCena.challenger);
+            boss = new Boss(CHARACTER_DATA.johnCena.boss);
+
+            challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
+            bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
+
+            challenger.x = canvasWidth / 2;
+            challenger.y = canvasHeight * 5 / 6;
+            boss.x = canvasWidth / 2;
+            boss.y = canvasHeight * 1 / 6;
+
+            let bf = new BulletSpawner();
+            // bf.pattern1(50);
+            setInterval(function () {
+                bf.pattern1(50)
+            }, 2000);
+
+            setInterval(function () {
+                //console.log(bullets);
+            }, 1000);
+
+            requestAnimationFrame(gameLoop);
         });
-    challenger = new Challenger(characters.johnCena.challenger);
-    boss = new Boss(characters.johnCena.boss);
-    bullets = [];
-
-    let bf = new BulletSpawner();
-    // bf.pattern1(50);
-    setInterval(function () {
-        bf.pattern1(50)
-    }, 2000);
-
-    setInterval(function () {
-        //console.log(bullets);
-    }, 1000);
-
-    challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
-    bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
-
-    //TODO: make more pretty
-    //https://stackoverflow.com/questions/37854355/wait-for-image-loading-to-complete-in-javascript
-    // challenger.sprite.onload = function () {
-    //     challengerCanvas.updateCanvas();
-    //     bossCanvas.updateCanvas();
-    // }
-
-    // boss.sprite.onload = function () {
-    //     challengerCanvas.updateCanvas();
-    //     bossCanvas.updateCanvas();
-    // }
-    requestAnimationFrame(gameLoop);
 };
 
 window.onresize = function () {
@@ -66,7 +59,6 @@ function gameLoop(currentTime) {
         challengerCanvas.updateCanvas();
         bossCanvas.updateCanvas();
         gameLogic();
-
     }
 
     requestAnimationFrame(gameLoop);

@@ -3,11 +3,11 @@ import { INPUTS_CHALLENGER } from "./inputSettings.js";
 
 export class Challenger {
     constructor(challengerData, specialAbility) {
-        this.x;
-        this.y;
+        this.x = 100;
+        this.y = 100;
 
         this.sprite = new Image();
-        this.sprite.src = challengerData.SpriteUrl;
+        this.sprite.src = challengerData.spriteUrl;
         this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;
         this.hitboxColor = challengerData.hitboxColor;
