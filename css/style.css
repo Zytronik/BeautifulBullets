@@ -6,10 +6,23 @@ html {
 	height: 100vh;
 	padding: 0;
 	margin: 0;
+	font-size: 20px;
 }
 
 main {
 	height: 100%;
+}
+
+article {
+	height: 100vh;
+	width: 100vw;
+}
+
+a,
+a:hover,
+a:active,
+a:focus {
+	color:white;
 }
 
 /* Variables */
@@ -18,16 +31,62 @@ main {
 	--boardBorderWidth: 5px; */
 }
 
-/* Game */
+/* Title Screen */
+article.titleScreen {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
 
-.gameCanvas {
+article.titleScreen > section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.titleScreen .footer {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 30px;
+}
+
+article.titleScreen .menu {
+	gap: 30px;
+	display: flex;
+	flex-direction: column;
+}
+
+article.titleScreen .menu-point button {
+	width: 100%;
+	padding: 15px 0;
+	font-size: 40px;
+	cursor: pointer;
+}
+
+article.titleScreen .menu-wrapper {
+	width: 40%;
+}
+
+article.titleScreen h1 {
+	font-size: 130px;
+	margin-top: unset;
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+/* Game */
+article.game .gameCanvas {
 	display: block;
 	border: 1px solid red;
 	position: relative;
 	z-index: 2;
 }
 
-.bulletCanvas {
+article.game .bulletCanvas {
+	border: 1px solid red;
 	display: block;
 	position: absolute;
 	top: 0;
@@ -37,29 +96,28 @@ main {
 	z-index: 1;
 }
 
-article {
+article.game {
 	display: flex;
 	flex-direction: row;
-	height: 100%;
 }
 
-article section {
+article.game section {
 	width: 50%;
 	height: 100%;
 }
 
-article section:last-of-type {
+article.game section:last-of-type {
 	border-left: 2px dotted white;
 }
 
-.player {
+article.game .player {
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.player .canvas {
+article.game .player .canvas {
 	height: 90%;
 	position: relative;
 	background-image: url("../img/bg.png");
@@ -67,7 +125,7 @@ article section:last-of-type {
 	background-size: 10%;
 }
 
-.player .canvas::after {
+article.game .player .canvas::after {
 	content: "";
 	background-color: rgba(0, 0, 0, 0.6);
 	position: absolute;
