@@ -6,7 +6,7 @@ html {
 	height: 100vh;
 	padding: 0;
 	margin: 0;
-	font-size: 20px;
+	font-size: 18px;
 }
 
 main {
@@ -16,13 +16,30 @@ main {
 article {
 	height: 100vh;
 	width: 100vw;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	transition: 300ms;
 }
 
 a,
 a:hover,
 a:active,
 a:focus {
-	color:white;
+	color: white;
+}
+
+p {
+	margin: unset;
+}
+
+article.hidePage {
+	visibility: hidden;
+	pointer-events: none;
+	opacity: 0;
+	z-index: 10;
 }
 
 /* Variables */
@@ -38,7 +55,7 @@ article.titleScreen {
 	align-items: center;
 }
 
-article.titleScreen > section {
+article.titleScreen>section {
 	height: 100%;
 	width: 100%;
 	display: flex;
@@ -78,7 +95,7 @@ article.titleScreen h1 {
 }
 
 /* Game */
-article.game .gameCanvas {
+article.game .characterCanvas {
 	display: block;
 	border: 1px solid red;
 	position: relative;
@@ -135,4 +152,173 @@ article.game .player .canvas::after {
 	right: 0;
 	width: 100%;
 	height: 100%;
+}
+
+/* Character Selection */
+article.characterSelection section {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+article.characterSelection .player {
+	position: relative;
+	overflow: hidden;
+	width: 50%;
+	height: 100%;
+}
+
+article.characterSelection .rdyButton {
+	position: absolute;
+	bottom: 5%;
+	font-size: 40px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 1% 25%;
+	cursor: pointer;
+}
+
+article.characterSelection .characters {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	left: 0;
+}
+
+article.characterSelection .character {
+	position: relative;
+	display: flex;
+	float: left;
+	margin: 0;
+	padding: 0;
+	width: 50vw;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+article.characterSelection h3 {
+	margin: unset;
+	height: 10%;
+	font-size: 60px;
+}
+
+article.characterSelection .character-wrapper {
+	width: 85%;
+	height: 90%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+article.characterSelection .character-desc {
+	width: 94%;
+	background-color: black;
+	color: white;
+	padding: 1% 5%;
+	height: 32%;
+	display: flex;
+}
+
+article.characterSelection .character-desc > div{
+	width: 50%;
+}
+
+article.characterSelection .character-desc h4 {
+	margin-top: 15px;
+	margin-bottom: 10px;
+	font-size: 120%;
+}
+
+article.characterSelection .stat p {
+	font-size: 75%;
+	text-transform: uppercase;
+}
+
+article.characterSelection .stat-bar {
+	height: 7px;
+	border-radius: 5px;
+	width: 80%;
+	border: 1px solid white;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	overflow: hidden;
+}
+
+article.characterSelection .stat-bar>span {
+	position: relative;
+	width: calc(20% - 2px);
+	border-right: 2px solid gray;
+	height: 100%;
+}
+
+article.characterSelection .stat-bar>span:last-of-type {
+	border: none;
+}
+
+article.characterSelection .stat-bar>div {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	background-color: white;
+}
+
+article.characterSelection .img-wrapper {
+	height: 45%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.characterSelection .player img {
+	max-width: 90%;
+	max-height: 100%;
+	object-fit: contain;
+	padding: 5% 0;
+}
+
+article.characterSelection #player1 {
+	background-color: green;
+}
+
+article.characterSelection #player2 {
+	background-color: blue;
+}
+
+article.characterSelection a.control_prev,
+article.characterSelection a.control_next {
+	position: absolute;
+	top: 40%;
+	z-index: 999;
+	display: block;
+	padding: 4% 3%;
+	width: auto;
+	height: auto;
+	background: #2a2a2a;
+	color: #fff;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 18px;
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+article.characterSelection a.control_prev:hover,
+article.characterSelection a.control_next:hover {
+	opacity: 1;
+	-webkit-transition: all 0.2s ease;
+}
+
+article.characterSelection a.control_prev {
+	border-radius: 0 2px 2px 0;
+}
+
+article.characterSelection a.control_next {
+	right: 0;
+	border-radius: 2px 0 0 2px;
 }

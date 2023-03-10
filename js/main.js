@@ -3,6 +3,7 @@ import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { BulletSpawner } from "./bulletSpawner.js";
+import { loadUI } from "./frontend.js";
 
 export let CHARACTER_DATA;
 export let challenger;
@@ -17,6 +18,7 @@ window.onload = function () {
         })
         .then(data => {
             CHARACTER_DATA = data;
+            loadUI();
             challenger = new Challenger(CHARACTER_DATA.johnCena.challenger);
             boss = new Boss(CHARACTER_DATA.johnCena.boss);
 
