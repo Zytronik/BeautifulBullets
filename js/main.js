@@ -1,4 +1,4 @@
-import { canvasHeight, canvasWidth, GameCanvas } from "./canvas.js";
+import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
@@ -22,11 +22,6 @@ window.onload = function () {
 
             challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
             bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
-
-            challenger.x = canvasWidth / 2;
-            challenger.y = canvasHeight * 5 / 6;
-            boss.x = canvasWidth / 2;
-            boss.y = canvasHeight * 1 / 6;
 
             let bf = new BulletSpawner();
             // bf.pattern1(50);

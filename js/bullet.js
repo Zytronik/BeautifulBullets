@@ -1,4 +1,4 @@
-import { canvasHeight, canvasWidth } from "./canvas.js";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "./gameSettings.js";
 
 export class Bullet {
     constructor(x, y, trajectoryFunction, lifetime, bulletNumba, switcherino) {
@@ -28,8 +28,8 @@ export class Bullet {
 
     isBulletOutOfFrame(){
         let border = this.radius*2;
-        let withinX = this.x <= -border || this.x >= canvasWidth+border;
-        let withinY = this.y <= -border || this.y >= canvasHeight+border;
+        let withinX = this.x <= -border || this.x >= BOARD_WIDTH+border;
+        let withinY = this.y <= -border || this.y >= BOARD_HEIGHT+border;
         return withinX && withinY;
     }
 }

@@ -1,10 +1,10 @@
-import { canvasUnit } from "./canvas.js";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "./gameSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
 
 export class Challenger {
     constructor(challengerData, specialAbility) {
-        this.x = 100;
-        this.y = 100;
+        this.x = BOARD_WIDTH / 2;
+        this.y = BOARD_HEIGHT * 5 / 6;
 
         this.sprite = new Image();
         this.sprite.src = challengerData.spriteUrl;
@@ -47,8 +47,8 @@ export class Challenger {
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
             let applySpeed = INPUTS_CHALLENGER.shift ? this.shiftSpeed : this.speed;
-            this.x += (xSpeed / normalize) * applySpeed * canvasUnit;
-            this.y += (ySpeed / normalize) * applySpeed * canvasUnit;
+            this.x += (xSpeed / normalize) * applySpeed;
+            this.y += (ySpeed / normalize) * applySpeed;
         }
 
         if (INPUTS_CHALLENGER.special || this.specialActive) {
