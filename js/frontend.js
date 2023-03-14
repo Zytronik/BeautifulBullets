@@ -1,6 +1,7 @@
-import { CHARACTER_DATA } from "./main.js"
+import { loadGame } from "./main.js";
+import { CHARACTER_DATA } from "./characters.js";
 
-export function loadUI() {
+window.onload = function () {
     //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
 
     document.querySelector("#play").addEventListener("click", function (e) {
@@ -13,6 +14,16 @@ export function loadUI() {
         showPage("config");
     });
 
+    document.querySelector("#rdyButton1").addEventListener("click", function (e) {
+        rdyUpPlayer1(this);
+    });
+
+    document.querySelector("#rdyButton2").addEventListener("click", function (e) {
+        rdyUpPlayer2(this);
+    });
+
+    let rdyUpd = [false, false];
+
     document.onkeydown = function (evt) {
         evt = evt || window.event;
         var isEscape = false;
@@ -22,9 +33,16 @@ export function loadUI() {
             isEscape = (evt.keyCode === 27);
         }
         if (isEscape) {
+            rdyUpd = [false, false];
+            unRdyUpButton();
             showPage("titleScreen")
         }
     };
+
+    function startGame(){
+        showPage("game");
+        loadGame();
+    }
 
     function showPage(pageClass) {
         var pages = document.querySelectorAll("main > article");
@@ -34,12 +52,44 @@ export function loadUI() {
         document.querySelector("article." + pageClass).classList.remove("hidePage");
     }
 
+    function getCurrentPage(){
+        var pages = document.querySelectorAll("main > article");
+        Array.prototype.forEach.call(pages, function (page) {
+            if(!page.classList.contains("hidePage")){
+                return page;
+            }
+        });
+    }
+
+    function unRdyUpButton(){
+        document.querySelector("#rdyButton1").classList.remove("ready");
+        document.querySelector("#rdyButton2").classList.remove("ready");
+    }
+
+    function rdyUpPlayer1(rdyButton){
+        rdyUpd[0] = !rdyUpd[0];
+        rdyButton.classList.toggle("ready");
+        checkRdyButton();
+    }
+
+    function rdyUpPlayer2(rdyButton){
+        rdyUpd[1] = !rdyUpd[1];
+        rdyButton.classList.toggle("ready");
+        checkRdyButton();
+    }
+
+    function checkRdyButton(){
+        if(rdyUpd[0] && rdyUpd[1]){
+            startGame()
+        }
+    }
+
     loadCharacterSelectionScreen();
 
     function loadCharacterSelectionScreen() {
         var players = document.querySelectorAll("article.characterSelection .player");
-        Array.prototype.forEach.call(players, function (player) {
-            loadCharacters(player);
+        Array.prototype.forEach.call(players, function (player, index) {
+            loadCharactersUI(player);
             let slides = player.querySelector(".characters .character");
             let slidesContainer = player.querySelector(".characters");
             let playerContainer = player;
@@ -80,11 +130,15 @@ export function loadUI() {
 
             player.querySelector("a.control_prev").addEventListener("click", function (e) {
                 e.preventDefault();
-                moveLeft()
+                if(!rdyUpd[index]){
+                    moveLeft()
+                }
             });
             player.querySelector("a.control_next").addEventListener("click", function (e) {
                 e.preventDefault();
-                moveRight()
+                if(!rdyUpd[index]){
+                    moveRight()
+                }
             });
         });
     }
@@ -114,11 +168,10 @@ export function loadUI() {
         return 100 / highest[stat] * value;
     }
 
-    function loadCharacters(player) {
+    function loadCharactersUI(player) {
         let characters = "";
         getHighestStats();
         for (var key in CHARACTER_DATA) {
-            //console.log(CHARACTER_DATA[key]);
             characters +=
             '<div class="character">'+
 				'<div class="character-wrapper">'+
@@ -180,4 +233,4 @@ export function loadUI() {
         }
         player.querySelector(".characters").innerHTML = characters;
     }
-};
+}

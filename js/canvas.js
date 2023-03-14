@@ -19,10 +19,12 @@ export class GameCanvas {
         this.updateCanvas();
     }
     resizeCanvas() {
-        this.canvasHeight = this.container.offsetHeight;
+        this.canvasHeight = this.container.clientHeight;
         this.canvasWidth = this.characterCanvas.height * 2 / 3;
         this.characterCanvas.height = this.canvasHeight;
         this.characterCanvas.width = this.canvasWidth;
+        this.bulletCanvas.width = this.characterCanvas.width;
+        this.bulletCanvas.height = this.characterCanvas.height;
         this.canvasUnit = this.canvasWidth / BOARD_WIDTH;
     }
     updateCanvas() {
@@ -32,13 +34,13 @@ export class GameCanvas {
         this.#drawBullets();
     }
     #createCharacterCanvas() {
-        this.characterCanvas.height = this.container.offsetHeight;
+        this.characterCanvas.height = this.container.clientHeight;
         this.characterCanvas.width = this.characterCanvas.height * 2 / 3;
         this.container.appendChild(this.characterCanvas);
         this.characterCanvas.classList.add("characterCanvas");
     }
     #createBulletCanvas() {
-        this.bulletCanvas.height = this.container.offsetHeight;
+        this.bulletCanvas.height = this.container.clientHeight;
         this.bulletCanvas.width = this.characterCanvas.height * 2 / 3;
         this.container.appendChild(this.bulletCanvas);
         this.bulletCanvas.classList.add("bulletCanvas");
@@ -61,7 +63,7 @@ export class GameCanvas {
             this.characterCtx.fillStyle = challenger.hitboxColor;
             this.characterCtx.fill();
         }
-        console.log("challenger.x", challenger.x)
+        //console.log("challenger.x", challenger.x)
         // console.log("challenger.y", challenger.y)
         // console.log("this.canvasHeight", this.canvasHeight)
         // console.log("this.canvasUnit", this.canvasUnit)
