@@ -11,6 +11,9 @@ export const INPUTS_BOSS = {
     right: false,
     down: false,
     up: false,
+    ability1: false,
+    ability2: false,
+    ability3: false,
 }
 
 export let INPUTS_PLAYER1 = {
@@ -18,7 +21,7 @@ export let INPUTS_PLAYER1 = {
     right: "ArrowRight",
     down: "ArrowDown",
     up: "ArrowUp",
-    shift: "ShiftLeft",
+    shift: "ShiftRight",
 }
 
 export let INPUTS_PLAYER2 = {
@@ -26,7 +29,9 @@ export let INPUTS_PLAYER2 = {
     right: "KeyD",
     down: "KeyS",
     up: "KeyW",
-    shift: "ShiftRight",
+    ability1: "Digit1",
+    ability2: "Digit2",
+    ability3: "Digit3",
 }
 
 document.addEventListener("keydown", (event) => {
@@ -52,6 +57,12 @@ document.addEventListener("keydown", (event) => {
         INPUTS_BOSS.right = true;
     } else if (event.code === INPUTS_PLAYER2.down) {
         INPUTS_BOSS.down = true;
+    } else if (event.code === INPUTS_PLAYER2.ability1) {
+        INPUTS_BOSS.ability1 = true;
+    } else if (event.code === INPUTS_PLAYER2.ability2) {
+        INPUTS_BOSS.ability2 = true;
+    } else if (event.code === INPUTS_PLAYER2.ability3) {
+        INPUTS_BOSS.ability3 = true;
     }
 });
 
@@ -78,6 +89,12 @@ document.addEventListener("keyup", (event) => {
         INPUTS_BOSS.right = false;
     } else if (event.code === INPUTS_PLAYER2.down) {
         INPUTS_BOSS.down = false;
+    } else if (event.code === INPUTS_PLAYER2.ability1) {
+        INPUTS_BOSS.ability1 = false;
+    } else if (event.code === INPUTS_PLAYER2.ability2) {
+        INPUTS_BOSS.ability2 = false;
+    } else if (event.code === INPUTS_PLAYER2.ability3) {
+        INPUTS_BOSS.ability3 = false;
     }
 });
 

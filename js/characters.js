@@ -1,3 +1,6 @@
+import { boss, bossBullets, challenger, challengerBullets } from "./main.js";
+import { Bullet } from "./bullet.js";
+
 export const CHARACTER_DATA = {
     "johnCena": {
         "name": "Nabil",
@@ -7,6 +10,7 @@ export const CHARACTER_DATA = {
             "spriteScaling": 30,
             "radius": 2,
             "hitboxColor": "red",
+
             "health": 2,
             "homing": 1.3,
             "fireRate": 0.7,
@@ -14,6 +18,7 @@ export const CHARACTER_DATA = {
             "bulletSpeed": 1,
             "speed": 8,
             "shiftSpeed": 1,
+
             "specialChargeRequired": 50,
             "specialChargeSpeed": 1,
             "specialPassiveChargeSpeed": 0.1,
@@ -21,28 +26,62 @@ export const CHARACTER_DATA = {
             "bullet": {
                 "radius": 2,
                 "color": "red"
-            }
+            },
         },
         "boss": {
             "spriteUrl": "./img/nabil.jpg",
             "spriteScaling": 0.05,
             "radius": 2,
             "speed": 8,
-            "ability1" : {
-                "use" : function() {
-                    console.log("wtf");
-                },
-                "attributes": [],
-                "CoolDown" : 10,
-                "abilityName" : "Ability 1",
-                "description" : "This is a description",
-                "iconUrl" : ""
+            "maxHealth": 1000,
+            "ability1": {
+                "use": function () {
+                    let bulletAmount = 100;
+                    for (let i = 0; i < bulletAmount; i++) {
+                        bossBullets.push(new Bullet(boss.x, boss.y, trajectory, 500, i, false));
+                    }
+                    this.currentCoolDown = 0;
 
+                    function trajectory(bulletNumba, bulletAmount, spiral) {
+                        let x = Math.sin(Math.PI * 2 / (bulletAmount) * bulletNumba + spiral) * 2;
+                        let y = Math.cos(Math.PI * 2 / (bulletAmount) * bulletNumba + spiral) * 2;
+                        return [x, y];
+                    }
+                },
+                "bulletProperties": {
+                    "radius": 2,
+                    "color": "white"
+                },
+                "coolDown": 2, //in seconds
+
+                "abilityName": "Ability 1",
+                "description": "This is a description DEAL WITH IT",
+                "iconUrl": "",
             },
-            "bullet": {
-                "radius": 2,
-                "color": "white"
-            }
+            "passive": {
+                "use": function () {
+                    let bulletAmount = 10;
+                    for (let i = 0; i < bulletAmount; i++) {
+                        bossBullets.push(new Bullet(boss.x, boss.y, trajectory, 500, i, false));
+                    }
+                    this.currentCoolDown = 0;
+
+                    function trajectory(bulletNumba, bulletAmount, spiral) {
+                        let x = Math.sin(Math.PI * 2 / (bulletAmount) * bulletNumba + spiral) * 2;
+                        let y = Math.cos(Math.PI * 2 / (bulletAmount) * bulletNumba + spiral) * 2;
+                        return [x, y];
+                    }
+                },
+                "bulletProperties": {
+                    "radius": 2,
+                    "color": "white"
+                },
+                "frequency": 0.3, //in seconds
+
+                "abilityName": "Passive",
+                "description": "This is a description for a P A S S I V E   A B I L I T Y",
+                "iconUrl": "",
+            },
         }
     },
     "maxMuster": {

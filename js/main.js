@@ -2,7 +2,6 @@ import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
-import { BulletSpawner } from "./bulletSpawner.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { updateGameUI } from "./frontend.js";
 
@@ -19,12 +18,6 @@ export function loadGame(player1, player2) {
 
     challengerCanvas = new GameCanvas(document.querySelector(".player1Canvas"));
     bossCanvas = new GameCanvas(document.querySelector(".player2Canvas"));
-
-    let bf = new BulletSpawner();
-    // bf.pattern1(50);
-    setInterval(function () {
-        bf.pattern1(50)
-    }, 2000);
 
     requestAnimationFrame(gameLoop);
 }
