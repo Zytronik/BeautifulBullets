@@ -89,10 +89,10 @@ function hitDetection2ab() {
         }
     });
 
-    const bossX = boos.x;
-    const bossX2 = boos.x * boos.x;
-    const bossY = boos.y;
-    const bossY2 = boos.y * boos.y;
+    const bossX = boss.x;
+    const bossX2 = boss.x * boss.x;
+    const bossY = boss.y;
+    const bossY2 = boss.y * boss.y;
 
     challengerBullets.forEach(function (bullet, index) {
         let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * bossX) + bossX2;

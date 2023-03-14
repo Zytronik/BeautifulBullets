@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from "./gameSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
 import { Bullet } from "./bullet.js";
-import { bullets, boss } from "./main.js";
+import { challengerBullets, boss } from "./main.js";
 
 export class Challenger {
     constructor(challengerData, specialAbility) {
@@ -85,7 +85,7 @@ export class Challenger {
     }
 
     #shootBullets() {
-        bullets.push(new Bullet(this.x, this.y, this.#challengerBulletTrajectory, 300, 1, false, this.homing));
+        challengerBullets.push(new Bullet(this.x, this.y, this.#challengerBulletTrajectory, 300, 1, false, this.homing));
     }
      
     #challengerBulletTrajectory() {
