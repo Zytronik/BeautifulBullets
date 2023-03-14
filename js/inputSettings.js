@@ -21,7 +21,8 @@ export let INPUTS_PLAYER1 = {
     right: "ArrowRight",
     down: "ArrowDown",
     up: "ArrowUp",
-    shift: "ShiftRight",
+    shift: "Comma",
+    special: "Period",
 }
 
 export let INPUTS_PLAYER2 = {
@@ -46,6 +47,8 @@ document.addEventListener("keydown", (event) => {
         INPUTS_CHALLENGER.down = true;
     } else if (event.code === INPUTS_PLAYER1.shift) {
         INPUTS_CHALLENGER.shift = true;
+    } else if (event.code === INPUTS_PLAYER1.special) {
+        INPUTS_CHALLENGER.special = true;
     }
 
     //Boss
@@ -78,6 +81,8 @@ document.addEventListener("keyup", (event) => {
         INPUTS_CHALLENGER.down = false;
     } else if (event.code === INPUTS_PLAYER1.shift) {
         INPUTS_CHALLENGER.shift = false;
+    }else if (event.code === INPUTS_PLAYER1.special) {
+        INPUTS_CHALLENGER.special = false;
     }
 
     //Boss

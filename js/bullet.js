@@ -1,36 +1,29 @@
-import { BOARD_HEIGHT, BOARD_WIDTH } from "./gameSettings.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "./gameSettings.js";
 
 export class Bullet {
-    constructor(x, y, trajectoryFunction, lifetime, bulletNumba, switcherino, homing=0) {
-        this.initX = x;
-        this.initY = y;
+    constructor(x, y, visuals, trajectoryFunction, lifetimeInSeconds, attributes) {
         this.x = x;
         this.y = y;
-        this.radius = 5;
+        this.color = visuals.color;
+        this.radius = visuals.radius;
         this.trajectoryFunction = trajectoryFunction;
-        this.lifetime = lifetime;
+        this.lifetime = lifetimeInSeconds * FPS;
         this.framesAlive = 0;
-        this.bulletNumba = bulletNumba;
-        this.homing = homing;
-        this.bool1 = switcherino;
-        this.bool2 = switcherino;
-        this.bool3 = switcherino;
+        this.attributes = attributes;
     }
     nextPos() {
-        let xyShift = this.trajectoryFunction(this.bulletNumba, 50, this.framesAlive/this.lifetime);
+        let xyShift = this.trajectoryFunction();
         this.x += xyShift[0];
         this.y += xyShift[1];
         this.framesAlive++;
     }
-
-    hasBulletFaded(){
-        return this.framesAlive >= this.lifetime;
+    hasBulletFaded() {
+        return (this.framesAlive >= this.lifetime) || this.#isBulletOutOfFrame();
     }
-
-    isBulletOutOfFrame(){
-        let border = this.radius*2;
-        let outsideX = this.x <= -border || this.x >= BOARD_WIDTH+border;
-        let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT+border;
+    #isBulletOutOfFrame() {
+        let border = this.radius * 2;
+        let outsideX = this.x <= -border || this.x >= BOARD_WIDTH + border;
+        let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT + border;
         return outsideX || outsideY;
     }
 }

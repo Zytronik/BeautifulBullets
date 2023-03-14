@@ -1,7 +1,7 @@
 import { GameCanvas } from "./canvas.js";
 import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
-import { FPS } from "./gameSettings.js";
+import { FPS, GRACE_RANGE } from "./gameSettings.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { updateGameUI } from "./frontend.js";
 
@@ -45,21 +45,17 @@ function gameLoop(currentTime) {
 }
 
 function gameLogic() {
-    /*
-    1. move everything
-    2. spawn bullets
-    */
-    challenger.move()
-    boss.move()
+    challenger.gameTick();
+    boss.gameTick();
     bossBullets.forEach(function (bullet, index) {
         bullet.nextPos();
-        if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
+        if (bullet.hasBulletFaded()) {
             bossBullets.splice(index, 1);
         }
     });
     challengerBullets.forEach(function (bullet, index) {
         bullet.nextPos();
-        if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
+        if (bullet.hasBulletFaded()) {
             challengerBullets.splice(index, 1);
         }
     });
@@ -88,7 +84,11 @@ function hitDetection2ab() {
         if (xDiffSquared + yDiffSquared < hitRange) {
             console.log("CHALLENGER GOT HIT!!!");
             bossBullets.splice(index, 1);
-        }
+        } 
+        if (xDiffSquared + yDiffSquared < GRACE_RANGE + hitRange) {
+            console.log("CHALLENGER IS DODGIN WELL!!!");
+            challenger.gainGraceCharge();
+        } 
     });
 
     const bossX = boss.x;

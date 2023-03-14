@@ -88,7 +88,7 @@ export class GameCanvas {
         this.bulletCtx.clearRect(0, 0, this.bulletCanvas.width, this.bulletCanvas.height);
         bossBullets.forEach(bullet => {
             this.bulletCtx.beginPath();
-            this.bulletCtx.fillStyle = 'red';
+            this.bulletCtx.fillStyle = bullet.color;
             this.bulletCtx.arc(
                 CANVAS_UNIT * bullet.x,
                 CANVAS_UNIT * bullet.y,

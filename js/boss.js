@@ -11,7 +11,7 @@ export class Boss {
         this.spriteScaling = bossData.spriteScaling;
         this.radius = bossData.radius;
 
-        this.speed = bossData.speed;
+        this.moveSpeed = bossData.moveSpeed;
         this.maxHealth = bossData.health;
         this.currentHealth = this.maxHealth;
 
@@ -27,21 +27,13 @@ export class Boss {
         this.passiveCoolDown = bossData.passive.frequency * FPS;
 
         // this.enrage = bossData.enrage;
-        /*
-                ability:
-                use
-                
-                attributes[]
-                CoolDown
-                CurrentCoolDown
-                
-                abilityName
-                description
-                icon
-        */
-
     }
-    move() {
+
+    gameTick() {
+        this.#move();
+        this.#castAbilities();
+    }
+    #move() {
         let xSpeed = 0;
         xSpeed = INPUTS_BOSS.right ? xSpeed + 1 : xSpeed;
         xSpeed = INPUTS_BOSS.left ? xSpeed - 1 : xSpeed;
@@ -53,21 +45,21 @@ export class Boss {
 
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
-            let applySpeed = this.speed;
+            let applySpeed = this.moveSpeed;
             let newX = this.x;
             let newY = this.y;
             newX += (xSpeed / normalize) * applySpeed;
             newY += (ySpeed / normalize) * applySpeed;
-            if (this.#checkBoundaries(newX, newY)) {
+            if (checkBoundaries(newX, newY)) {
                 this.x = newX;
                 this.y = newY;
             }
         }
 
-        this.#castAbilities();
-    }
-    #checkBoundaries(newX, newY) {
-        return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT / 4;
+        function checkBoundaries(newX, newY) {
+            return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT / 4;
+
+        }
     }
     #castAbilities() {
         //TODO inputbuffer?
