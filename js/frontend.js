@@ -63,8 +63,7 @@ export function updateGameUI(){
 function setupGame(){
     let healthCount = CHARACTER_DATA[getSelectedCharacterPlayer1()]["challenger"]["health"];
     let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar, index) {
-        console.log(hBar);
+    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
         var hearts = "";
         for (let i = 0; i < healthCount; i++) {
             hearts += '<div class="heart"></div>';
