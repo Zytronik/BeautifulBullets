@@ -29,8 +29,8 @@ export class Bullet {
 
     isBulletOutOfFrame(){
         let border = this.radius*2;
-        let withinX = this.x <= -border || this.x >= BOARD_WIDTH+border;
-        let withinY = this.y <= -border || this.y >= BOARD_HEIGHT+border;
-        return withinX || withinY;
+        let outsideX = this.x <= -border || this.x >= BOARD_WIDTH+border;
+        let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT+border;
+        return outsideX || outsideY;
     }
 }

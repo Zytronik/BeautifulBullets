@@ -28,6 +28,17 @@ export const CHARACTER_DATA = {
             "spriteScaling": 0.05,
             "radius": 2,
             "speed": 8,
+            "ability1" : {
+                "use" : function() {
+                    console.log("wtf");
+                },
+                "attributes": [],
+                "CoolDown" : 10,
+                "abilityName" : "Ability 1",
+                "description" : "This is a description",
+                "iconUrl" : ""
+
+            },
             "bullet": {
                 "radius": 2,
                 "color": "white"
