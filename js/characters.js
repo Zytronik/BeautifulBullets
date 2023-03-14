@@ -26,7 +26,7 @@ export const CHARACTER_DATA = {
         "boss": {
             "spriteUrl": "./img/nabil.jpg",
             "spriteScaling": 0.05,
-            "radius": 300,
+            "radius": 2,
             "bullet": {
                 "radius": 2,
                 "color": "white"
