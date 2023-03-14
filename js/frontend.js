@@ -39,9 +39,17 @@ window.onload = function () {
         }
     };
 
+    function getSelectedCharacterPlayer1(){
+        return document.querySelector("article.characterSelection #player1 .characters").children[1].dataset.character;
+    }
+
+    function getSelectedCharacterPlayer2(){
+        return document.querySelector("article.characterSelection #player2 .characters").children[1].dataset.character;
+    }
+
     function startGame(){
         showPage("game");
-        loadGame();
+        loadGame(getSelectedCharacterPlayer1(), getSelectedCharacterPlayer2());
     }
 
     function showPage(pageClass) {
@@ -171,9 +179,9 @@ window.onload = function () {
     function loadCharactersUI(player) {
         let characters = "";
         getHighestStats();
-        for (var key in CHARACTER_DATA) {
+        for (const key in CHARACTER_DATA) {
             characters +=
-            '<div class="character">'+
+            '<div class="character" data-character="'+key+'">'+
 				'<div class="character-wrapper">'+
 					'<h3>'+CHARACTER_DATA[key]["name"]+'</h3>'+
 					'<div class="img-wrapper">'+

@@ -43,10 +43,10 @@ article.hidePage {
 }
 
 /* Variables */
-:root {
+/*:root { */
 	/* --spawnHeight: 0;
 	--boardBorderWidth: 5px; */
-}
+/* } */
 
 /* Title Screen */
 article.titleScreen {
@@ -319,7 +319,7 @@ article.characterSelection a.control_next {
 article.characterSelection a.control_prev:hover,
 article.characterSelection a.control_next:hover {
 	opacity: 1;
-	-webkit-transition: all 0.2s ease;
+	transition: all 0.2s ease;
 }
 
 article.characterSelection a.control_prev {
