@@ -65,7 +65,6 @@ function gameLogic() {
     });
     challengerBullets.forEach(function (bullet, index) {
         bullet.nextPos();
-        console.log(challengerBullets.length)
         if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
             challengerBullets.splice(index, 1);
         }
