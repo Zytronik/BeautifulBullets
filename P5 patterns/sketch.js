@@ -2,7 +2,7 @@ const bossPosX = 225;
 const bossPosY = 80;
 let pointsPos = [];
 let trajectory = [];
-let points = 1;
+let points = 50;
 let counter = 0;
 let switcherino = true;
 let translation;
@@ -15,7 +15,7 @@ function setup() {
   angleMode(DEGREES);
   // pattern1c();
   setInterval(consLog,250);
-  setInterval(pattern1e,10)
+  setInterval(pattern1f,1000)
   // setInterval(pattern1c,1000)
 }
 
@@ -128,10 +128,11 @@ function pattern1e() {
 
 function pattern1f() {
   strokeWeight(5)
-  let steps = 10
+  let random = Math.random();
+  let random2 = Math.random();
   for(let i = 0; i < points; i++) {
     pointsPos.push([bossPosX, bossPosY]);
-    trajectory.push([0, 0, i, 0]); 
+    trajectory.push([(random-0.5)*3, 1+random2, i, 0]); 
   }
 }
 
@@ -164,8 +165,6 @@ function pattern2() {
   }
   counter%0.1;
 }
-
-
 
 // 2 swirls gegengleich
 function pattern3() {
@@ -348,6 +347,13 @@ function pattern8() {
       pointsPos[i][0] = pointsPos[i][0]+trajectory[i][0];
       pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
     }
+
+    if (trajectory[i][3] >= 150) {
+      trajectory[i][0] = sin(360/points*(trajectory[i][2]+counter))
+      trajectory[i][1] = cos(360/points*(trajectory[i][2]+counter))
+    }
+
+    trajectory[i][3] += 1;
   }
 }
 
