@@ -4,7 +4,7 @@ import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { BulletSpawner } from "./bulletSpawner.js";
 import { CHARACTER_DATA } from "./characters.js";
-import  { updateGameUI } from "./frontend.js";
+import { updateGameUI } from "./frontend.js";
 
 export let challenger;
 export let boss;
@@ -66,7 +66,6 @@ function gameLogic() {
     });
     challengerBullets.forEach(function (bullet, index) {
         bullet.nextPos();
-        console.log(bullet)
         if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
             challengerBullets.splice(index, 1);
         }

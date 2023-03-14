@@ -102,9 +102,9 @@ export class GameCanvas {
             this.bulletCtx.beginPath();
             this.bulletCtx.fillStyle = 'red';
             this.bulletCtx.arc(
-                this.canvasUnit * bullet.x,
-                this.canvasUnit * bullet.y,
-                this.canvasUnit * bullet.radius,
+                CANVAS_UNIT * bullet.x,
+                CANVAS_UNIT * bullet.y,
+                CANVAS_UNIT * bullet.radius,
                 0,
                 2 * Math.PI
             );
