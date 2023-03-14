@@ -1,5 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from "./gameSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
+import { Bullet } from "./bullet.js";
+import { bullets, boss } from "./main.js";
 
 export class Challenger {
     constructor(challengerData, specialAbility) {
@@ -19,6 +21,7 @@ export class Challenger {
         this.fireRate = challengerData.fireRate;
         this.bulletDamage = challengerData.bulletDamage;
         this.bulletSpeed = challengerData.bulletSpeed;
+        this.frameCount = 0;
 
         this.speed = challengerData.speed;
         this.shiftSpeed = challengerData.shiftSpeed;
@@ -62,7 +65,12 @@ export class Challenger {
             this.useSpecialAbility();
         }
 
-        this.#shootBullets();
+        if (this.frameCount >= (5/this.fireRate)) {
+            this.#shootBullets(this.homing);
+            this.frameCount = 0;
+        }
+        this.frameCount++
+
     }
     #checkBoundaries(newX, newY){
         return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT;
@@ -77,6 +85,18 @@ export class Challenger {
     }
 
     #shootBullets() {
-
+        bullets.push(new Bullet(this.x, this.y, this.#challengerBulletTrajectory, 300, 1, false, this.homing));
+    }
+     
+    #challengerBulletTrajectory() {
+        let translation;
+        if(boss.x-this.x+translation >= 0) {
+            translation =  50;
+        } else {
+            translation = -50;
+        }
+        let x = ((boss.x-this.x+translation)*this.homing)/this.lifetime*this.framesAlive*this.homing/(2.5*this.homing);
+        let y = -20;
+        return [x, y]
     }
 }

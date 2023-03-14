@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from "./gameSettings.js";
 
 export class Bullet {
-    constructor(x, y, trajectoryFunction, lifetime, bulletNumba, switcherino) {
+    constructor(x, y, trajectoryFunction, lifetime, bulletNumba, switcherino, homing=0) {
         this.initX = x;
         this.initY = y;
         this.x = x;
@@ -11,6 +11,7 @@ export class Bullet {
         this.lifetime = lifetime;
         this.framesAlive = 0;
         this.bulletNumba = bulletNumba;
+        this.homing = homing;
         this.bool1 = switcherino;
         this.bool2 = switcherino;
         this.bool3 = switcherino;

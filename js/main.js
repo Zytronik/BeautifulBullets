@@ -12,9 +12,9 @@ export let challengerBullets = [];
 let challengerCanvas;
 let bossCanvas;
 
-export function loadGame() {
-    challenger = new Challenger(CHARACTER_DATA.johnCena.challenger);
-    boss = new Boss(CHARACTER_DATA.johnCena.boss);
+export function loadGame(player1, player2) {
+    challenger = new Challenger(CHARACTER_DATA[player1].challenger);
+    boss = new Boss(CHARACTER_DATA[player2].boss);
 
     challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
     bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
