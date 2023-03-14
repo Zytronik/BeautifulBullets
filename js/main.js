@@ -8,7 +8,8 @@ import  { updateGameUI } from "./frontend.js";
 
 export let challenger;
 export let boss;
-export let bullets = [];
+export let bossBullets = [];
+export let challengerBullets = [];
 let challengerCanvas;
 let bossCanvas;
 
@@ -57,10 +58,9 @@ function gameLogic() {
     */
     challenger.move()
     boss.move()
-    bullets.forEach(function (bullet, index) {
+    bossBullets.forEach(function (bullet, index) {
         bullet.nextPos();
         if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
-            bullets.splice(index, 1);
         }
     });
     hitDetection2ab();
@@ -69,29 +69,40 @@ function gameLogic() {
 
 //(a-b)^2 = a^2 - 2ab + b^2
 function hitDetection2ab() {
+    // TODO:
     // (is the character in i-frames?)
     // just got hit for example
 
     // reversed, bullet just spawned
     // no active hitbox yet
 
-    // performance: check all bullets? only nearest bullets? parallelization?
-    // x-difference^2 + y-difference^2 < (bulletsize + playersize)^2
-
-    let hasBeenHit = false;
     const challengerX = challenger.x;
     const challengerX2 = challenger.x * challenger.x;
     const challengerY = challenger.y;
     const challengerY2 = challenger.y * challenger.y;
-    bullets.forEach(bullet => {
-        if (!hasBeenHit) {
-            let xDiffSquared =  bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
-            let yDiffSquared =  bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
-            let hitRange = (challenger.radius + bullet.radius) * (challenger.radius + bullet.radius);
-            if (xDiffSquared + yDiffSquared < hitRange) {
-                console.log("GOT HIT!!!");
-                hasBeenHit = true;
-            }
+
+    bossBullets.forEach(function (bullet, index) {
+        let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
+        let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
+        let hitRange = (challenger.radius + bullet.radius) * (challenger.radius + bullet.radius);
+        if (xDiffSquared + yDiffSquared < hitRange) {
+            console.log("CHALLENGER GOT HIT!!!");
+            bossBullets.splice(index, 1);
+        }
+    });
+
+    const bossX = boos.x;
+    const bossX2 = boos.x * boos.x;
+    const bossY = boos.y;
+    const bossY2 = boos.y * boos.y;
+
+    challengerBullets.forEach(function (bullet, index) {
+        let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * bossX) + bossX2;
+        let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
+        let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
+        if (xDiffSquared + yDiffSquared < hitRange) {
+            console.log("BOSS GOT HIT!!!");
+            challengerBullets.splice(index, 1);
         }
     });
 }
