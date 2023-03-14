@@ -47,8 +47,14 @@ export class Challenger {
         if (xSpeed != 0 || ySpeed != 0) {
             let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
             let applySpeed = INPUTS_CHALLENGER.shift ? this.shiftSpeed : this.speed;
-            this.x += (xSpeed / normalize) * applySpeed;
-            this.y += (ySpeed / normalize) * applySpeed;
+            let newX = this.x;
+            let newY = this.y;
+            newX += (xSpeed / normalize) * applySpeed;
+            newY += (ySpeed / normalize) * applySpeed;
+            if(this.#checkBoundaries(newX, newY)){
+                this.x = newX;
+                this.y = newY;
+            }
         }
 
         if (INPUTS_CHALLENGER.special || this.specialActive) {
@@ -56,6 +62,9 @@ export class Challenger {
         }
 
         this.#shootBullets();
+    }
+    #checkBoundaries(newX, newY){
+        return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT;
     }
 
     takeDamage(){

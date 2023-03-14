@@ -3,41 +3,33 @@ import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { BulletSpawner } from "./bulletSpawner.js";
-import { loadUI } from "./frontend.js";
+import { CHARACTER_DATA } from "./characters.js";
 
-export let CHARACTER_DATA;
 export let challenger;
 export let boss;
 export let bullets = [];
 let challengerCanvas;
 let bossCanvas;
-window.onload = function () {
-    fetch("js/characters.json")
-        .then(response => {
-            return response.json();
-        })
-        .then(data => {
-            CHARACTER_DATA = data;
-            loadUI();
-            challenger = new Challenger(CHARACTER_DATA.johnCena.challenger);
-            boss = new Boss(CHARACTER_DATA.johnCena.boss);
 
-            challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
-            bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
+export function loadGame() {
+    challenger = new Challenger(CHARACTER_DATA.johnCena.challenger);
+    boss = new Boss(CHARACTER_DATA.johnCena.boss);
 
-            let bf = new BulletSpawner();
-            // bf.pattern1(50);
-            setInterval(function () {
-                bf.pattern1(50)
-            }, 2000);
+    challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
+    bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
 
-            setInterval(function () {
-                //console.log(bullets);
-            }, 1000);
+    let bf = new BulletSpawner();
+    // bf.pattern1(50);
+    setInterval(function () {
+        bf.pattern1(50)
+    }, 2000);
 
-            requestAnimationFrame(gameLoop);
-        });
-};
+    setInterval(function () {
+        //console.log(bullets);
+    }, 1000);
+
+    requestAnimationFrame(gameLoop);
+}
 
 window.onresize = function () {
     challengerCanvas.resizeCanvas();

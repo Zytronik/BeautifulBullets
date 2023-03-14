@@ -23,7 +23,7 @@ function draw() {
   circle(bossPosX+translation, bossPosY, 30);
   // circle(mouseX, mouseY, 30);
   // pattern2();
-  pattern3();
+  pattern2();
   
   colorMode(RGB);
   // noLoop();
