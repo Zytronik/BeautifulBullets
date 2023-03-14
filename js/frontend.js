@@ -51,17 +51,31 @@ function getSelectedCharacterPlayer2(){
     return document.querySelector("article.characterSelection #player2 .characters").children[1].dataset.character;
 }
 
-function updateBossChallengerHealthbar(){
+function updateBossChallengerHealthbarPosition(){
     document.querySelector(':root').style.setProperty('--bossChallengerHealthX',  challenger.x * CANVAS_UNIT + 'px');
     document.querySelector(':root').style.setProperty('--bossChallengerHealthY',  challenger.y * CANVAS_UNIT + 'px');
 }
 
 export function updateGameUI(){
-    updateBossChallengerHealthbar();
+    updateBossChallengerHealthbarPosition();
+}
+
+function setupGame(){
+    let healthCount = CHARACTER_DATA[getSelectedCharacterPlayer1()]["challenger"]["health"];
+    let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
+    Array.prototype.forEach.call(playersHealthBar, function (hBar, index) {
+        console.log(hBar);
+        var hearts = "";
+        for (let i = 0; i < healthCount; i++) {
+            hearts += '<div class="heart"></div>';
+        }
+        hBar.innerHTML = hearts;
+    });
 }
 
 function startGame(){
     showPage("game");
+    setupGame();
     loadGame(getSelectedCharacterPlayer1(), getSelectedCharacterPlayer2());
 }
 

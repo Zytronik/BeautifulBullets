@@ -7,7 +7,7 @@ export const CHARACTER_DATA = {
             "spriteScaling": 30,
             "radius": 2,
             "hitboxColor": "red",
-            "health": 1,
+            "health": 2,
             "homing": 1.3,
             "fireRate": 0.7,
             "bulletDamage": 2.8,
@@ -60,7 +60,7 @@ export const CHARACTER_DATA = {
         "boss": {
             "spriteUrl": "./img/bg.png",
             "spriteScaling": 0.05,
-            "radius": 300,
+            "radius": 30,
             "bullet": {
                 "radius": 2,
                 "color": "white"
