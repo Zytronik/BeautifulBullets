@@ -86,9 +86,15 @@ export class Challenger {
     #shootBullets() {
         bullets.push(new Bullet(this.x, this.y, this.#challengerBulletTrajectory, 300, 1, false, this.homing));
     }
-    
+     
     #challengerBulletTrajectory() {
-        let x = (boss.x-this.x)/25/this.homing;
+        let translation;
+        if(boss.x-this.x+translation >= 0) {
+            translation =  50;
+        } else {
+            translation = -50;
+        }
+        let x = ((boss.x-this.x+translation)*this.homing)/this.lifetime*this.framesAlive*this.homing/(2.5*this.homing);
         let y = -20;
         return [x, y]
     }
