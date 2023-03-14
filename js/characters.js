@@ -27,6 +27,7 @@ export const CHARACTER_DATA = {
             "spriteUrl": "./img/nabil.jpg",
             "spriteScaling": 0.05,
             "radius": 2,
+            "speed": 8,
             "bullet": {
                 "radius": 2,
                 "color": "white"
