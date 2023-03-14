@@ -106,6 +106,7 @@ function pattern1d() {
   }
 }
 
+// zigzag
 function pattern1e() {
   strokeWeight(5)
   let steps = 10
@@ -122,6 +123,15 @@ function pattern1e() {
     translation -= steps;
   } else {
     switcherino = true;
+  }
+}
+
+function pattern1f() {
+  strokeWeight(5)
+  let steps = 10
+  for(let i = 0; i < points; i++) {
+    pointsPos.push([bossPosX, bossPosY]);
+    trajectory.push([0, 0, i, 0]); 
   }
 }
 
