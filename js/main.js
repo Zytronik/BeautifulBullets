@@ -60,6 +60,14 @@ function gameLogic() {
     bossBullets.forEach(function (bullet, index) {
         bullet.nextPos();
         if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
+            bossBullets.splice(index, 1);
+        }
+    });
+    challengerBullets.forEach(function (bullet, index) {
+        bullet.nextPos();
+        console.log(bullet)
+        if (bullet.hasBulletFaded() || bullet.isBulletOutOfFrame()) {
+            challengerBullets.splice(index, 1);
         }
     });
     hitDetection2ab();

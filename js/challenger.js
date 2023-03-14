@@ -66,7 +66,7 @@ export class Challenger {
         }
 
         if (this.frameCount >= (5/this.fireRate)) {
-            this.#shootBullets(this.homing);
+            this.#shootBullets();
             this.frameCount = 0;
         }
         this.frameCount++
