@@ -4,6 +4,7 @@ import { Boss } from "./boss.js";
 import { FPS } from "./gameSettings.js";
 import { BulletSpawner } from "./bulletSpawner.js";
 import { CHARACTER_DATA } from "./characters.js";
+import  { updateGameUI } from "./frontend.js";
 
 export let challenger;
 export let boss;
@@ -15,8 +16,8 @@ export function loadGame(player1, player2) {
     challenger = new Challenger(CHARACTER_DATA[player1].challenger);
     boss = new Boss(CHARACTER_DATA[player2].boss);
 
-    challengerCanvas = new GameCanvas(document.querySelector(".challengerCanvas"));
-    bossCanvas = new GameCanvas(document.querySelector(".bossCanvas"));
+    challengerCanvas = new GameCanvas(document.querySelector(".player1Canvas"));
+    bossCanvas = new GameCanvas(document.querySelector(".player2Canvas"));
 
     let bf = new BulletSpawner();
     // bf.pattern1(50);
@@ -63,6 +64,7 @@ function gameLogic() {
         }
     });
     hitDetection2ab();
+    updateGameUI();
 }
 
 //(a-b)^2 = a^2 - 2ab + b^2

@@ -43,10 +43,11 @@ article.hidePage {
 }
 
 /* Variables */
-/*:root { */
-	/* --spawnHeight: 0;
-	--boardBorderWidth: 5px; */
-/* } */
+:root {
+	--heartWidth: 25px;
+	--bossChallengerHealthX: 0;
+	--bossChallengerHealthY: 0;
+}
 
 /* Title Screen */
 article.titleScreen {
@@ -135,7 +136,7 @@ article.game .player {
 }
 
 article.game .player .canvas {
-	height: 90%;
+	height: 100%;
 	position: relative;
 	background-image: url("../img/bg.png");
 	background-repeat: repeat;
@@ -152,6 +153,85 @@ article.game .player .canvas::after {
 	right: 0;
 	width: 100%;
 	height: 100%;
+}
+
+article.game .player-wrapper {
+	height: 90%;
+	position: relative;
+}
+
+article.game .challenger-abilitie .grace-bar {
+	width: 20px;
+	height: 80%;
+	position: absolute;
+	left: -20px;
+	background-color: white;
+	bottom: 0;
+}
+
+article.game .boss .challenger-abilitie {
+	display: none;
+}
+
+article.game .challenger-abilitie .grace-bar>div {
+	width: 100%;
+	height: 60%;
+	background-color: green;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+article.game .challenger-healthbar {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	margin-top: 10px;
+	display: flex;
+}
+
+article.game .boss .challenger-healthbar {
+	position: absolute;
+	left: var(--bossChallengerHealthX);
+	top: var(--bossChallengerHealthY);
+	z-index: 1;
+	opacity: 0.4;
+	transform: translate(-50%, 15px) scale(0.7);
+}
+
+article.game .challenger-healthbar .heart {
+	position: relative;
+	width: var(--heartWidth);
+	height: calc(var(--heartWidth) / 10 * 9);
+	margin-right: calc(var(--heartWidth) / 5);
+}
+
+article.game .challenger-healthbar .heart:last-of-type {
+	margin-right: unset;
+}
+
+article.game .challenger-healthbar .heart::before,
+article.game .challenger-healthbar .heart::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	width: calc(var(--heartWidth) / 2);
+	height: calc(var(--heartWidth) / 10 * 8);
+	border-radius: 50px 50px 0 0;
+	background: red;
+}
+
+article.game .challenger-healthbar .heart::before {
+	left: calc(var(--heartWidth) / 2);
+	transform: rotate(-45deg);
+	transform-origin: 0 100%;
+}
+
+article.game .challenger-healthbar .heart::after {
+	left: 0;
+	transform: rotate(45deg);
+	transform-origin: 100% 100%;
 }
 
 /* Character Selection */
