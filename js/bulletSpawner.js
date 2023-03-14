@@ -1,4 +1,4 @@
-import { boss, bullets } from "./main.js";
+import { boss, bossBullets } from "./main.js";
 import { Bullet } from "./bullet.js";
 
 export const BULLET_SPAWNER_MAP = new Map();
@@ -11,7 +11,7 @@ export class BulletSpawner {
 
     pattern1(bulletAmount) {
         for (let i = 0; i < bulletAmount; i++) {
-            bullets.push(new Bullet(boss.x, boss.y, this.#trajectory, 500, i, false));
+            bossBullets.push(new Bullet(boss.x, boss.y, this.#trajectory, 500, i, false));
         }
     }
 

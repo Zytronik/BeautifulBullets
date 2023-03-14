@@ -13,6 +13,7 @@ export class Challenger {
         this.hitboxColor = challengerData.hitboxColor;
 
         this.health = challengerData.health;
+        this.currentHealth = this.health;
 
         this.homing = challengerData.homing;
         this.fireRate = challengerData.fireRate;

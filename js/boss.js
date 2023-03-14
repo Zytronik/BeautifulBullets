@@ -11,7 +11,27 @@ export class Boss {
         this.spriteScaling = bossData.spriteScaling;
         this.radius = bossData.radius;
 
-        this.speed = 3;
+        this.speed = bossData.speed;
+        // this.maxHealth = bossData.health;
+        // this.currentHealth = this.maxHealth;
+
+        // this.ability1 = bossData.ability1;
+        // this.ability2 = bossData.ability2;
+        // this.ability3 = bossData.ability3;
+        // this.enrage = bossData.enrage;
+        // this.passive = bossData.passive;
+/*
+        ability:
+        use
+        
+        attributes[]
+        CoolDown
+        CurrentCoolDown
+        
+        description
+        icon
+*/        
+
     }
     move() {
         let xSpeed = 0;
