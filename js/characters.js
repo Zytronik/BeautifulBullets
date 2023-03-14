@@ -60,15 +60,15 @@ export const CHARACTER_DATA = {
             },
             "passive": {
                 "use": function () {
-                    let bulletAmount = 10;
+                    let bulletAmount = 20;
                     for (let i = 0; i < bulletAmount; i++) {
                         bossBullets.push(new Bullet(boss.x, boss.y, trajectory, 500, i, false));
                     }
                     this.currentCoolDown = 0;
 
-                    function trajectory(bulletNumba, bulletAmount, spiral) {
-                        let x = Math.sin(Math.PI * 2 / (bulletAmount) * bulletNumba + spiral) * 2;
-                        let y = Math.cos(Math.PI * 2 / (bulletAmount) * bulletNumba + spiral) * 2;
+                    function trajectory(bulletNumba, spiral) {
+                        let x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumba + spiral) * 2;
+                        let y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumba + spiral) * 2;
                         return [x, y];
                     }
                 },

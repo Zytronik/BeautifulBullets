@@ -17,7 +17,7 @@ export class Bullet {
         this.bool3 = switcherino;
     }
     nextPos() {
-        let xyShift = this.trajectoryFunction(this.bulletNumba, 50, this.framesAlive/this.lifetime);
+        let xyShift = this.trajectoryFunction(this.bulletNumba, this.framesAlive/this.lifetime);
         this.x += xyShift[0];
         this.y += xyShift[1];
         this.framesAlive++;
