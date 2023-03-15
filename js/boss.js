@@ -12,12 +12,12 @@ export class Boss {
         this.radius = bossData.stats.radius;
 
         this.moveSpeed = bossData.stats.moveSpeed;
-        this.maxHealth = bossData.stats.health;
+        this.maxHealth = bossData.stats.maxHealth;
         this.currentHealth = this.maxHealth;
 
-        this.ability1 = bossData.ability1;
-        this.ability1CoolDownRequired = bossData.ability1.coolDown * FPS;
-        this.ability1CoolDown = bossData.ability1.coolDown * FPS;
+        this.ability1 = bossData.abilities.ability1;
+        this.ability1CoolDownRequired = bossData.abilities.ability1.coolDown * FPS;
+        this.ability1CoolDown = bossData.abilities.ability1.coolDown * FPS;
 
         // this.ability2 = bossData.ability2;
         // this.ability3 = bossData.ability3;
@@ -32,6 +32,10 @@ export class Boss {
     gameTick() {
         this.#move();
         this.#castAbilities();
+    }
+    takeDamageAndCheckDead(damageAmount) {
+        this.currentHealth -= damageAmount;
+        return this.currentHealth <= 0
     }
     #move() {
         let xSpeed = 0;

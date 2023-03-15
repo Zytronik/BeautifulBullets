@@ -21,16 +21,15 @@ export const CHARACTER_DATA = {
             },
 
             // S T A T S 
-            "stats" : {
+            "stats": {
                 "health": 2,
-
                 "homing": 1.3,
                 "fireRate": 12, // Bullets per Second
                 "bulletDamage": 2.8,
-                "bulletSpeed": 1,
                 "moveSpeed": 8,
-                "shiftSpeed": 1,
             },
+            "bulletSpeed": 1,
+            "shiftSpeed": 1,
 
             // S P E C I A L
             "special": {
@@ -44,7 +43,7 @@ export const CHARACTER_DATA = {
 
                 "abilityName": "Blankbomb",
                 "description": "Destroys all bullets on the screen.",
-                "iconUrl": "",
+                "iconUrl": "img/special.png",
             },
         },
 
@@ -55,59 +54,61 @@ export const CHARACTER_DATA = {
             "spriteScaling": 0.01,
 
             // S T A T S 
-            "stats" : {
+            "stats": {
                 "radius": 5,
                 "moveSpeed": 8,
                 "maxHealth": 1000,
             },
-            
+
             // A B I L I T I E S
-            "ability1": {
-                "use": function () {
-                    if (this.fancyStuff) {
-                        let bulletAmount = 70;
-                        let lifetime = 10
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
-                            this.mybullets.push(bullet)
-                            bossBullets.push(bullet);
+            "abilities": {
+                "ability1": {
+                    "use": function () {
+                        if (this.fancyStuff) {
+                            let bulletAmount = 70;
+                            let lifetime = 10
+                            for (let i = 0; i < bulletAmount; i++) {
+                                let attributes = [i, bulletAmount, 0, lifetime * FPS]
+                                let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
+                                this.mybullets.push(bullet)
+                                bossBullets.push(bullet);
+                            }
+                            this.fancyStuff = !this.fancyStuff;
                         }
-                        this.fancyStuff = !this.fancyStuff;
-                    }
-                    else if (!this.fancyStuff) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectory2;
-                        })
-                        this.fancyStuff = !this.fancyStuff;
-                        this.mybullets = []
-                    }
+                        else if (!this.fancyStuff) {
+                            this.mybullets.forEach(bullet => {
+                                bullet.trajectoryFunction = trajectory2;
+                            })
+                            this.fancyStuff = !this.fancyStuff;
+                            this.mybullets = []
+                        }
 
-                    function trajectory1() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
-                        return [x, y];
-                    }
+                        function trajectory1() {
+                            let currentBulletID = this.attributes[0];
+                            let totalBullets = this.attributes[1];
+                            let shiftMovement = this.attributes[2] / this.attributes[3];
+                            let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
+                            let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
+                            this.attributes[2]++;
+                            return [x, y];
+                        }
 
-                    function trajectory2() {
-                        return [0, 6];
-                    }
+                        function trajectory2() {
+                            return [0, 6];
+                        }
+                    },
+                    "bulletVisuals": {
+                        "radius": 4,
+                        "color": "white"
+                    },
+                    "coolDown": 2, //in seconds
+                    "fancyStuff": true,
+                    "mybullets": [],
+
+                    "abilityName": "Ability 1",
+                    "description": "This is a description DEAL WITH IT",
+                    "iconUrl": "img/ability1.png",
                 },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
-                "coolDown": 2, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
-
-                "abilityName": "Ability 1",
-                "description": "This is a description DEAL WITH IT",
-                "iconUrl": "",
             },
             "passive": {
                 "use": function () {
@@ -136,8 +137,8 @@ export const CHARACTER_DATA = {
                 "frequency": 2, //in seconds
 
                 "abilityName": "Passive",
-                "description": "This is a description for a P A S S I V E   A B I L I T Y",
-                "iconUrl": "",
+                "description": "This is a description for a Passive Ability.",
+                "iconUrl": "img/passive.png",
             },
         }
     },
@@ -160,16 +161,15 @@ export const CHARACTER_DATA = {
             },
 
             // S T A T S 
-            "stats" : {
-                "health": 2,
-
-                "homing": 1.3,
-                "fireRate": 12, // Bullets per Second
-                "bulletDamage": 2.8,
-                "bulletSpeed": 1,
-                "moveSpeed": 8,
-                "shiftSpeed": 1,
+            "stats": {
+                "health": 5,
+                "homing": 2,
+                "fireRate": 4, // Bullets per Second
+                "bulletDamage": 5,
+                "moveSpeed": 3,
             },
+            "bulletSpeed": 2,
+            "shiftSpeed": 1.6,
 
             // S P E C I A L
             "special": {
@@ -183,7 +183,7 @@ export const CHARACTER_DATA = {
 
                 "abilityName": "Blankbomb",
                 "description": "Destroys all bullets on the screen.",
-                "iconUrl": "",
+                "iconUrl": "img/special.png",
             },
         },
 
@@ -194,59 +194,61 @@ export const CHARACTER_DATA = {
             "spriteScaling": 0.01,
 
             // S T A T S 
-            "stats" : {
-                "radius": 5,
-                "moveSpeed": 8,
-                "maxHealth": 1000,
+            "stats": {
+                "radius": 6,
+                "moveSpeed": 8.6,
+                "maxHealth": 2000,
             },
-            
+
             // A B I L I T I E S
-            "ability1": {
-                "use": function () {
-                    if (this.fancyStuff) {
-                        let bulletAmount = 70;
-                        let lifetime = 10
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
-                            this.mybullets.push(bullet)
-                            bossBullets.push(bullet);
+            "abilities": {
+                "ability1": {
+                    "use": function () {
+                        if (this.fancyStuff) {
+                            let bulletAmount = 70;
+                            let lifetime = 10
+                            for (let i = 0; i < bulletAmount; i++) {
+                                let attributes = [i, bulletAmount, 0, lifetime * FPS]
+                                let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
+                                this.mybullets.push(bullet)
+                                bossBullets.push(bullet);
+                            }
+                            this.fancyStuff = !this.fancyStuff;
                         }
-                        this.fancyStuff = !this.fancyStuff;
-                    }
-                    else if (!this.fancyStuff) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectory2;
-                        })
-                        this.fancyStuff = !this.fancyStuff;
-                        this.mybullets = []
-                    }
+                        else if (!this.fancyStuff) {
+                            this.mybullets.forEach(bullet => {
+                                bullet.trajectoryFunction = trajectory2;
+                            })
+                            this.fancyStuff = !this.fancyStuff;
+                            this.mybullets = []
+                        }
 
-                    function trajectory1() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
-                        return [x, y];
-                    }
+                        function trajectory1() {
+                            let currentBulletID = this.attributes[0];
+                            let totalBullets = this.attributes[1];
+                            let shiftMovement = this.attributes[2] / this.attributes[3];
+                            let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
+                            let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
+                            this.attributes[2]++;
+                            return [x, y];
+                        }
 
-                    function trajectory2() {
-                        return [0, 6];
-                    }
+                        function trajectory2() {
+                            return [0, 6];
+                        }
+                    },
+                    "bulletVisuals": {
+                        "radius": 4,
+                        "color": "white"
+                    },
+                    "coolDown": 2, //in seconds
+                    "fancyStuff": true,
+                    "mybullets": [],
+
+                    "abilityName": "Ability 1",
+                    "description": "This is a description DEAL WITH IT",
+                    "iconUrl": "img/ability1.png",
                 },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
-                "coolDown": 2, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
-
-                "abilityName": "Ability 1",
-                "description": "This is a description DEAL WITH IT",
-                "iconUrl": "",
             },
             "passive": {
                 "use": function () {
@@ -275,8 +277,8 @@ export const CHARACTER_DATA = {
                 "frequency": 2, //in seconds
 
                 "abilityName": "Passive",
-                "description": "This is a description for a P A S S I V E   A B I L I T Y",
-                "iconUrl": "",
+                "description": "This is a description for a Passive Ability.",
+                "iconUrl": "img/passive.png",
             },
         }
     },
@@ -299,16 +301,15 @@ export const CHARACTER_DATA = {
             },
 
             // S T A T S 
-            "stats" : {
-                "health": 2,
-
-                "homing": 1.3,
-                "fireRate": 12, // Bullets per Second
-                "bulletDamage": 2.8,
-                "bulletSpeed": 1,
-                "moveSpeed": 8,
-                "shiftSpeed": 1,
+            "stats": {
+                "health": 4,
+                "homing": 0.8,
+                "fireRate": 8, // Bullets per Second
+                "bulletDamage": 4.8,
+                "moveSpeed": 9,
             },
+            "shiftSpeed": 1.2,
+            "bulletSpeed": 1.3,
 
             // S P E C I A L
             "special": {
@@ -323,7 +324,7 @@ export const CHARACTER_DATA = {
 
                 "abilityName": "Blankbomb",
                 "description": "Destroys all bullets on the screen.",
-                "iconUrl": "",
+                "iconUrl": "img/special.png",
             },
         },
 
@@ -334,59 +335,61 @@ export const CHARACTER_DATA = {
             "spriteScaling": 0.01,
 
             // S T A T S 
-            "stats" : {
-                "radius": 5,
-                "moveSpeed": 8,
-                "maxHealth": 1000,
+            "stats": {
+                "radius": 10,
+                "moveSpeed": 6,
+                "maxHealth": 4000,
             },
-            
+
             // A B I L I T I E S
-            "ability1": {
-                "use": function () {
-                    if (this.fancyStuff) {
-                        let bulletAmount = 70;
-                        let lifetime = 10
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
-                            this.mybullets.push(bullet)
-                            bossBullets.push(bullet);
+            "abilities": {
+                "ability1": {
+                    "use": function () {
+                        if (this.fancyStuff) {
+                            let bulletAmount = 70;
+                            let lifetime = 10
+                            for (let i = 0; i < bulletAmount; i++) {
+                                let attributes = [i, bulletAmount, 0, lifetime * FPS]
+                                let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
+                                this.mybullets.push(bullet)
+                                bossBullets.push(bullet);
+                            }
+                            this.fancyStuff = !this.fancyStuff;
                         }
-                        this.fancyStuff = !this.fancyStuff;
-                    }
-                    else if (!this.fancyStuff) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectory2;
-                        })
-                        this.fancyStuff = !this.fancyStuff;
-                        this.mybullets = []
-                    }
+                        else if (!this.fancyStuff) {
+                            this.mybullets.forEach(bullet => {
+                                bullet.trajectoryFunction = trajectory2;
+                            })
+                            this.fancyStuff = !this.fancyStuff;
+                            this.mybullets = []
+                        }
 
-                    function trajectory1() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
-                        return [x, y];
-                    }
+                        function trajectory1() {
+                            let currentBulletID = this.attributes[0];
+                            let totalBullets = this.attributes[1];
+                            let shiftMovement = this.attributes[2] / this.attributes[3];
+                            let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
+                            let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
+                            this.attributes[2]++;
+                            return [x, y];
+                        }
 
-                    function trajectory2() {
-                        return [0, 6];
-                    }
+                        function trajectory2() {
+                            return [0, 6];
+                        }
+                    },
+                    "bulletVisuals": {
+                        "radius": 4,
+                        "color": "white"
+                    },
+                    "coolDown": 2, //in seconds
+                    "fancyStuff": true,
+                    "mybullets": [],
+
+                    "abilityName": "Ability 1",
+                    "description": "This is a description DEAL WITH IT",
+                    "iconUrl": "img/ability1.png",
                 },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
-                "coolDown": 2, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
-
-                "abilityName": "Ability 1",
-                "description": "This is a description DEAL WITH IT",
-                "iconUrl": "",
             },
             "passive": {
                 "use": function () {
@@ -415,8 +418,8 @@ export const CHARACTER_DATA = {
                 "frequency": 2, //in seconds
 
                 "abilityName": "Passive",
-                "description": "This is a description for a P A S S I V E   A B I L I T Y",
-                "iconUrl": "",
+                "description": "This is a description for a Passive Ability.",
+                "iconUrl": "img/passive.png",
             },
         }
     },

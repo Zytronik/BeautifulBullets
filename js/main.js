@@ -15,6 +15,7 @@ let bossCanvas;
 export function loadGame(player1, player2) {
     challenger = new Challenger(CHARACTER_DATA[player1].challenger);
     boss = new Boss(CHARACTER_DATA[player2].boss);
+    console.log(boss.currentHealth)
 
     challengerCanvas = new GameCanvas(document.querySelector(".player1Canvas"));
     bossCanvas = new GameCanvas(document.querySelector(".player2Canvas"));
@@ -34,6 +35,7 @@ function gameLoop(currentTime) {
 
     if (timeSinceLastRender >= 1000 / FPS) {
         deltaTime = timeSinceLastRender;
+        console.log(1000 / timeSinceLastRender);
         lastRenderTime = currentTime;
 
         challengerCanvas.updateCanvas();
@@ -63,6 +65,10 @@ function gameLogic() {
     updateGameUI();
 }
 
+function gameOver(){
+    console.log("G A M E   O V E R");
+}
+
 //(a-b)^2 = a^2 - 2ab + b^2
 function hitDetection2ab() {
     // TODO:
@@ -82,11 +88,13 @@ function hitDetection2ab() {
         let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
         let hitRange = (challenger.radius + bullet.radius) * (challenger.radius + bullet.radius);
         if (xDiffSquared + yDiffSquared < hitRange) {
-            console.log("CHALLENGER GOT HIT!!!");
             bossBullets.splice(index, 1);
+            let isGameOver = challenger.takeDamageAndCheckDead();
+            if (isGameOver) {
+                gameOver();
+            }
         } 
         if (xDiffSquared + yDiffSquared < GRACE_RANGE + hitRange) {
-            console.log("CHALLENGER IS DODGIN WELL!!!");
             challenger.gainGraceCharge();
         } 
     });
@@ -101,8 +109,12 @@ function hitDetection2ab() {
         let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
         let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
         if (xDiffSquared + yDiffSquared < hitRange) {
-            console.log("BOSS GOT HIT!!!");
+            console.log(boss.currentHealth)
             challengerBullets.splice(index, 1);
+            let isGameOver = boss.takeDamageAndCheckDead(challenger.bulletDamage);
+            if (isGameOver) {
+                gameOver();
+            }
         }
     });
 }
