@@ -46,7 +46,13 @@ export class Challenger {
         this.#specialAbility();
         this.#iframesTimeout();
     }
-    gainGraceCharge() { this.specialCharge += this.specialGraceChargeSpeed; }
+    gainGraceCharge() {
+        if (this.specialCharge + this.specialGraceChargeSpeed > this.specialMaxCharge) {
+            this.specialCharge = this.specialMaxCharge;
+        } else {
+            this.specialCharge += this.specialGraceChargeSpeed;
+        }
+    }
     takeDamageAndCheckDead() {
         if (!this.isInvincible) {
             this.currentHealth--;
@@ -82,7 +88,11 @@ export class Challenger {
         }
     }
     #gainPassiveCharge() {
-        this.specialCharge += this.specialPassiveChargeSpeed;
+        if (this.specialCharge + this.specialPassiveChargeSpeed > this.specialMaxCharge) {
+            this.specialCharge = this.specialMaxCharge
+        } else {
+            this.specialCharge += this.specialPassiveChargeSpeed;
+        }
     }
     #shootBullets() {
         if (this.fireRateTracker >= this.fireRateInFrames) {
