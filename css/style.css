@@ -431,10 +431,13 @@ article.characterSelection .rdyButton.ready::after {
 article.characterSelection #pageBack {
 	position: absolute;
 	z-index: 10;
+	left: 2%;
+	top: 2%;
+	display: block;
 }
 
 article.characterSelection #pageBack img {
-	width: 5%;
+	width: 3%;
 }
 
 article.characterSelection .characters {
