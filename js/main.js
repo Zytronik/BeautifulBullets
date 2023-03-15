@@ -24,8 +24,10 @@ export function loadGame(player1, player2) {
 }
 
 window.onresize = function () {
-    challengerCanvas.resizeCanvas();
-    bossCanvas.resizeCanvas();
+    setTimeout(()=>{
+        challengerCanvas.resizeCanvas();
+        bossCanvas.resizeCanvas();
+    }, 500);
 }
 
 let lastRenderTime = 0;

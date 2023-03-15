@@ -21,8 +21,8 @@ export class GameCanvas {
     }
     resizeCanvas() {
         this.canvasHeight = this.container.offsetHeight;
-        this.canvasWidth = this.characterCanvas.height * 2 / 3;
         this.characterCanvas.height = this.canvasHeight;
+        this.canvasWidth = this.characterCanvas.height * 2 / 3;
         this.characterCanvas.width = this.canvasWidth;
         this.bulletCanvas.width = this.characterCanvas.width;
         this.bulletCanvas.height = this.characterCanvas.height;
