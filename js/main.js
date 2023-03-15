@@ -29,7 +29,7 @@ window.onresize = function () {
             challengerCanvas.resizeCanvas();
             bossCanvas.resizeCanvas();
         }
-    }, 500);
+    }, 800);
 }
 
 let previousFrameAt = 0;

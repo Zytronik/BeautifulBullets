@@ -1,4 +1,4 @@
-import { loadGame, challenger, boss, currentFPS } from "./main.js";
+import { loadGame, challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "./main.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 
@@ -21,6 +21,12 @@ window.onload = function () {
 
     document.querySelector("#rdyButton2").addEventListener("click", function (e) {
         rdyUpPlayer2(this);
+    });
+
+    document.querySelector("#pageBack").addEventListener("click", function (e) {
+        rdyUpd = [false, false];
+        unRdyUpButton();
+        showPage("titleScreen");
     });
 
     loadCharacterSelectionScreen();
@@ -60,7 +66,7 @@ function updateBossChallengerHealthbarPosition() {
 export function updateGameUI() {
     updateBossChallengerHealthbarPosition();
     updateChallengerSpecialCharge();
-    updateFPSCounter();
+    updateDebugUI();
     updateChallengerHealthbar();
     updateBossHealthbar()
 }
@@ -170,8 +176,11 @@ function setupChallengerHealthBar() {
     });
 }
 
-function updateFPSCounter(){
-    document.querySelector('#fpsCounter > span').innerHTML = currentFPS;    
+function updateDebugUI(){
+    document.querySelector('#currentFPS > span').innerHTML = currentFPS;
+    document.querySelector('#canvasRenderTime > span').innerHTML = canvasRenderTime;
+    document.querySelector('#gameLogicTime > span').innerHTML = gameLogicTime;
+    document.querySelector('#totalFrameCalculationTime > span').innerHTML = totalFrameCalculationTime; 
 }
 
 function setupGame() {
