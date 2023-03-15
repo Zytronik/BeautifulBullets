@@ -257,7 +257,7 @@ article.game .boss-healthbar .life-bar {
 }
 
 article.game .boss-healthbar .life-bar > div {
-	width: 80%;
+	width: 0%;
 	height: 100%;
 	position: absolute;
 	background-color: green;
