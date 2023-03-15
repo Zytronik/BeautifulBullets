@@ -28,22 +28,39 @@ window.onresize = function () {
     bossCanvas.resizeCanvas();
 }
 
-let lastRenderTime = 0;
-let deltaTime = 0;
+let previousFrameAt = 0;
+let currentlyAt = 0;
+let nextCalculationAt = 0;
 export let currentFPS = 0;
-function gameLoop(currentTime) {
-    const timeSinceLastRender = currentTime - lastRenderTime;
-
-    if (timeSinceLastRender >= 1000 / FPS) {
-        deltaTime = timeSinceLastRender;
-        currentFPS = Math.round(1000 / timeSinceLastRender);
-        lastRenderTime = currentTime;
-
-        challengerCanvas.updateCanvas();
-        bossCanvas.updateCanvas();
-        gameLogic();
+export let canvasRenderTime = 0;
+export let gameLogicTime = 0;
+export let totalFrameCalculationTime = 0;
+function gameLoop() {
+    //Wait for next frame on high refreshrates
+    do {
+        currentlyAt = performance.now();
+    } while (currentlyAt < nextCalculationAt);
+    let amountWaitedTooLong = currentlyAt - nextCalculationAt;
+    if (amountWaitedTooLong > 1000/FPS) {
+        amountWaitedTooLong = 0
+    } else if (amountWaitedTooLong < 0) {
+        console.error("THE GAME IS RUNNING TOO SLOW, PLS HELP");
     }
+    currentFPS = (1000 / (currentlyAt - previousFrameAt)).toFixed(0);
+    previousFrameAt = currentlyAt;
 
+    let t1 = performance.now()
+    challengerCanvas.updateCanvas();
+    bossCanvas.updateCanvas();
+    canvasRenderTime = (performance.now() - t1).toFixed(0);
+
+    t1 = performance.now()
+    gameLogic();
+    gameLogicTime = (performance.now() - t1).toFixed(0);
+
+    totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
+
+    nextCalculationAt = currentlyAt + 1000 / FPS - amountWaitedTooLong;
     requestAnimationFrame(gameLoop);
 }
 
@@ -66,7 +83,7 @@ function gameLogic() {
     updateGameUI();
 }
 
-function gameOver(){
+function gameOver() {
     console.log("G A M E   O V E R");
 }
 
@@ -94,10 +111,10 @@ function hitDetection2ab() {
             if (isGameOver) {
                 gameOver();
             }
-        } 
+        }
         if (xDiffSquared + yDiffSquared < GRACE_RANGE + hitRange) {
             challenger.gainGraceCharge();
-        } 
+        }
     });
 
     const bossX = boss.x;
