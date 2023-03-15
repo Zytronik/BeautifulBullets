@@ -76,7 +76,7 @@ function setupChallengerSpecialChargeBar() {
 }
 
 function setupChallengerHealthBar() {
-    let healthCount = CHARACTER_DATA[getSelectedCharacterPlayer1()]["challenger"]["health"];
+    let healthCount = CHARACTER_DATA[getSelectedCharacterPlayer1()]["challenger"]["stats"]["health"];
     let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
     Array.prototype.forEach.call(playersHealthBar, function (hBar) {
         var hearts = "";
