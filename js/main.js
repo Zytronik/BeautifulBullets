@@ -49,17 +49,17 @@ function gameLoop() {
     } else if (amountWaitedTooLong < 0) {
         console.error("THE GAME IS RUNNING TOO SLOW, PLS HELP");
     }
-    currentFPS = (1000 / (currentlyAt - previousFrameAt)).toFixed(2);
+    currentFPS = Math.round(1000 / (currentlyAt - previousFrameAt));
     previousFrameAt = currentlyAt;
 
     let t1 = performance.now()
     challengerCanvas.updateCanvas();
     bossCanvas.updateCanvas();
-    canvasRenderTime = (performance.now() - t1).toFixed(2);
+    canvasRenderTime = Math.round(performance.now() - t1);
 
     t1 = performance.now()
     gameLogic();
-    gameLogicTime = (performance.now() - t1).toFixed(2);
+    gameLogicTime = Math.round(performance.now() - t1);
 
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
 
