@@ -9,10 +9,10 @@ export class Boss {
         this.sprite = new Image();
         this.sprite.src = bossData.spriteUrl;
         this.spriteScaling = bossData.spriteScaling;
-        this.radius = bossData.radius;
+        this.radius = bossData.stats.radius;
 
-        this.moveSpeed = bossData.moveSpeed;
-        this.maxHealth = bossData.health;
+        this.moveSpeed = bossData.stats.moveSpeed;
+        this.maxHealth = bossData.stats.health;
         this.currentHealth = this.maxHealth;
 
         this.ability1 = bossData.ability1;

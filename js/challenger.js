@@ -15,17 +15,17 @@ export class Challenger {
         this.hitboxColor = challengerData.hitboxColor;
         this.bulletVisuals = challengerData.bulletVisuals;
 
-        this.health = challengerData.health;
+        this.health = challengerData.stats.health;
         this.currentHealth = this.health;
 
-        this.homing = challengerData.homing;
-        this.fireRateInFrames = FPS / challengerData.fireRate;
+        this.homing = challengerData.stats.homing;
+        this.fireRateInFrames = FPS / challengerData.stats.fireRate;
         this.fireRateTracker = 0;
-        this.bulletDamage = challengerData.bulletDamage;
-        this.bulletSpeed = challengerData.bulletSpeed;
+        this.bulletDamage = challengerData.stats.bulletDamage;
+        this.bulletSpeed = challengerData.stats.bulletSpeed;
 
-        this.moveSpeed = challengerData.moveSpeed;
-        this.shiftSpeed = challengerData.shiftSpeed;
+        this.moveSpeed = challengerData.stats.moveSpeed;
+        this.shiftSpeed = challengerData.stats.shiftSpeed;
 
         this.useSpecialAbility = challengerData.special.use;
         this.specialMaxCharge = 100;

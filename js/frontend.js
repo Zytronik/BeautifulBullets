@@ -58,9 +58,24 @@ function updateBossChallengerHealthbarPosition(){
 
 export function updateGameUI(){
     updateBossChallengerHealthbarPosition();
+    updateChallengerSpecialCharge();
 }
 
-function setupGame(){
+function updateChallengerSpecialCharge(){
+    let ChargeBarWidth = 100 / challenger.specialMaxCharge * challenger.specialCharge
+    if(ChargeBarWidth <= 100){
+        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar > div").style.height = ChargeBarWidth + "%";
+    }
+}
+
+function setupChallengerSpecialChargeBar(){
+    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
+    for (let i = 0; i < barCount; i++) {
+        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:'+100 / barCount+'%"></span>';
+    }
+}
+
+function setupChallengerHealthBar(){
     let healthCount = CHARACTER_DATA[getSelectedCharacterPlayer1()]["challenger"]["health"];
     let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
     Array.prototype.forEach.call(playersHealthBar, function (hBar) {
@@ -72,10 +87,15 @@ function setupGame(){
     });
 }
 
+function setupGame(){
+    setupChallengerHealthBar();
+    setupChallengerSpecialChargeBar();
+}
+
 function startGame(){
     showPage("game");
-    setupGame();
     loadGame(getSelectedCharacterPlayer1(), getSelectedCharacterPlayer2());
+    setupGame();
 }
 
 function showPage(pageClass) {
@@ -217,37 +237,37 @@ function loadCharactersUI(player) {
                         '<div class="stat speed">'+
                             '<p>Speed | '+CHARACTER_DATA[key]["challenger"]["speed"]+'</p>'+
                             '<div class="stat-bar">'+
-                            '<div style="width: '+calculateStat("speed", CHARACTER_DATA[key]["challenger"]["speed"])+'%"></div>'+
-                            '<span></span><span></span><span></span><span></span><span></span>'+
-                        '</div>'+
+                                '<div style="width: '+calculateStat("speed", CHARACTER_DATA[key]["challenger"]["speed"])+'%"></div>'+
+                                '<span></span><span></span><span></span><span></span><span></span>'+
+                            '</div>'+
                         '</div>'+
                         '<div class="stat health">'+
                             '<p>Health | '+CHARACTER_DATA[key]["challenger"]["health"]+'</p>'+
                             '<div class="stat-bar">'+
-                            '<div style="width: '+calculateStat("health", CHARACTER_DATA[key]["challenger"]["health"])+'%"></div>'+
-                            '<span></span><span></span><span></span><span></span><span></span>'+
-                        '</div>'+
+                                '<div style="width: '+calculateStat("health", CHARACTER_DATA[key]["challenger"]["health"])+'%"></div>'+
+                                '<span></span><span></span><span></span><span></span><span></span>'+
+                            '</div>'+
                         '</div>'+
                         '<div class="stat homing">'+
                             '<p>Homing | '+CHARACTER_DATA[key]["challenger"]["homing"]+'</p>'+
                             '<div class="stat-bar">'+
-                            '<div style="width: '+calculateStat("homing", CHARACTER_DATA[key]["challenger"]["homing"])+'%"></div>'+
-                            '<span></span><span></span><span></span><span></span><span></span>'+
-                        '</div>'+
+                                '<div style="width: '+calculateStat("homing", CHARACTER_DATA[key]["challenger"]["homing"])+'%"></div>'+
+                                '<span></span><span></span><span></span><span></span><span></span>'+
+                            '</div>'+
                         '</div>'+
                         '<div class="stat fireRate">'+
                             '<p>Fire-Rate | '+CHARACTER_DATA[key]["challenger"]["fireRate"]+'</p>'+
                             '<div class="stat-bar">'+
-                            '<div style="width: '+calculateStat("fireRate", CHARACTER_DATA[key]["challenger"]["fireRate"])+'%"></div>'+
-                            '<span></span><span></span><span></span><span></span><span></span>'+
-                        '</div>'+
+                                '<div style="width: '+calculateStat("fireRate", CHARACTER_DATA[key]["challenger"]["fireRate"])+'%"></div>'+
+                                '<span></span><span></span><span></span><span></span><span></span>'+
+                            '</div>'+
                         '</div>'+
                         '<div class="stat bulletDamage">'+
                             '<p>Damage | '+CHARACTER_DATA[key]["challenger"]["bulletDamage"]+'</p>'+
                             '<div class="stat-bar">'+
-                            '<div style="width: '+calculateStat("bulletDamage", CHARACTER_DATA[key]["challenger"]["bulletDamage"])+'%"></div>'+
-                            '<span></span><span></span><span></span><span></span><span></span>'+
-                        '</div>'+
+                                '<div style="width: '+calculateStat("bulletDamage", CHARACTER_DATA[key]["challenger"]["bulletDamage"])+'%"></div>'+
+                                '<span></span><span></span><span></span><span></span><span></span>'+
+                            '</div>'+
                         '</div>'+
                         '<p>A:<span>Bullet Shield</span></p>'+
                     '</div>'+
