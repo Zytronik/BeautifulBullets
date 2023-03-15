@@ -1,4 +1,4 @@
-import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "./gameSettings.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "./gameSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
 import { Bullet } from "./bullet.js";
 import { challengerBullets, boss } from "./main.js";
@@ -17,6 +17,8 @@ export class Challenger {
 
         this.health = challengerData.stats.health;
         this.currentHealth = this.health;
+        this.isInvincible = false;
+        this.iFramesCounter = 0;
 
         this.homing = challengerData.stats.homing;
         this.fireRateInFrames = FPS / challengerData.stats.fireRate;
@@ -37,15 +39,22 @@ export class Challenger {
         this.specialActiveFor = 0;
         this.specialActive = false;
     }
-
     gameTick() {
         this.#move();
         this.#gainPassiveCharge();
         this.#shootBullets();
         this.#specialAbility();
+        this.#iframesTimeout();
     }
     gainGraceCharge() { this.specialCharge += this.specialGraceChargeSpeed; }
-    takeDamage() {}
+    takeDamageAndCheckDead() {
+        if (!this.isInvincible) {
+            this.currentHealth--;
+            this.isInvincible = true;
+            this.iFramesCounter = 0;
+        }
+        return this.currentHealth === 0;
+    }
     #move() {
         let xSpeed = 0;
         xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
@@ -83,7 +92,7 @@ export class Challenger {
         } else {
             this.fireRateTracker++
         }
-    
+
         function trajectory() {
             let translation;
             let homing = this.attributes[0]
@@ -101,6 +110,12 @@ export class Challenger {
         if (INPUTS_CHALLENGER.special && this.specialCharge >= this.specialChargeRequired) {
             this.useSpecialAbility();
             this.specialCharge -= this.specialChargeRequired;
+        }
+    }
+    #iframesTimeout() {
+        if (this.isInvincible) {
+            this.iFramesCounter++;
+            this.isInvincible = (this.iFramesCounter < CHALLENGER_I_FRAMES);
         }
     }
 }
