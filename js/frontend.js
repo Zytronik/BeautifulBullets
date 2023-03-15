@@ -1,4 +1,4 @@
-import { loadGame, challenger } from "./main.js";
+import { loadGame, challenger, currentFPS } from "./main.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 
@@ -59,6 +59,7 @@ function updateBossChallengerHealthbarPosition() {
 export function updateGameUI() {
     updateBossChallengerHealthbarPosition();
     updateChallengerSpecialCharge();
+    updateFPSCounter();
 }
 
 function updateChallengerSpecialCharge() {
@@ -85,6 +86,10 @@ function setupChallengerHealthBar() {
         }
         hBar.innerHTML = hearts;
     });
+}
+
+function updateFPSCounter(){
+    document.querySelector('#fpsCounter > span').innerHTML = currentFPS;    
 }
 
 function setupGame() {
