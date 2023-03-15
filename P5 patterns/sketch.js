@@ -11,17 +11,20 @@ let boolTrans = true;
 function setup() {
   translation = 0;
   createCanvas(450, 600);
-  background(220, 10);
+  background(220);
   angleMode(DEGREES);
   // pattern1c();
   setInterval(consLog,250);
-  setInterval(pattern1f,1000)
+  setInterval(pattern1g,1000)
   // setInterval(pattern1c,1000)
+  noFill();
 }
 
 function draw() {
-  background(220);
+  background(220, 100);
   frameRate(60);
+  stroke("blue");
+  strokeWeight(5)
   circle(bossPosX, bossPosY, 30);
   // circle(mouseX, mouseY, 30);
   // console.log(frameCount)
@@ -31,7 +34,8 @@ function draw() {
   // pattern5();
   // pattern6();
   // pattern7();
-  pattern8();
+  // pattern8();
+  pattern9();
   
   colorMode(RGB);
   // noLoop();
@@ -126,6 +130,7 @@ function pattern1e() {
   }
 }
 
+//fireworks with random start flight speed (before Explosion)
 function pattern1f() {
   strokeWeight(5)
   let random = Math.random();
@@ -133,6 +138,37 @@ function pattern1f() {
   for(let i = 0; i < points; i++) {
     pointsPos.push([bossPosX, bossPosY]);
     trajectory.push([(random-0.5)*3, 1+random2, i, 0]); 
+  }
+}
+
+
+function pattern1g() {
+  strokeWeight(5)
+  let random = Math.random();
+  let random2 = Math.random();
+  for(let i = 0; i < points; i++) {
+    pointsPos.push([bossPosX, bossPosY]);
+    trajectory.push([(random-0.5)*3, 1+random2, i, 0]); 
+  }
+}
+
+//double fireworks with random explosion timer + random speed (start)
+function pattern1g() {
+  strokeWeight(5)
+  let random  = Math.random(),
+      random2 = Math.random(),
+      random3 = Math.random(),
+      random4 = Math.random();
+  const randomExplosionTimer = Math.random()*180+60;
+  const randomExplosionTimer2 = Math.random()*180+60;
+  for(let i = 0; i < points; i++) {
+    if(i <= points/2) {
+      pointsPos.push([bossPosX, bossPosY]);
+      trajectory.push([(-random)*1.5, random3, i, 0, randomExplosionTimer]); 
+    } else {
+      pointsPos.push([bossPosX, bossPosY]);
+      trajectory.push([(random2)*1.5, random4, i, 0, randomExplosionTimer2]); 
+    }
   }
 }
 
@@ -334,9 +370,10 @@ function pattern7() {
   }
 }
 
+//single fireworks
 function pattern8() {
   let border = 50;
-  // strokeWeight(5)
+  strokeWeight(5)
   for(let i = 0; i <= pointsPos.length-1; i++) {
     // console.log(pointsPos[i][0])
     point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
@@ -348,12 +385,89 @@ function pattern8() {
       pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
     }
 
-    if (trajectory[i][3] >= 150) {
+    if (trajectory[i][3] <= 150) {
+      noFill();
+      strokeWeight(1);
+      stroke("red");
+      circle(pointsPos[i][0], pointsPos[i][1], (150-trajectory[i][3]));
+    } else {
+      strokeWeight(5);
+      stroke("black");
       trajectory[i][0] = sin(360/points*(trajectory[i][2]+counter))
       trajectory[i][1] = cos(360/points*(trajectory[i][2]+counter))
+
     }
 
     trajectory[i][3] += 1;
+  }
+}
+
+//half fireworks facing down, bit of randomness in the circle shape, 2 fireworks at the same time
+function pattern9() {
+  let border = 50;
+  strokeWeight(5)
+  for(let i = 0; i <= pointsPos.length-1; i++) {
+    // console.log(pointsPos[i][0])
+    point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
+    if (pointsPos[i][0] <= -border || pointsPos[i][0] >= width+border || pointsPos[i][1] <= -border || pointsPos[i][1] >= height+border) {
+      pointsPos.splice(i, 1);
+      trajectory.splice(i, 1)
+    } else {
+      pointsPos[i][0] = pointsPos[i][0]+trajectory[i][0];
+      pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
+    }
+
+    if (trajectory[i][3] <= trajectory[i][4]) {
+      noFill();
+      strokeWeight(10);
+      stroke("red");
+      // circle(pointsPos[i][0], pointsPos[i][1], (150-trajectory[i][3]));
+    } else {
+      strokeWeight(5);
+      stroke("black");
+      trajectory[i][0] = sin(180/points*2*((trajectory[i][2]%(points/2))+counter)-90)
+      trajectory[i][1] = cos(180/points*2*((trajectory[i][2]%(points/2))+counter)-90)
+
+    }
+
+    trajectory[i][3] += 1;
+    if(Math.random() >= 0.5) {
+      trajectory[i][3] += 1;
+    }
+  }
+}
+
+function pattern10() {
+  let border = 50;
+  strokeWeight(5)
+  for(let i = 0; i <= pointsPos.length-1; i++) {
+    // console.log(pointsPos[i][0])
+    point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
+    if (pointsPos[i][0] <= -border || pointsPos[i][0] >= width+border || pointsPos[i][1] <= -border || pointsPos[i][1] >= height+border) {
+      pointsPos.splice(i, 1);
+      trajectory.splice(i, 1)
+    } else {
+      pointsPos[i][0] = pointsPos[i][0]+trajectory[i][0];
+      pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
+    }
+
+    if (trajectory[i][3] <= trajectory[i][4]) {
+      noFill();
+      strokeWeight(10);
+      stroke("red");
+      // circle(pointsPos[i][0], pointsPos[i][1], (150-trajectory[i][3]));
+    } else {
+      strokeWeight(5);
+      stroke("black");
+      trajectory[i][0] = sin(180/points*2*((trajectory[i][2]%(points/2))+counter)-90)
+      trajectory[i][1] = cos(180/points*2*((trajectory[i][2]%(points/2))+counter)-90)
+
+    }
+
+    trajectory[i][3] += 1;
+    if(Math.random() >= 0.5) {
+      trajectory[i][3] += 1;
+    }
   }
 }
 
