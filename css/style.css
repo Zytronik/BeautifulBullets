@@ -1,12 +1,50 @@
 /* General */
 body,
 html {
-	background-color: rgb(65, 65, 65);
+	background-color: rgb(28, 28, 28);
 	color: white;
 	height: 100vh;
 	padding: 0;
 	margin: 0;
 	font-size: 18px;
+	font-family: pixelatedFont;
+}
+
+button {
+	font-family: pixelatedFont;
+	position: relative;
+	background: rgb(226, 226, 226);
+	z-index: 1;
+	font-weight: bold;
+}
+
+button::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 10px;
+	bottom: 10px;
+	left: -10px;
+	right: -10px;
+	background: rgb(226, 226, 226);
+	z-index: -1;
+}
+
+button::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 4px;
+	bottom: 4px;
+	left: -6px;
+	right: -6px;
+	background: rgb(226, 226, 226);
+	z-index: -1;
+}
+
+@font-face {
+	font-family: pixelatedFont;
+	src: url(../fonts/VCR_OSD_MONO_1.001.ttf);
 }
 
 main {
@@ -83,8 +121,14 @@ article.titleScreen .menu {
 	flex-direction: column;
 }
 
+article.titleScreen .menu-point {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 article.titleScreen .menu-point button {
-	width: 100%;
+	width: 85%;
 	padding: 15px 0;
 	font-size: 40px;
 	cursor: pointer;
@@ -104,13 +148,11 @@ article.titleScreen h1 {
 /* Game */
 article.game .characterCanvas {
 	display: block;
-	border: 1px solid red;
 	position: relative;
 	z-index: 2;
 }
 
 article.game .bulletCanvas {
-	border: 1px solid red;
 	display: block;
 	position: absolute;
 	top: 0;
@@ -194,7 +236,7 @@ article.game .challenger-abilitie .grace-bar>div {
 	right: 0;
 }
 
-article.game .challenger-abilitie .grace-bar > span {
+article.game .challenger-abilitie .grace-bar>span {
 	display: block;
 	width: 100%;
 	border-top: 2px solid black;
@@ -202,11 +244,11 @@ article.game .challenger-abilitie .grace-bar > span {
 	position: relative;
 }
 
-article.game .challenger-abilitie .grace-bar > span:first-of-type {
+article.game .challenger-abilitie .grace-bar>span:first-of-type {
 	border: none;
 }
 
-article.game .boss .boss-healthbar{
+article.game .boss .boss-healthbar {
 	top: 100%;
 }
 
@@ -230,12 +272,13 @@ article.game .boss-healthbar .boss-desc {
 	width: 100%;
 }
 
-article.game .boss-healthbar .boss-desc > div {
+article.game .boss-healthbar .boss-desc>div {
 	display: flex;
 	align-items: center;
+	width: 100%;
 }
 
-article.game .boss-healthbar .boss-desc > span {
+article.game .boss-healthbar .boss-desc>span {
 	margin-right: 15px;
 }
 
@@ -256,8 +299,8 @@ article.game .boss-healthbar .life-bar {
 	transform: translateY(-50%);
 }
 
-article.game .boss-healthbar .life-bar > div {
-	width: 80%;
+article.game .boss-healthbar .life-bar>div {
+	width: 0%;
 	height: 100%;
 	position: absolute;
 	background-color: green;
@@ -296,7 +339,7 @@ article.game .challenger-healthbar .heart:last-of-type {
 }
 
 article.game .challenger-healthbar .heart.life::before,
-article.game .challenger-healthbar .heart.life::after{
+article.game .challenger-healthbar .heart.life::after {
 	background: red;
 }
 
@@ -347,12 +390,54 @@ article.characterSelection .rdyButton {
 	cursor: pointer;
 	transition: 300ms;
 	box-shadow: none;
+	background: #242424;
 	border: 0;
+	color: white;
 }
 
-article.characterSelection .rdyButton.ready {
-	background-color: red;
-	color: white;
+article.characterSelection .rdyButton::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 10px;
+	bottom: 10px;
+	transition: 300ms;
+	left: -10px;
+	right: -10px;
+	background: #242424;
+	z-index: -1;
+}
+
+article.characterSelection .rdyButton::after {
+	content: "";
+	display: block;
+	position: absolute;
+	transition: 300ms;
+	top: 4px;
+	bottom: 4px;
+	left: -6px;
+	right: -6px;
+	background: #242424;
+	z-index: -1;
+}
+
+article.characterSelection .rdyButton.ready,
+article.characterSelection .rdyButton.ready::before,
+article.characterSelection .rdyButton.ready::after {
+	background-color: rgb(226, 226, 226);
+	color: black;
+}
+
+article.characterSelection #pageBack {
+	position: absolute;
+	z-index: 10;
+	left: 2%;
+	top: 2%;
+	display: block;
+}
+
+article.characterSelection #pageBack img {
+	width: 15px;
 }
 
 article.characterSelection .characters {
@@ -390,15 +475,41 @@ article.characterSelection .character-wrapper {
 }
 
 article.characterSelection .character-desc {
-	width: 94%;
+	width: 85%;
 	background-color: black;
 	color: white;
-	padding: 1% 5%;
+	padding: 1% 3%;
 	height: 34%;
 	display: flex;
+	position: relative;
+	z-index: 2;
 }
 
-article.characterSelection .character-desc > div{
+article.characterSelection .character-desc::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 15px;
+	bottom: 15px;
+	left: -15px;
+	right: -15px;
+	background: black;
+	z-index: -1;
+}
+
+article.characterSelection .character-desc::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 6px;
+	bottom: 6px;
+	left: -9px;
+	right: -9px;
+	background: black;
+	z-index: -1;
+}
+
+article.characterSelection .character-desc>div {
 	width: 50%;
 }
 
@@ -465,22 +576,23 @@ article.characterSelection .player img.icon {
 	height: 100%;
 	padding: unset;
 	background-color: white;
-	border: 2px solid green;
+	border: 2px solid gray;
 	cursor: pointer;
+	max-width: unset;
 }
 
-article.characterSelection .player img.icon:hover + .ability,
-article.characterSelection .player img.icon:active + .ability,
-article.characterSelection .player img.icon:focus + .ability,
-article.characterSelection .player img.icon + .ability:hover,
-article.characterSelection .player img.icon + .ability:active,
-article.characterSelection .player img.icon + .ability:focus,
-article.characterSelection .player img.icon:hover + .passive,
-article.characterSelection .player img.icon:active + .passive,
-article.characterSelection .player img.icon:focus + .passive,
-article.characterSelection .player img.icon + .passive:hover,
-article.characterSelection .player img.icon + .passive:active,
-article.characterSelection .player img.icon + .passive:focus  {
+article.characterSelection .player img.icon:hover+.ability,
+article.characterSelection .player img.icon:active+.ability,
+article.characterSelection .player img.icon:focus+.ability,
+article.characterSelection .player img.icon+.ability:hover,
+article.characterSelection .player img.icon+.ability:active,
+article.characterSelection .player img.icon+.ability:focus,
+article.characterSelection .player img.icon:hover+.passive,
+article.characterSelection .player img.icon:active+.passive,
+article.characterSelection .player img.icon:focus+.passive,
+article.characterSelection .player img.icon+.passive:hover,
+article.characterSelection .player img.icon+.passive:active,
+article.characterSelection .player img.icon+.passive:focus {
 	visibility: visible;
 	opacity: 1;
 }
@@ -499,12 +611,12 @@ article.characterSelection .player .abilty-wrapper {
 article.characterSelection .player .icon-wrapper {
 	display: flex;
 	margin-top: 30px;
-	gap: 10px;
+	gap: 20px;
 	height: 20%;
 }
 
-article.characterSelection .player img.icon + .ability,
-article.characterSelection .player img.icon + .passive {
+article.characterSelection .player img.icon+.ability,
+article.characterSelection .player img.icon+.passive {
 	position: absolute;
 	left: 50%;
 	top: calc(100% + 0px);
@@ -512,10 +624,19 @@ article.characterSelection .player img.icon + .passive {
 	opacity: 0;
 	color: black;
 	background-color: white;
-	border: 2px solid green;
+	border: 2px solid gray;
 	width: 400%;
-	z-index: 1;
+	z-index: 5;
 	transform: translateX(-50%);
+	padding: 10% 20%;
+	font-size: 16px;
+}
+
+article.characterSelection .player img.icon+.ability h5,
+article.characterSelection .player img.icon+.passive h5 {
+	margin-top: unset;
+	margin-bottom: 5px;
+	font-size: 16px;
 }
 
 article.characterSelection .player img {
@@ -526,11 +647,11 @@ article.characterSelection .player img {
 }
 
 article.characterSelection #player1 {
-	background-color: green;
+	background-color: #0d0d0d;
 }
 
 article.characterSelection #player2 {
-	background-color: blue;
+	background-color: transparent;
 }
 
 article.characterSelection a.control_prev,
@@ -539,16 +660,25 @@ article.characterSelection a.control_next {
 	top: 40%;
 	z-index: 999;
 	display: block;
-	padding: 4% 3%;
+	padding: 5%;
 	width: auto;
 	height: auto;
-	background: #2a2a2a;
 	color: #fff;
 	text-decoration: none;
 	font-weight: 600;
 	font-size: 18px;
 	opacity: 0.8;
 	cursor: pointer;
+}
+
+article.characterSelection a.control_next>img, 
+article.characterSelection a.control_prev>img {
+	width: 40%;
+	object-fit: contain;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
 }
 
 article.characterSelection a.control_prev:hover,
