@@ -275,6 +275,7 @@ article.game .boss-healthbar .boss-desc {
 article.game .boss-healthbar .boss-desc>div {
 	display: flex;
 	align-items: center;
+	width: 100%;
 }
 
 article.game .boss-healthbar .boss-desc>span {
@@ -389,8 +390,9 @@ article.characterSelection .rdyButton {
 	cursor: pointer;
 	transition: 300ms;
 	box-shadow: none;
-	background: rgb(226, 226, 226);
+	background: #242424;
 	border: 0;
+	color: white;
 }
 
 article.characterSelection .rdyButton::before {
@@ -402,7 +404,7 @@ article.characterSelection .rdyButton::before {
 	transition: 300ms;
 	left: -10px;
 	right: -10px;
-	background: rgb(226, 226, 226);
+	background: #242424;
 	z-index: -1;
 }
 
@@ -415,15 +417,24 @@ article.characterSelection .rdyButton::after {
 	bottom: 4px;
 	left: -6px;
 	right: -6px;
-	background: rgb(226, 226, 226);
+	background: #242424;
 	z-index: -1;
 }
 
 article.characterSelection .rdyButton.ready,
 article.characterSelection .rdyButton.ready::before,
 article.characterSelection .rdyButton.ready::after {
-	background-color: #242424;
-	color: white;
+	background-color: rgb(226, 226, 226);
+	color: black;
+}
+
+article.characterSelection #pageBack {
+	position: absolute;
+	z-index: 10;
+}
+
+article.characterSelection #pageBack img {
+	width: 5%;
 }
 
 article.characterSelection .characters {

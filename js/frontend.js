@@ -24,6 +24,7 @@ window.onload = function () {
     });
 
     loadCharacterSelectionScreen();
+    
 }
 
 let rdyUpd = [false, false];
