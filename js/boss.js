@@ -15,9 +15,9 @@ export class Boss {
         this.maxHealth = bossData.stats.health;
         this.currentHealth = this.maxHealth;
 
-        this.ability1 = bossData.ability1;
-        this.ability1CoolDownRequired = bossData.ability1.coolDown * FPS;
-        this.ability1CoolDown = bossData.ability1.coolDown * FPS;
+        this.ability1 = bossData.abilities.ability1;
+        this.ability1CoolDownRequired = bossData.abilities.ability1.coolDown * FPS;
+        this.ability1CoolDown = bossData.abilities.ability1.coolDown * FPS;
 
         // this.ability2 = bossData.ability2;
         // this.ability3 = bossData.ability3;

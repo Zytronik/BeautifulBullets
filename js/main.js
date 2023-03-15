@@ -34,6 +34,7 @@ function gameLoop(currentTime) {
 
     if (timeSinceLastRender >= 1000 / FPS) {
         deltaTime = timeSinceLastRender;
+        console.log(1000 / timeSinceLastRender);
         lastRenderTime = currentTime;
 
         challengerCanvas.updateCanvas();

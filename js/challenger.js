@@ -22,10 +22,10 @@ export class Challenger {
         this.fireRateInFrames = FPS / challengerData.stats.fireRate;
         this.fireRateTracker = 0;
         this.bulletDamage = challengerData.stats.bulletDamage;
-        this.bulletSpeed = challengerData.stats.bulletSpeed;
+        this.bulletSpeed = challengerData.bulletSpeed;
 
         this.moveSpeed = challengerData.stats.moveSpeed;
-        this.shiftSpeed = challengerData.stats.shiftSpeed;
+        this.shiftSpeed = challengerData.shiftSpeed;
 
         this.useSpecialAbility = challengerData.special.use;
         this.specialMaxCharge = 100;

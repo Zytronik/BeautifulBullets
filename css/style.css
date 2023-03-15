@@ -268,10 +268,10 @@ article.characterSelection .player {
 article.characterSelection .rdyButton {
 	position: absolute;
 	bottom: 5%;
-	font-size: 40px;
+	font-size: 35px;
 	left: 50%;
 	transform: translateX(-50%);
-	padding: 1% 25%;
+	padding: 0.5% 25%;
 	cursor: pointer;
 	transition: 300ms;
 	box-shadow: none;
@@ -322,7 +322,7 @@ article.characterSelection .character-desc {
 	background-color: black;
 	color: white;
 	padding: 1% 5%;
-	height: 32%;
+	height: 34%;
 	display: flex;
 }
 
@@ -337,12 +337,17 @@ article.characterSelection .character-desc h4 {
 }
 
 article.characterSelection .stat p {
-	font-size: 75%;
+	font-size: 60%;
 	text-transform: uppercase;
 }
 
+article.characterSelection .character-desc h5 {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
 article.characterSelection .stat-bar {
-	height: 7px;
+	height: 6px;
 	border-radius: 5px;
 	width: 80%;
 	border: 1px solid white;
@@ -378,6 +383,67 @@ article.characterSelection .img-wrapper {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+article.characterSelection .challengerSpecial p {
+	font-size: 80%;
+}
+
+article.characterSelection .player img.icon {
+	height: 100%;
+	padding: unset;
+	background-color: white;
+	border: 2px solid green;
+	cursor: pointer;
+}
+
+article.characterSelection .player img.icon:hover + .ability,
+article.characterSelection .player img.icon:active + .ability,
+article.characterSelection .player img.icon:focus + .ability,
+article.characterSelection .player img.icon + .ability:hover,
+article.characterSelection .player img.icon + .ability:active,
+article.characterSelection .player img.icon + .ability:focus,
+article.characterSelection .player img.icon:hover + .passive,
+article.characterSelection .player img.icon:active + .passive,
+article.characterSelection .player img.icon:focus + .passive,
+article.characterSelection .player img.icon + .passive:hover,
+article.characterSelection .player img.icon + .passive:active,
+article.characterSelection .player img.icon + .passive:focus  {
+	visibility: visible;
+	opacity: 1;
+}
+
+article.characterSelection .player img.icon:hover,
+article.characterSelection .player img.icon:active,
+article.characterSelection .player img.icon:focus {
+	opacity: 0.9;
+}
+
+article.characterSelection .player .abilty-wrapper {
+	position: relative;
+	width: 15%;
+}
+
+article.characterSelection .player .icon-wrapper {
+	display: flex;
+	margin-top: 30px;
+	gap: 10px;
+	height: 20%;
+}
+
+article.characterSelection .player img.icon + .ability,
+article.characterSelection .player img.icon + .passive {
+	position: absolute;
+	left: 50%;
+	top: calc(100% + 0px);
+	visibility: hidden;
+	opacity: 0;
+	color: black;
+	background-color: white;
+	border: 2px solid green;
+	width: 400%;
+	z-index: 1;
+	transform: translateX(-50%);
 }
 
 article.characterSelection .player img {
