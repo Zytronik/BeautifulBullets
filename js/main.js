@@ -25,8 +25,10 @@ export function loadGame(player1, player2) {
 
 window.onresize = function () {
     setTimeout(()=>{
-        challengerCanvas.resizeCanvas();
-        bossCanvas.resizeCanvas();
+        if(challengerCanvas !== undefined && bossCanvas !== undefined){
+            challengerCanvas.resizeCanvas();
+            bossCanvas.resizeCanvas();
+        }
     }, 500);
 }
 
