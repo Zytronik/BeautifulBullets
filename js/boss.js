@@ -12,7 +12,7 @@ export class Boss {
         this.radius = bossData.stats.radius;
 
         this.moveSpeed = bossData.stats.moveSpeed;
-        this.maxHealth = bossData.stats.health;
+        this.maxHealth = bossData.stats.maxHealth;
         this.currentHealth = this.maxHealth;
 
         this.ability1 = bossData.abilities.ability1;
@@ -32,6 +32,10 @@ export class Boss {
     gameTick() {
         this.#move();
         this.#castAbilities();
+    }
+    takeDamageAndCheckDead(damageAmount) {
+        this.currentHealth -= damageAmount;
+        return this.currentHealth <= 0
     }
     #move() {
         let xSpeed = 0;
