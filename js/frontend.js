@@ -1,4 +1,4 @@
-import { loadGame, challenger, currentFPS } from "./main.js";
+import { loadGame, challenger, boss, currentFPS } from "./main.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 
@@ -60,6 +60,19 @@ export function updateGameUI() {
     updateBossChallengerHealthbarPosition();
     updateChallengerSpecialCharge();
     updateFPSCounter();
+    updateChallengerHealthbar();
+}
+
+function updateChallengerHealthbar(){
+    let playersHealthBars = document.querySelectorAll("article.game .player .challenger-healthbar");
+    Array.prototype.forEach.call(playersHealthBars, function (hBar) {
+        Array.prototype.forEach.call(hBar.children, function (h) {
+            h.classList.remove("life");
+        });
+        for (let i = 0; i < challenger.currentHealth; i++) {
+            hBar.children[i].classList.add("life");
+        }
+    });    
 }
 
 function updateChallengerSpecialCharge() {
@@ -95,12 +108,30 @@ function updateFPSCounter(){
 function setupGame() {
     setupChallengerHealthBar();
     setupChallengerSpecialChargeBar();
+    setupBossHealthBar();
 }
 
 function startGame() {
     showPage("game");
     loadGame(getSelectedCharacterPlayer1(), getSelectedCharacterPlayer2());
     setupGame();
+}
+
+function setupBossHealthBar() {
+    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
+    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
+        console.log(boss);
+        hBar.innerHTML = '<div class="boss-desc">' +
+        '<div>' +
+        '<img src="'+CHARACTER_DATA[getSelectedCharacterPlayer2()]["spriteUrl"]+'">' +
+        '<p>'+ CHARACTER_DATA[getSelectedCharacterPlayer2()]["name"] +'</p>' +
+        '</div>' +
+        '<span>60%</span>' +
+        '</div>' +
+        '<div class="life-bar">' +
+        '<div></div>' +
+        '</div>';
+    });
 }
 
 function showPage(pageClass) {

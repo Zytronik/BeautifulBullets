@@ -15,7 +15,7 @@ let bossCanvas;
 export function loadGame(player1, player2) {
     challenger = new Challenger(CHARACTER_DATA[player1].challenger);
     boss = new Boss(CHARACTER_DATA[player2].boss);
-    console.log(boss.currentHealth)
+    //console.log(boss.currentHealth)
 
     challengerCanvas = new GameCanvas(document.querySelector(".player1Canvas"));
     bossCanvas = new GameCanvas(document.querySelector(".player2Canvas"));
@@ -110,7 +110,7 @@ function hitDetection2ab() {
         let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
         let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
         if (xDiffSquared + yDiffSquared < hitRange) {
-            console.log(boss.currentHealth)
+            //console.log(boss.currentHealth)
             challengerBullets.splice(index, 1);
             let isGameOver = boss.takeDamageAndCheckDead(challenger.bulletDamage);
             if (isGameOver) {
