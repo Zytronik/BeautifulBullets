@@ -30,12 +30,13 @@ window.onresize = function () {
 
 let lastRenderTime = 0;
 let deltaTime = 0;
+export let currentFPS = 0;
 function gameLoop(currentTime) {
     const timeSinceLastRender = currentTime - lastRenderTime;
 
     if (timeSinceLastRender >= 1000 / FPS) {
         deltaTime = timeSinceLastRender;
-        console.log(1000 / timeSinceLastRender);
+        currentFPS = Math.round(1000 / timeSinceLastRender);
         lastRenderTime = currentTime;
 
         challengerCanvas.updateCanvas();
