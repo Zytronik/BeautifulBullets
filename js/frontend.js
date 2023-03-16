@@ -218,12 +218,34 @@ function setupGame() {
     setupChallengerHealthBar();
     setupChallengerSpecialChargeBar();
     setupBossHealthBar();
+    setupBossAbilities();
 }
 
 function startGame() {
     showPage("game");
     loadGame(getSelectedCharacterPlayer1(), getSelectedCharacterPlayer2());
     setupGame();
+}
+
+function setupBossAbilities(){
+    let bossAbilitiesPlayers = document.querySelectorAll("article.game .player .boss-abilities");
+    Array.prototype.forEach.call(bossAbilitiesPlayers, function (bossAbilities) {
+        for (var  index in boss.abilities) {/* 
+            console.log(boss.abilities[index]) */
+            bossAbilities.innerHTML += 
+            '<div class="ability-wrapper">'+
+            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
+            '</div>';
+            bossAbilities.innerHTML += 
+            '<div class="ability-wrapper">'+
+            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
+            '</div>';
+            bossAbilities.innerHTML += 
+            '<div class="ability-wrapper">'+
+            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
+            '</div>';
+        }
+    });
 }
 
 function setupBossHealthBar() {

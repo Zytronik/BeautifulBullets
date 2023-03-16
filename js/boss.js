@@ -6,6 +6,9 @@ export class Boss {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT / 6;
 
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+
         this.sprite = new Image();
         this.sprite.src = bossData.spriteUrl;
         this.spriteScaling = bossData.spriteScaling;
@@ -15,6 +18,7 @@ export class Boss {
         this.maxHealth = bossData.stats.maxHealth;
         this.currentHealth = this.maxHealth;
 
+        this.abilities = bossData.abilities;
         this.ability1 = bossData.abilities.ability1;
         this.ability1CoolDownRequired = bossData.abilities.ability1.coolDown * FPS;
         this.ability1CoolDown = bossData.abilities.ability1.coolDown * FPS;
@@ -38,22 +42,23 @@ export class Boss {
         return this.currentHealth <= 0
     }
     #move() {
-        let xSpeed = 0;
-        xSpeed = INPUTS_BOSS.right ? xSpeed + 1 : xSpeed;
-        xSpeed = INPUTS_BOSS.left ? xSpeed - 1 : xSpeed;
+        this.xSpeed = 0;
+        this.ySpeed = 0;
 
-        let ySpeed = 0;
-        ySpeed = INPUTS_BOSS.down ? ySpeed + 1 : ySpeed;
-        ySpeed = INPUTS_BOSS.up ? ySpeed - 1 : ySpeed;
+        this.xSpeed = INPUTS_BOSS.right ? this.xSpeed + 1 : this.xSpeed;
+        this.xSpeed = INPUTS_BOSS.left ? this.xSpeed - 1 : this.xSpeed;
+
+        this.ySpeed = INPUTS_BOSS.down ? this.ySpeed + 1 : this.ySpeed;
+        this.ySpeed = INPUTS_BOSS.up ? this.ySpeed - 1 : this.ySpeed;
 
 
-        if (xSpeed != 0 || ySpeed != 0) {
-            let normalize = Math.sqrt(Math.pow(xSpeed, 2) + Math.pow(ySpeed, 2))
+        if (this.xSpeed != 0 || this.ySpeed != 0) {
+            let normalize = Math.sqrt(Math.pow(this.xSpeed, 2) + Math.pow(this.ySpeed, 2))
             let applySpeed = this.moveSpeed;
             let newX = this.x;
             let newY = this.y;
-            newX += (xSpeed / normalize) * applySpeed;
-            newY += (ySpeed / normalize) * applySpeed;
+            newX += (this.xSpeed / normalize) * applySpeed;
+            newY += (this.ySpeed / normalize) * applySpeed;
             if (checkBoundaries(newX, newY)) {
                 this.x = newX;
                 this.y = newY;

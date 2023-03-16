@@ -253,6 +253,28 @@ article.game .player-wrapper {
 	position: relative;
 }
 
+article.game .challenger .boss-abilities {
+	display: none;
+}
+
+article.game .boss-abilities {
+	position: absolute;
+	left: 100%;
+	bottom: 0;
+	width: 15%;
+	margin-left: 15px;
+}
+
+article.game .boss-abilities .ability-wrapper {
+	margin-top: 15px;
+}
+
+article.game .boss-abilities .ability-wrapper > img {
+	object-fit: contain;
+	width:100%;
+	background-color: white;
+}
+
 article.game .challenger-abilitie {
 	width: 20px;
 	height: 80%;
