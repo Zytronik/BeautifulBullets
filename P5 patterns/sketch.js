@@ -1,4 +1,4 @@
-const bossPosX = 225;
+const bossPosX = 333;
 const bossPosY = 80;
 let pointsPos = [];
 let trajectory = [];
@@ -10,7 +10,7 @@ let boolTrans = true;
 
 function setup() {
   translation = 0;
-  createCanvas(900, 600);
+  createCanvas(1000, 1000);
   background(220);
   // angleMode(DEGREES);
   // pattern1c();
@@ -167,7 +167,7 @@ function pattern1g() {
 function pattern1h() {
   for(let i = 0; i < points; i++) {
       pointsPos.push([mouseX, mouseY]);
-      trajectory.push([0, -10, i, 0]); 
+      trajectory.push([0, -20, i, 0]); 
   }
 }
 
@@ -455,8 +455,8 @@ function pattern10() {
     let angle = Math.atan2(bossPosY-pointsPos[i][1], bossPosX-pointsPos[i][0]),
         maxSpeed = 0.5,
         homingForce = 2;
-    trajectory[i][0] += Math.cos(angle)*(maxSpeed*(homingForce+(homingForce/7)));
-    trajectory[i][1] += Math.sin(angle)*(maxSpeed*(homingForce))/2;
+    trajectory[i][0] += Math.cos(angle)*(maxSpeed*(homingForce+(homingForce/4)));
+    trajectory[i][1] += Math.sin(angle)*(maxSpeed*(homingForce))/3;
     // let vx = Math.cos(angle) * (this.maxSpeed * (1 - homingForce)) + (this.target.vx * homingForce);
     // let vy = Math.sin(angle) * (this.maxSpeed * (1 - homingForce)) + (this.target.vy * homingForce);
     // if (trajectory[i][0] >= 10) {
