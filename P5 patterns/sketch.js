@@ -2,7 +2,7 @@ const bossPosX = 225;
 const bossPosY = 80;
 let pointsPos = [];
 let trajectory = [];
-let points = 50;
+let points = 1;
 let counter = 0;
 let switcherino = true;
 let translation;
@@ -10,12 +10,12 @@ let boolTrans = true;
 
 function setup() {
   translation = 0;
-  createCanvas(450, 600);
+  createCanvas(900, 600);
   background(220);
-  angleMode(DEGREES);
+  // angleMode(DEGREES);
   // pattern1c();
   setInterval(consLog,250);
-  setInterval(pattern1g,1000)
+  setInterval(pattern1h,100)
   // setInterval(pattern1c,1000)
   noFill();
 }
@@ -28,6 +28,7 @@ function draw() {
   circle(bossPosX, bossPosY, 30);
   // circle(mouseX, mouseY, 30);
   // console.log(frameCount)
+
   // pattern3();
   // pattern2();
   // pattern4();
@@ -35,7 +36,8 @@ function draw() {
   // pattern6();
   // pattern7();
   // pattern8();
-  pattern9();
+  // pattern9();
+  pattern10();
   
   colorMode(RGB);
   // noLoop();
@@ -141,18 +143,7 @@ function pattern1f() {
   }
 }
 
-
-function pattern1g() {
-  strokeWeight(5)
-  let random = Math.random();
-  let random2 = Math.random();
-  for(let i = 0; i < points; i++) {
-    pointsPos.push([bossPosX, bossPosY]);
-    trajectory.push([(random-0.5)*3, 1+random2, i, 0]); 
-  }
-}
-
-//double fireworks with random explosion timer + random speed (start)
+//double (half) fireworks with random explosion timer + random speed (start)
 function pattern1g() {
   strokeWeight(5)
   let random  = Math.random(),
@@ -169,6 +160,14 @@ function pattern1g() {
       pointsPos.push([bossPosX, bossPosY]);
       trajectory.push([(random2)*1.5, random4, i, 0, randomExplosionTimer2]); 
     }
+  }
+}
+
+
+function pattern1h() {
+  for(let i = 0; i < points; i++) {
+      pointsPos.push([mouseX, mouseY]);
+      trajectory.push([0, -10, i, 0]); 
   }
 }
 
@@ -439,11 +438,12 @@ function pattern9() {
 
 function pattern10() {
   let border = 50;
-  strokeWeight(5)
+  strokeWeight(5);
+  stroke("black");
   for(let i = 0; i <= pointsPos.length-1; i++) {
     // console.log(pointsPos[i][0])
     point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
-    if (pointsPos[i][0] <= -border || pointsPos[i][0] >= width+border || pointsPos[i][1] <= -border || pointsPos[i][1] >= height+border) {
+    if (pointsPos[i][0] <= -border || pointsPos[i][0] >= width+border || pointsPos[i][1] <= -border || pointsPos[i][1] >= 2*height+border) {
       pointsPos.splice(i, 1);
       trajectory.splice(i, 1)
     } else {
@@ -451,23 +451,21 @@ function pattern10() {
       pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
     }
 
-    if (trajectory[i][3] <= trajectory[i][4]) {
-      noFill();
-      strokeWeight(10);
-      stroke("red");
-      // circle(pointsPos[i][0], pointsPos[i][1], (150-trajectory[i][3]));
-    } else {
-      strokeWeight(5);
-      stroke("black");
-      trajectory[i][0] = sin(180/points*2*((trajectory[i][2]%(points/2))+counter)-90)
-      trajectory[i][1] = cos(180/points*2*((trajectory[i][2]%(points/2))+counter)-90)
+    
+    let angle = Math.atan2(bossPosY-pointsPos[i][1], bossPosX-pointsPos[i][0]),
+        maxSpeed = 0.5,
+        homingForce = 2;
+    trajectory[i][0] += Math.cos(angle)*(maxSpeed*(homingForce+(homingForce/7)));
+    trajectory[i][1] += Math.sin(angle)*(maxSpeed*(homingForce))/2;
+    // let vx = Math.cos(angle) * (this.maxSpeed * (1 - homingForce)) + (this.target.vx * homingForce);
+    // let vy = Math.sin(angle) * (this.maxSpeed * (1 - homingForce)) + (this.target.vy * homingForce);
+    // if (trajectory[i][0] >= 10) {
+    //   trajectory[i][0] = 10;
+    // } else if (trajectory[i][1] >= 12) {
+    //   trajectory[i][1] = 12;
+    // }
 
-    }
 
-    trajectory[i][3] += 1;
-    if(Math.random() >= 0.5) {
-      trajectory[i][3] += 1;
-    }
   }
 }
 
