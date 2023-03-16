@@ -96,7 +96,7 @@ export class Challenger {
     }
     #shootBullets() {
         if (this.fireRateTracker >= this.fireRateInFrames) {
-            let bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 10, [this.homing])
+            let bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 10, [this.homing, 0 ,0])
             challengerBullets.push(bullet);
             this.fireRateTracker = 0;
         } else {
@@ -104,16 +104,18 @@ export class Challenger {
         }
 
         function trajectory() {
-            let translation;
-            let homing = this.attributes[0]
-            if (boss.x - this.x + translation >= 0) {
-                translation = 50;
-            } else {
-                translation = -50;
-            }
-            let x = ((boss.x - this.x + translation) * homing) / this.lifetime * this.framesAlive * homing / (2.5 * homing);
-            let y = -20;
-            return [x, y]
+            let homing = this.attributes[0],
+                prevX = this.attributes[1],
+                prevY = this.attributes[2],
+                angle = Math.atan2(boss.y-this.y, boss.x-this.x),
+                maxSpeed = 0.5,
+                x = Math.cos(angle)*(maxSpeed*(homing+(homing/2)))+prevX,
+                y = Math.sin(angle)*(maxSpeed*(homing))/3+prevY;
+
+            this.attributes[1] = x;
+            this.attributes[2] = y;
+            // console.log(boss.xSpeed)
+            return [x, y-20]
         }
     }
     #specialAbility() {

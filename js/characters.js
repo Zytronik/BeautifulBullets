@@ -55,7 +55,7 @@ export const CHARACTER_DATA = {
 
             // S T A T S 
             "stats": {
-                "radius": 5,
+                "radius": 20,
                 "moveSpeed": 8,
                 "maxHealth": 1000,
             },
