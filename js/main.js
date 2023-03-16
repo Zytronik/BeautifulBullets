@@ -3,7 +3,7 @@ import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS, GRACE_RANGE } from "./gameSettings.js";
 import { CHARACTER_DATA } from "./characters.js";
-import { updateGameUI } from "./frontend.js";
+import { updateGameUI, gamePaused } from "./frontend.js";
 
 export let challenger;
 export let boss;
@@ -57,8 +57,10 @@ function gameLoop() {
     bossCanvas.updateCanvas();
     canvasRenderTime = Math.round(performance.now() - t1);
 
-    t1 = performance.now()
-    gameLogic();
+    t1 = performance.now();
+    if(!gamePaused){
+        gameLogic();
+    }
     gameLogicTime = Math.round(performance.now() - t1);
 
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;

@@ -29,26 +29,57 @@ window.onload = function () {
         showPage("titleScreen");
     });
 
+    document.querySelector("#resumeGame").addEventListener("click", function (e) {
+        resumeGame();
+    });
+
+    document.querySelector("#quitGame").addEventListener("click", function (e) {
+        quitGame();
+    });
+
     loadCharacterSelectionScreen();
-    
+
+    document.onkeydown = function (evt) {
+        evt = evt || window.event;
+        var isEscape = false;
+        if ("key" in evt) {
+            isEscape = (evt.key === "Escape" || evt.key === "Esc");
+        } else {
+            isEscape = (evt.keyCode === 27);
+        }
+        if (isEscape) {
+            let currentPage = getCurrentPage();
+            if(currentPage.classList.contains("characterSelection")){
+                rdyUpd = [false, false];
+                unRdyUpButton();
+                showPage("titleScreen");
+            }else if(currentPage.classList.contains("game")){
+                if(currentPage.querySelector(".pauseScreen").classList.contains("paused")){
+                    resumeGame();
+                }else{
+                    pauseGame();
+                } 
+            } 
+        }
+    };
 }
 
 let rdyUpd = [false, false];
+export let gamePaused = false;
 
-document.onkeydown = function (evt) {
-    evt = evt || window.event;
-    var isEscape = false;
-    if ("key" in evt) {
-        isEscape = (evt.key === "Escape" || evt.key === "Esc");
-    } else {
-        isEscape = (evt.keyCode === 27);
-    }
-    if (isEscape) {
-        rdyUpd = [false, false];
-        unRdyUpButton();
-        showPage("titleScreen")
-    }
-};
+function quitGame(){
+    showPage("titleScreen");
+}
+
+function pauseGame(){
+    gamePaused = true;
+    document.querySelector("article.game .pauseScreen").classList.add("paused");
+}
+
+function resumeGame(){
+    gamePaused = false;
+    document.querySelector("article.game .pauseScreen").classList.remove("paused");
+}
 
 function getSelectedCharacterPlayer1() {
     return document.querySelector("article.characterSelection #player1 .characters").children[1].dataset.character;
@@ -71,7 +102,7 @@ export function updateGameUI() {
     updateBossHealthbar()
 }
 
-function updateChallengerHealthbar(){
+function updateChallengerHealthbar() {
     let playersHealthBars = document.querySelectorAll("article.game .player .challenger-healthbar");
     Array.prototype.forEach.call(playersHealthBars, function (hBar) {
         Array.prototype.forEach.call(hBar.children, function (h) {
@@ -80,7 +111,7 @@ function updateChallengerHealthbar(){
         for (let i = 0; i < challenger.currentHealth; i++) {
             hBar.children[i].classList.add("life");
         }
-    });    
+    });
 }
 
 function convert_color(c) {
@@ -137,12 +168,12 @@ function getHealthbarColors(c1, c2, st) {
     return steps;
 };
 
-function updateBossHealthbar(){
-    var colors = getHealthbarColors('rgb(255, 0, 0)', 'rgb(0, 128, 0)' , 100);
+function updateBossHealthbar() {
+    var colors = getHealthbarColors('rgb(255, 0, 0)', 'rgb(0, 128, 0)', 100);
     let playersHealthBars = document.querySelectorAll("article.game .player .boss-healthbar");
     Array.prototype.forEach.call(playersHealthBars, function (hBar) {
         var life = 100 / boss.maxHealth * boss.currentHealth;
-        if(life >= 0){
+        if (life >= 0) {
             hBar.querySelector(".life-bar > div").style.width = life + "%";
             hBar.querySelector(".boss-desc > span").innerHTML = Math.round(life) + "%";
             hBar.querySelector(".life-bar > div").style.backgroundColor = Object.keys(colors)[Math.floor(life)]
@@ -176,11 +207,11 @@ function setupChallengerHealthBar() {
     });
 }
 
-function updateDebugUI(){
+function updateDebugUI() {
     document.querySelector('#currentFPS > span').innerHTML = currentFPS;
     document.querySelector('#canvasRenderTime > span').innerHTML = canvasRenderTime;
     document.querySelector('#gameLogicTime > span').innerHTML = gameLogicTime;
-    document.querySelector('#totalFrameCalculationTime > span').innerHTML = totalFrameCalculationTime; 
+    document.querySelector('#totalFrameCalculationTime > span').innerHTML = totalFrameCalculationTime;
 }
 
 function setupGame() {
@@ -199,15 +230,15 @@ function setupBossHealthBar() {
     let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
     Array.prototype.forEach.call(playersHealthBar, function (hBar) {
         hBar.innerHTML = '<div class="boss-desc">' +
-        '<div>' +
-        '<img src="'+CHARACTER_DATA[getSelectedCharacterPlayer2()]["spriteUrl"]+'">' +
-        '<p>'+ CHARACTER_DATA[getSelectedCharacterPlayer2()]["name"] +'</p>' +
-        '</div>' +
-        '<span>0%</span>' +
-        '</div>' +
-        '<div class="life-bar">' +
-        '<div></div>' +
-        '</div>';
+            '<div>' +
+            '<img src="' + CHARACTER_DATA[getSelectedCharacterPlayer2()]["spriteUrl"] + '">' +
+            '<p>' + CHARACTER_DATA[getSelectedCharacterPlayer2()]["name"] + '</p>' +
+            '</div>' +
+            '<span>0%</span>' +
+            '</div>' +
+            '<div class="life-bar">' +
+            '<div></div>' +
+            '</div>';
     });
 }
 
@@ -221,11 +252,13 @@ function showPage(pageClass) {
 
 function getCurrentPage() {
     var pages = document.querySelectorAll("main > article");
+    var r = ""
     Array.prototype.forEach.call(pages, function (page) {
         if (!page.classList.contains("hidePage")) {
-            return page;
+            r = page;
         }
     });
+    return r;
 }
 
 function unRdyUpButton() {
@@ -370,9 +403,9 @@ function loadCharactersUI(player) {
         }
         characters +=
             //special challenger
-            '<div class="challengerSpecial">'+
+            '<div class="challengerSpecial">' +
             '<h5>' + CHARACTER_DATA[key]["challenger"]["special"]["abilityName"] + '</h5>' +
-            '<p>' + CHARACTER_DATA[key]["challenger"]["special"]["description"] + '</p>'+
+            '<p>' + CHARACTER_DATA[key]["challenger"]["special"]["description"] + '</p>' +
             '</div>';
         characters +=
             '</div>' +
@@ -394,9 +427,9 @@ function loadCharactersUI(player) {
             '<div class="icon-wrapper">';
         characters +=
             //passive boss
-            '<div class="abilty-wrapper">'+
-            '<img class="icon" src="' + CHARACTER_DATA[key]["boss"]["passive"]["iconUrl"] + '" alt="' + CHARACTER_DATA[key]["boss"]["passive"]["abilityName"] + '">'+
-            '<div class="passive">'+
+            '<div class="abilty-wrapper">' +
+            '<img class="icon" src="' + CHARACTER_DATA[key]["boss"]["passive"]["iconUrl"] + '" alt="' + CHARACTER_DATA[key]["boss"]["passive"]["abilityName"] + '">' +
+            '<div class="passive">' +
             '<h5>' + CHARACTER_DATA[key]["boss"]["passive"]["abilityName"] + '</h5>' +
             '<p>' + CHARACTER_DATA[key]["boss"]["passive"]["description"] + '</p>' +
             '</div>' +
@@ -405,28 +438,28 @@ function loadCharactersUI(player) {
             let ability = CHARACTER_DATA[key]["boss"]["abilities"][i];
             characters +=
                 //abilities boss
-                '<div class="abilty-wrapper">'+
-                '<img class="icon" src="' + ability["iconUrl"] + '" alt="' + ability["abilityName"] + '">'+
-                '<div class="ability">'+
+                '<div class="abilty-wrapper">' +
+                '<img class="icon" src="' + ability["iconUrl"] + '" alt="' + ability["abilityName"] + '">' +
+                '<div class="ability">' +
                 '<h5>' + ability["abilityName"] + '</h5>' +
-                '<p>' + ability["description"] + '</p>'+
-                '</div>'+
-                '</div>'+
+                '<p>' + ability["description"] + '</p>' +
+                '</div>' +
+                '</div>' +
 
-                '<div class="abilty-wrapper">'+
-                '<img class="icon" src="' + ability["iconUrl"] + '" alt="' + ability["abilityName"] + '">'+
-                '<div class="ability">'+
+                '<div class="abilty-wrapper">' +
+                '<img class="icon" src="' + ability["iconUrl"] + '" alt="' + ability["abilityName"] + '">' +
+                '<div class="ability">' +
                 '<h5>' + ability["abilityName"] + '</h5>' +
-                '<p>' + ability["description"] + '</p>'+
-                '</div>'+ 
-                '</div>'+
+                '<p>' + ability["description"] + '</p>' +
+                '</div>' +
+                '</div>' +
 
-                '<div class="abilty-wrapper">'+
-                '<img class="icon" src="' + ability["iconUrl"] + '" alt="' + ability["abilityName"] + '">'+
-                '<div class="ability">'+
+                '<div class="abilty-wrapper">' +
+                '<img class="icon" src="' + ability["iconUrl"] + '" alt="' + ability["abilityName"] + '">' +
+                '<div class="ability">' +
                 '<h5>' + ability["abilityName"] + '</h5>' +
-                '<p>' + ability["description"] + '</p>'+
-                '</div>'+
+                '<p>' + ability["description"] + '</p>' +
+                '</div>' +
                 '</div>';
         }
         characters +=
