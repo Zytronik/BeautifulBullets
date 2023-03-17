@@ -6,8 +6,8 @@ export class Boss {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT / 6;
 
-        this.xSpeed = 0;
-        this.ySpeed = 0;
+        this.xSpeedNormalized = 0;
+        this.ySpeedNormalized = 0;
 
         this.sprite = new Image();
         this.sprite.src = bossData.spriteUrl;
@@ -57,17 +57,12 @@ export class Boss {
             let applySpeed = this.moveSpeed;
             let newX = this.x;
             let newY = this.y;
-            newX += (this.xSpeed / normalize) * applySpeed;
-            newY += (this.ySpeed / normalize) * applySpeed;
-            if (checkBoundaries(newX, newY)) {
-                this.x = newX;
-                this.y = newY;
-            }
-        }
-
-        function checkBoundaries(newX, newY) {
-            return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT / 4;
-
+            this.xSpeedNormalized = this.xSpeed / normalize * applySpeed;
+            this.ySpeedNormalized = this.ySpeed / normalize * applySpeed;
+            newX += this.xSpeedNormalized;
+            newY += this.ySpeedNormalized;
+            this.x = (newX >= 0 && newX <= BOARD_WIDTH) ? newX : this.x;
+            this.y = (newY >= 0 && newY <= BOARD_HEIGHT) ? newY : this.y;
         }
     }
     #castAbilities() {
