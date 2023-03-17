@@ -196,7 +196,7 @@ article.game .player .canvas {
 
 article.game .player .canvas::after {
 	content: "";
-	background-color: rgba(0, 0, 0, 0.6);
+	background-color: rgba(0, 0, 0, 0.8);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -204,6 +204,107 @@ article.game .player .canvas::after {
 	right: 0;
 	width: 100%;
 	height: 100%;
+}
+
+article.game .roundEndScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
+article.game .roundEndScreen.active{
+	z-index: 100;
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+}
+
+@keyframes roundEndScreenWidth {
+	0% {
+		width: 0%;
+	}
+
+	100% {
+		width: 50%;
+	}
+}
+
+@keyframes roundEndScreenOpacity {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+article.game .roundEndScreen.active .roundStatsPlayer1,
+article.game .roundEndScreen.active .roundStatsPlayer2 {
+	animation: roundEndScreenWidth 1s ease-in-out 1s forwards;
+}
+
+article.game .roundEndScreen.active .generalStats > *,
+article.game .roundEndScreen.active .roundStatsPlayer1 > *,
+article.game .roundEndScreen.active .roundStatsPlayer2 > * {
+	animation: roundEndScreenOpacity 0.5s ease-in-out 1.5s forwards;
+}
+
+article.game .roundEndScreen .roundEndScreen-wrapper {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+article.game .roundEndScreen .generalStats {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+article.game .roundEndScreen .generalStats h3 {
+	font-size: 45px;
+	opacity: 0;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1,
+article.game .roundEndScreen .roundStatsPlayer2 {
+	width: 0%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1 h4,
+article.game .roundEndScreen .roundStatsPlayer2 h4 {
+	font-size: 45px;
+	opacity: 0;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1 span,
+article.game .roundEndScreen .roundStatsPlayer2 span{
+	font-size: 300px;
+	opacity: 0;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1{
+	background-color: rgba(13,13,13,0.9);
+}
+
+article.game .roundEndScreen .roundStatsPlayer2{
+	background-color: rgba(28,28,28,0.9);
 }
 
 article.game .pauseScreen {
@@ -267,6 +368,26 @@ article.game .boss-abilities {
 
 article.game .boss-abilities .ability-wrapper {
 	margin-top: 15px;
+	position: relative;
+}
+
+article.game .boss-abilities .ability-wrapper .overlay {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+article.game .boss-abilities .ability-wrapper .overlay > div {
+	background-color: red;
+	height: 0%;
+	bottom: 0;
+	position: absolute;
+	width: 100%;
 }
 
 article.game .boss-abilities .ability-wrapper > img {
@@ -707,10 +828,9 @@ article.characterSelection .player img.icon+.passive h5 {
 }
 
 article.characterSelection .player img {
-	max-width: 90%;
-	max-height: 100%;
+	max-width: 100%;
+	height: 100%;
 	object-fit: contain;
-	padding: 5% 0;
 }
 
 article.characterSelection #player1 {

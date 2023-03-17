@@ -1,6 +1,7 @@
 import { loadGame, challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "./main.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
+import { INPUTS_BOSS } from "./inputSettings.js"
 
 window.onload = function () {
     //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
@@ -54,11 +55,13 @@ window.onload = function () {
                 unRdyUpButton();
                 showPage("titleScreen");
             }else if(currentPage.classList.contains("game")){
-                if(currentPage.querySelector(".pauseScreen").classList.contains("paused")){
-                    resumeGame();
-                }else{
-                    pauseGame();
-                } 
+                if(!roundEndActive){
+                    if(currentPage.querySelector(".pauseScreen").classList.contains("paused")){
+                        resumeGame();
+                    }else{
+                        pauseGame();
+                    }
+                }
             } 
         }
     };
@@ -94,12 +97,21 @@ function updateBossChallengerHealthbarPosition() {
     document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
 }
 
+function updateBossAbilitiesUI(){
+    let bossAbilities = document.querySelectorAll("article.game .boss .boss-abilities > div");
+    Array.prototype.forEach.call(bossAbilities, function (bossAbility, index) {
+        let height = 100 - (100 / boss["ability"+(index + 1)+"CoolDownRequired"] * boss["ability"+(index + 1)+"CoolDown"]);
+        bossAbility.querySelector(".ability-wrapper .overlay > div").style.height = height + "%"
+    });
+}
+
 export function updateGameUI() {
     updateBossChallengerHealthbarPosition();
     updateChallengerSpecialCharge();
     updateDebugUI();
     updateChallengerHealthbar();
-    updateBossHealthbar()
+    updateBossHealthbar();
+    updateBossAbilitiesUI();
 }
 
 function updateChallengerHealthbar() {
@@ -209,9 +221,23 @@ function setupChallengerHealthBar() {
 
 function updateDebugUI() {
     document.querySelector('#currentFPS > span').innerHTML = currentFPS;
+   /*  if(currentFPS >= 58){
+        document.querySelector('#currentFPS').style.color = "green";
+    }else if(currentFPS >= 45){
+        document.querySelector('#currentFPS').style.color = "orange";
+    }else{
+        document.querySelector('#currentFPS').style.color = "red";
+    } */
     document.querySelector('#canvasRenderTime > span').innerHTML = canvasRenderTime;
     document.querySelector('#gameLogicTime > span').innerHTML = gameLogicTime;
     document.querySelector('#totalFrameCalculationTime > span').innerHTML = totalFrameCalculationTime;
+    /* if(totalFrameCalculationTime <= 16){
+        document.querySelector('#totalFrameCalculationTime').style.color = "green";
+    }else if(totalFrameCalculationTime <= 20){
+        document.querySelector('#totalFrameCalculationTime').style.color = "orange";
+    }else{
+        document.querySelector('#totalFrameCalculationTime').style.color = "red";
+    } */
 }
 
 function setupGame() {
@@ -227,22 +253,25 @@ function startGame() {
     setupGame();
 }
 
+let roundEndActive = false;
+
+export function showRoundEndScreen(){
+    roundEndActive = true;
+    document.querySelector("article.game .roundEndScreen").classList.add("active");
+
+}
+
 function setupBossAbilities(){
     let bossAbilitiesPlayers = document.querySelectorAll("article.game .player .boss-abilities");
     Array.prototype.forEach.call(bossAbilitiesPlayers, function (bossAbilities) {
-        for (var  index in boss.abilities) {/* 
-            console.log(boss.abilities[index]) */
+        for (var  index in boss.abilities) {
             bossAbilities.innerHTML += 
-            '<div class="ability-wrapper">'+
+            '<div class="ability-wrapper" data-ability="'+index+'">'+
             '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
-            '</div>';
-            bossAbilities.innerHTML += 
-            '<div class="ability-wrapper">'+
-            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
-            '</div>';
-            bossAbilities.innerHTML += 
-            '<div class="ability-wrapper">'+
-            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
+            '<div class="overlay">'+
+            '<span></span>'+
+            '<div></div>'+
+            '</div>'+
             '</div>';
         }
     });
