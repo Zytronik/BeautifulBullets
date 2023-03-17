@@ -61,15 +61,8 @@ export class Boss {
             this.ySpeedNormalized = this.ySpeed / normalize * applySpeed;
             newX += this.xSpeedNormalized;
             newY += this.ySpeedNormalized;
-            if (checkBoundaries(newX, newY)) {
-                this.x = newX;
-                this.y = newY;
-            }
-        }
-
-        function checkBoundaries(newX, newY) {
-            return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT / 4;
-
+            this.x = (newX >= 0 && newX <= BOARD_WIDTH) ? newX : this.x;
+            this.y = (newY >= 0 && newY <= BOARD_HEIGHT) ? newY : this.y;
         }
     }
     #castAbilities() {
