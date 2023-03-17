@@ -51,12 +51,12 @@ export const CHARACTER_DATA = {
         "boss": {
             // V I S U A L S
             "spriteUrl": "./img/nabil.jpg",
-            "spriteScaling": 0.01,
+            "spriteScaling": 0.04,
 
             // S T A T S 
             "stats": {
-                "radius": 20,
-                "moveSpeed": 8,
+                "radius": 70,
+                "moveSpeed": 3,
                 "maxHealth": 1000,
             },
 

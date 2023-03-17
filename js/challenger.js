@@ -99,17 +99,14 @@ export class Challenger {
 
         function trajectory() {
             let homing = this.attributes[0],
-                prevX = this.attributes[1],
-                prevY = this.attributes[2],
-                angle = Math.atan2(boss.y - this.y, boss.x - this.x),
+                angle = Math.atan2(boss.y-this.y, boss.x-this.x),
                 maxSpeed = 0.5,
-                x = Math.cos(angle) * (maxSpeed * (homing + (homing / 2))) + prevX,
-                y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + prevY;
-
+                x = Math.cos(angle)*(maxSpeed*(homing+(homing/2)))+(boss.xSpeedNormalized*homing/50)+this.attributes[1],
+                y = Math.sin(angle)*(maxSpeed*(homing))/3+(boss.ySpeedNormalized*homing/50)+this.attributes[2];
             this.attributes[1] = x;
             this.attributes[2] = y;
-            // console.log(boss.xSpeed)
-            return [x, y - 20]
+            // console.log(boss.xSpeedNormalized)
+            return [x, y-20]
         }
     }
     #specialAbility() {
