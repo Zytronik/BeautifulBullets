@@ -46,8 +46,6 @@ function gameLoop() {
     let amountWaitedTooLong = currentlyAt - nextCalculationAt;
     if (amountWaitedTooLong > 1000/FPS) {
         amountWaitedTooLong = 0
-    } else if (amountWaitedTooLong < 0) {
-        console.error("THE GAME IS RUNNING TOO SLOW, PLS HELP");
     }
     currentFPS = Math.round(1000 / (currentlyAt - previousFrameAt));
     previousFrameAt = currentlyAt;
@@ -62,7 +60,6 @@ function gameLoop() {
         gameLogic();
     }
     gameLogicTime = Math.round(performance.now() - t1);
-
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
 
     nextCalculationAt = currentlyAt + 1000 / FPS - amountWaitedTooLong;

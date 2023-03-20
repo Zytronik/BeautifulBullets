@@ -1,13 +1,20 @@
-import { PLAYER } from "./matchData";
-
 export class Round {
-    constructor(isFirstHalf) {
-        this.challenger = isFirstHalf ? PLAYER.ONE : PLAYER.TWO;
-        this.boss = isFirstHalf ? PLAYER.TWO : PLAYER.ONE;
-        this.timeSurvivedInFrames = 0;
-        this.timeInGraceInFrames = 0;
-        this.damageDealtToBoss = 0;
-        this.challengerBulletsFired = 0;
-        this.bossBulletsFired = 0;
+    constructor() {
+        this.player1.stats = {
+            selectedCharacter: "",
+            damageDealt: 0,
+            timeSurvivedInFrames: 0,
+            timeInGraceInFrames: 0,
+            challengerBulletsFired: 0,
+            bossBulletsFired: 0,
+        }
+        this.player2.stats = {
+            selectedCharacter: "",
+            damageDealt: 0,
+            timeSurvivedInFrames: 0,
+            timeInGraceInFrames: 0,
+            challengerBulletsFired: 0,
+            bossBulletsFired: 0,
+        }
     }
 }
