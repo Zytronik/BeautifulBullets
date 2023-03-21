@@ -462,7 +462,7 @@ function pattern10() {
   }
 }
 
-
+//challenger shooting multiple beams (cone-like)
 function pattern11() {
   let border = 50,
     c = PI / pow((10-points)*2, 0.011*pow(points,2)-0.178*points+1.211),
