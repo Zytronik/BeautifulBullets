@@ -1,5 +1,8 @@
-let currentGameState;
-const GAMESTATE = {
+import {showPage, resetRdyUps, getSelectedCharacters, setupGameUI, pauseGame, resumeGame} from "./frontend.js";
+import { loadGame } from "./main.js";
+
+export let currentGameState;
+export const GAMESTATE = {
     MAIN_MENU: "MAIN_MENU",
     SETTINGS: "SETTINGS",
     CHARACTER_SELECTION: "CHARACTER_SELECTION",
@@ -23,6 +26,8 @@ STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.GAMEPLAY_ENRAGE,
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.PAUSE_SCREEN, gameplayRegularToPauseScreen)
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGE + GAMESTATE.CHALLENGER_DEATH, gameplayEnrageToChallengerDeath)
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGE + GAMESTATE.PAUSE_SCREEN, gameplayEnrageToPauseScreen)
+STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_REGULAR, pauseScreenToGameplayRegular)
+STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_ENRAGE, pauseScreenToGameplayEnrage)
 STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.MAIN_MENU, pauseScreenToMainMenu)
 STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.SWITCHING_SIDES_CUTSCENE, challengerDeathToSwitchingSidesCutscene)
 STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.GAMEOVER_CUTSCENE, ChallengerDeathToGameOverCutscene)
@@ -40,38 +45,69 @@ export function goToState(GAMESTATE) {
         transitionMethod();
     }
 }
-function mainMenuToSettings() { 
-    console.log("main menu -> settings") 
+function mainMenuToSettings() {
+    console.log("main menu -> settings")
+    showPage("config");
+    currentGameState = GAMESTATE.SETTINGS;
 }
 function mainMenuToCharacterSelection() { 
-    console.log("main menu -> character selection") 
+    console.log("main menu -> character selection");
+    showPage("characterSelection");
+    currentGameState = GAMESTATE.CHARACTER_SELECTION;
 }
 function settingsToMainMenu() { 
-    console.log("settings -> main menu") 
+    console.log("settings -> main menu");
+    showPage("titleScreen");
+    currentGameState = GAMESTATE.MAIN_MENU;
 }
 function characterSelectionToMainMenu() { 
-    console.log("character selection -> main menu") 
+    console.log("character selection -> main menu");
+    showPage("titleScreen");
+    resetRdyUps();
+    currentGameState = GAMESTATE.MAIN_MENU;
 }
 function characterSelectionToGameStartCutscene() { 
-    console.log("character selection -> game start cutscene") 
+    console.log("character selection -> game start cutscene");
+    showPage("game");
+    resetRdyUps();
+    currentGameState = GAMESTATE.GAMESTART_CUTSCENE;
+    //TODO isch nur temporär
+    goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
 function gameStartCutsceneToGameplayRegular() { 
-    console.log("game start cutscene -> gameplay regular") 
+    console.log("game start cutscene -> gameplay regular");
+    loadGame(getSelectedCharacters());
+    setupGameUI();
+    currentGameState = GAMESTATE.GAMEPLAY_REGULAR;
 }
 function gameplayRegularToGameplayEnrage() { 
-    console.log("gameplay regular -> gameplay enrage") 
+    console.log("gameplay regular -> gameplay enrage");
+    currentGameState = GAMESTATE.GAMEPLAY_ENRAGE;
 }
 function gameplayRegularToPauseScreen() { 
-    console.log("gameplay regular -> pause screen") 
+    console.log("gameplay regular -> pause screen");
+    pauseGame();
+    currentGameState = GAMESTATE.PAUSE_SCREEN;
 }
 function gameplayEnrageToChallengerDeath() { 
-    console.log("gameplay enrage -> challenger death") 
+    console.log("gameplay enrage -> challenger death");
 }
 function gameplayEnrageToPauseScreen() { 
-    console.log("gameplay enrage -> pause screen") 
+    console.log("gameplay enrage -> pause screen");
+    currentGameState = GAMESTATE.PAUSE_SCREEN;
+}
+function pauseScreenToGameplayRegular(){
+    console.log("pause screen -> gameplay regular");
+    resumeGame();
+    currentGameState = GAMESTATE.GAMEPLAY_REGULAR;
+}
+function pauseScreenToGameplayEnrage(){
+    console.log("pause screen -> gameplay enrage") 
 }
 function pauseScreenToMainMenu() { 
-    console.log("pause screen -> challenger death") 
+    console.log("pause screen -> main menu");
+    showPage("titleScreen");
+    currentGameState = GAMESTATE.MAIN_MENU;
 }
 function challengerDeathToSwitchingSidesCutscene() { 
     console.log("challenger death -> switching sides cutscene") 
