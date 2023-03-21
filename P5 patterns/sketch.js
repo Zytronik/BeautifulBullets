@@ -2,7 +2,7 @@ const bossPosX = 333;
 const bossPosY = 80;
 let pointsPos = [];
 let trajectory = [];
-let points = 1;
+let points = 10;
 let counter = 0;
 let switcherino = true;
 let translation;
@@ -10,13 +10,13 @@ let boolTrans = true;
 
 function setup() {
   translation = 0;
-  createCanvas(1000, 1000);
+  createCanvas(666, 1000);
   background(220);
   // angleMode(DEGREES);
-  // pattern1c();
+  // pattern1h();
   setInterval(consLog,250);
-  setInterval(pattern1h,100)
-  // setInterval(pattern1c,1000)
+  setInterval(pattern1a,1000)
+  // setInterval(pattern1g,1000)
   noFill();
 }
 
@@ -29,15 +29,16 @@ function draw() {
   // circle(mouseX, mouseY, 30);
   // console.log(frameCount)
 
-  // pattern3();
   // pattern2();
+  // pattern3();
   // pattern4();
   // pattern5();
-  // pattern6();
+  pattern6();
   // pattern7();
   // pattern8();
   // pattern9();
-  pattern10();
+  // pattern10();
+  // pattern11();
   
   colorMode(RGB);
   // noLoop();
@@ -46,7 +47,7 @@ function draw() {
 function pattern1a() {
   let borderWidth = 150;
   strokeWeight(5)
-  counter += 0.5;
+  counter += 0.1;
   for(let i = 0; i < points; i++) {
     // pointsPos.push([(width-borderWidth*2)/points*i+borderWidth, sin(180/points*i)*20+100])
     pointsPos.push([bossPosX+translation, bossPosY]);
@@ -167,7 +168,7 @@ function pattern1g() {
 function pattern1h() {
   for(let i = 0; i < points; i++) {
       pointsPos.push([mouseX, mouseY]);
-      trajectory.push([0, -20, i, 0]); 
+      trajectory.push([0, -20, i, 0, 0]); 
   }
 }
 
@@ -337,14 +338,13 @@ function pattern6() {
       pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
     }
 
-    let factor = 1.5;
+    let factor = 0.03;
     if(trajectory[i][3] <= 60) {
-      trajectory[i][0] = sin(360/points*(trajectory[i][2]))/2
-      trajectory[i][1] = cos(360/points*(trajectory[i][2]))/2+1
+      trajectory[i][0] = sin(TWO_PI/points*(trajectory[i][2]))/2
+      trajectory[i][1] = cos(TWO_PI/points*(trajectory[i][2]))/2+1
     } else {
-      trajectory[i][0] = sin(360/points*(trajectory[i][2])+trajectory[i][3]*factor)+(mouseX-pointsPos[i][0])/160
-      trajectory[i][1] = cos(360/points*(trajectory[i][2])+trajectory[i][3]*factor)+1
-      // console.log(trajectory[i][0])
+      trajectory[i][0] = sin(TWO_PI/points*(trajectory[i][2])+trajectory[i][3]*factor)+(mouseX-pointsPos[i][0])/160
+      trajectory[i][1] = cos(TWO_PI/points*(trajectory[i][2])+trajectory[i][3]*factor)+1      // console.log(trajectory[i][0])
     }
     trajectory[i][3] += 1;
 
@@ -355,7 +355,7 @@ function pattern6() {
 // homing beam bo brrr points=1 100ms
 function pattern7() {
   let border = 50;
-  // strokeWeight(5)
+  strokeWeight(5)
   for(let i = 0; i <= pointsPos.length-1; i++) {
     // console.log(pointsPos[i][0])
     point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
@@ -436,6 +436,7 @@ function pattern9() {
   }
 }
 
+//challenger shooting 
 function pattern10() {
   let border = 50;
   strokeWeight(5);
@@ -457,15 +458,43 @@ function pattern10() {
         homingForce = 2;
     trajectory[i][0] += Math.cos(angle)*(maxSpeed*(homingForce+(homingForce/4)));
     trajectory[i][1] += Math.sin(angle)*(maxSpeed*(homingForce))/3;
-    // let vx = Math.cos(angle) * (this.maxSpeed * (1 - homingForce)) + (this.target.vx * homingForce);
-    // let vy = Math.sin(angle) * (this.maxSpeed * (1 - homingForce)) + (this.target.vy * homingForce);
-    // if (trajectory[i][0] >= 10) {
-    //   trajectory[i][0] = 10;
-    // } else if (trajectory[i][1] >= 12) {
-    //   trajectory[i][1] = 12;
+  }
+}
+
+
+function pattern11() {
+  let border = 50,
+      c = PI/8,
+      angle = 0;
+  strokeWeight(5);
+  stroke("black");
+  for(let i = 0; i <= pointsPos.length-1; i++) {
+    // console.log(pointsPos[i][0])
+    point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
+    if (pointsPos[i][0] <= -border || pointsPos[i][0] >= width+border || pointsPos[i][1] <= -border || pointsPos[i][1] >= 2*height+border) {
+      pointsPos.splice(i, 1);
+      trajectory.splice(i, 1)
+    } else {
+      pointsPos[i][0] = pointsPos[i][0]+trajectory[i][0];
+      pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
+    }
+    if (trajectory[i] == undefined) {
+      break;
+    }
+    trajectory[i][0] = sin(c/(points-1)*trajectory[i][2]+PI-c/2)*10+trajectory[i][3];
+    trajectory[i][1] = cos(c/(points-1)*trajectory[i][2]+PI-c/2)-20+trajectory[i][4]
+
+    // if (points/2 > trajectory[i][2]) {
+      angle = Math.atan2(bossPosY-pointsPos[i][1], bossPosX-pointsPos[i][0])-c/(points-1)*(trajectory[i][2])
+    // } else if (points/2 == trajectory[i][2]) {
+    //   angle = Math.atan2(bossPosY-pointsPos[i][1], bossPosX-pointsPos[i][0])
+    // } else {
+    //   angle = Math.atan2(bossPosY-pointsPos[i][1], bossPosX-pointsPos[i][0])-c/(points-1)*(trajectory[i][2])
     // }
-
-
+    let maxSpeed = 0.5,
+        homingForce = 2;
+    trajectory[i][3] += Math.cos(angle+c/(points-1)*trajectory[i][2])*(maxSpeed*(homingForce+(homingForce/4)));
+    trajectory[i][4] += Math.sin(angle+c/(points-1)*trajectory[i][2])*(maxSpeed*(homingForce))/3;
   }
 }
 
