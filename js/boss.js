@@ -32,7 +32,6 @@ export class Boss {
 
         // this.enrage = bossData.enrage;
     }
-
     gameTick() {
         this.#move();
         this.#castAbilities();
@@ -40,6 +39,15 @@ export class Boss {
     takeDamageAndCheckDead(damageAmount) {
         this.currentHealth -= damageAmount;
         return this.currentHealth <= 0
+    }
+    reset() {
+        this.x = BOARD_WIDTH / 2;
+        this.y = BOARD_HEIGHT / 6;
+        this.xSpeedNormalized = 0;
+        this.ySpeedNormalized = 0;
+        this.currentHealth = this.maxHealth;
+        this.ability1CoolDown = bossData.abilities.ability1.coolDown * FPS;
+        this.passiveCoolDown = bossData.passive.frequency * FPS;
     }
     #move() {
         this.xSpeed = 0;
