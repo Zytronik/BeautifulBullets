@@ -3,7 +3,7 @@ import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS, GRACE_RANGE } from "./gameSettings.js";
 import { CHARACTER_DATA } from "./characters.js";
-import { updateGameUI, gamePaused } from "./frontend.js";
+import { updateGameUI, gamePaused,showRoundEndScreen } from "./frontend.js";
 
 export let challenger;
 export let boss;
@@ -46,8 +46,6 @@ function gameLoop() {
     let amountWaitedTooLong = currentlyAt - nextCalculationAt;
     if (amountWaitedTooLong > 1000/FPS) {
         amountWaitedTooLong = 0
-    } else if (amountWaitedTooLong < 0) {
-        console.error("THE GAME IS RUNNING TOO SLOW, PLS HELP");
     }
     currentFPS = Math.round(1000 / (currentlyAt - previousFrameAt));
     previousFrameAt = currentlyAt;
@@ -62,7 +60,6 @@ function gameLoop() {
         gameLogic();
     }
     gameLogicTime = Math.round(performance.now() - t1);
-
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
 
     nextCalculationAt = currentlyAt + 1000 / FPS - amountWaitedTooLong;
@@ -89,6 +86,7 @@ function gameLogic() {
 }
 
 function gameOver() {
+    showRoundEndScreen();
     console.log("G A M E   O V E R");
 }
 

@@ -112,7 +112,7 @@ export const CHARACTER_DATA = {
             },
             "passive": {
                 "use": function () {
-                    let bulletAmount = 50;
+                    let bulletAmount = 20;
                     let lifetime = 10
                     for (let i = 0; i < bulletAmount; i++) {
                         let attributes = [i, bulletAmount, 0, lifetime * FPS]
@@ -183,7 +183,7 @@ export const CHARACTER_DATA = {
 
                 "abilityName": "Blankbomb",
                 "description": "Destroys all bullets on the screen.",
-                "iconUrl": "img/special.png",
+                "iconUrl": "img/special.jpg",
             },
         },
 
@@ -283,18 +283,18 @@ export const CHARACTER_DATA = {
         }
     },
 
-    "dirtChan": {
-        "name": "Dirt-chan",
-        "spriteUrl": "./img/bg.png",
+    "yoimiya": {
+        "name": "Yoimiya Naganohara",
+        "spriteUrl": "./img/yoimiya/portrait.png",
 
         // C H A L L E N G E R
         "challenger": {
 
             // V I S U A L S
-            "spriteUrl": "./img/bg.png",
-            "spriteScaling": 30,
-            "radius": 5,
-            "hitboxColor": "red",
+            "spriteUrl": "./img/yoimiya/challenger.png",
+            "spriteScaling": 110,
+            "radius": 8,
+            "hitboxColor": "black",
             "bulletVisuals": {
                 "radius": 5,
                 "color": "blue"
@@ -302,10 +302,10 @@ export const CHARACTER_DATA = {
 
             // S T A T S 
             "stats": {
-                "health": 4,
-                "homing": 0.8,
-                "fireRate": 8, // Bullets per Second
-                "bulletDamage": 4.8,
+                "health": 3,
+                "homing": 1.1,
+                "fireRate": 12, // Bullets per Second
+                "bulletDamage": 4.1,
                 "moveSpeed": 9,
             },
             "shiftSpeed": 1.2,
@@ -322,9 +322,9 @@ export const CHARACTER_DATA = {
                 "passiveChargeSpeed": 2, // Charge per second
                 "duration": 0,
 
-                "abilityName": "Blankbomb",
-                "description": "Destroys all bullets on the screen.",
-                "iconUrl": "img/special.png",
+                "abilityName": "Machine Gun Bow",
+                "description": "Shoots Bullets faster for a limited Time.",
+                "iconUrl": "img/yoimiya/special.jpg",
             },
         },
 
@@ -419,7 +419,7 @@ export const CHARACTER_DATA = {
 
                 "abilityName": "Passive",
                 "description": "This is a description for a Passive Ability.",
-                "iconUrl": "img/passive.png",
+                "iconUrl": "img/yoimiya/special.jpg",
             },
         }
     },

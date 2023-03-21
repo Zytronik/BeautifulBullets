@@ -77,14 +77,8 @@ export class Challenger {
             let newY = this.y;
             newX += (xSpeed / normalize) * applySpeed;
             newY += (ySpeed / normalize) * applySpeed;
-            if (checkBoundaries(newX, newY)) {
-                this.x = newX;
-                this.y = newY;
-            }
-        }
-
-        function checkBoundaries(newX, newY) {
-            return newX >= 0 && newX <= BOARD_WIDTH && newY >= 0 && newY <= BOARD_HEIGHT;
+            this.x = (newX >= 0 && newX <= BOARD_WIDTH) ? newX : this.x;
+            this.y = (newY >= 0 && newY <= BOARD_HEIGHT) ? newY : this.y;
         }
     }
     #gainPassiveCharge() {
@@ -96,7 +90,7 @@ export class Challenger {
     }
     #shootBullets() {
         if (this.fireRateTracker >= this.fireRateInFrames) {
-            let bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 10, [this.homing, 0 ,0])
+            let bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 10, [this.homing, 0, 0])
             challengerBullets.push(bullet);
             this.fireRateTracker = 0;
         } else {
