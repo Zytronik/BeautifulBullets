@@ -112,7 +112,7 @@ export const CHARACTER_DATA = {
             },
             "passive": {
                 "use": function () {
-                    let bulletAmount = 15;
+                    let bulletAmount = 50;
                     let lifetime = 10
                     for (let i = 0; i < bulletAmount; i++) {
                         let attributes = [i, bulletAmount, 0, lifetime * FPS]
