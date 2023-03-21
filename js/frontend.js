@@ -1,19 +1,19 @@
-import { loadGame, challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "./main.js";
+import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "./main.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
-import { INPUTS_BOSS } from "./inputSettings.js"
+import { goToState, GAMESTATE, currentGameState } from "./gameStateManager.js";
 
 window.onload = function () {
     //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
 
     document.querySelector("#play").addEventListener("click", function (e) {
         e.preventDefault();
-        showPage("characterSelection");
+        goToState(GAMESTATE.CHARACTER_SELECTION);
     });
 
     document.querySelector("#config").addEventListener("click", function (e) {
         e.preventDefault();
-        showPage("config");
+        goToState(GAMESTATE.SETTINGS);
     });
 
     document.querySelector("#rdyButton1").addEventListener("click", function (e) {
@@ -25,17 +25,15 @@ window.onload = function () {
     });
 
     document.querySelector("#pageBack").addEventListener("click", function (e) {
-        rdyUpd = [false, false];
-        unRdyUpButton();
-        showPage("titleScreen");
+        goToState(GAMESTATE.MAIN_MENU);
     });
 
     document.querySelector("#resumeGame").addEventListener("click", function (e) {
-        resumeGame();
+        goToState(GAMESTATE.GAMEPLAY_REGULAR);
     });
 
     document.querySelector("#quitGame").addEventListener("click", function (e) {
-        quitGame();
+        goToState(GAMESTATE.MAIN_MENU);
     });
 
     loadCharacterSelectionScreen();
@@ -49,20 +47,20 @@ window.onload = function () {
             isEscape = (evt.keyCode === 27);
         }
         if (isEscape) {
-            let currentPage = getCurrentPage();
-            if(currentPage.classList.contains("characterSelection")){
-                rdyUpd = [false, false];
-                unRdyUpButton();
-                showPage("titleScreen");
-            }else if(currentPage.classList.contains("game")){
-                if(!roundEndActive){
-                    if(currentPage.querySelector(".pauseScreen").classList.contains("paused")){
-                        resumeGame();
-                    }else{
-                        pauseGame();
-                    }
-                }
-            } 
+            console.log("hello");
+            if(currentGameState === GAMESTATE.SETTINGS){
+                goToState(GAMESTATE.MAIN_MENU);
+            }
+
+            if(currentGameState === GAMESTATE.CHARACTER_SELECTION){
+                goToState(GAMESTATE.MAIN_MENU);
+            }
+
+            if(currentGameState === GAMESTATE.GAMEPLAY_REGULAR){
+                goToState(GAMESTATE.PAUSE_SCREEN);
+            }else if(currentGameState === GAMESTATE.PAUSE_SCREEN){
+                goToState(GAMESTATE.GAMEPLAY_REGULAR);
+            }
         }
     };
 }
@@ -70,39 +68,39 @@ window.onload = function () {
 let rdyUpd = [false, false];
 export let gamePaused = false;
 
-function quitGame(){
-    showPage("titleScreen");
+export function resetRdyUps(){
+    rdyUpd = [false, false];
+    document.querySelector("#rdyButton1").classList.remove("ready");
+    document.querySelector("#rdyButton2").classList.remove("ready");
 }
 
-function pauseGame(){
-    gamePaused = true;
-    document.querySelector("article.game .pauseScreen").classList.add("paused");
-}
-
-function resumeGame(){
+export function resumeGame(){
     gamePaused = false;
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
 }
 
-function getSelectedCharacterPlayer1() {
-    return document.querySelector("article.characterSelection #player1 .characters").children[1].dataset.character;
+export function pauseGame(){
+    gamePaused = true;
+    document.querySelector("article.game .pauseScreen").classList.add("paused");
 }
 
-function getSelectedCharacterPlayer2() {
-    return document.querySelector("article.characterSelection #player2 .characters").children[1].dataset.character;
+export function getSelectedCharacters(){
+    return [document.querySelector("article.characterSelection #player1 .characters").children[1].dataset.character, document.querySelector("article.characterSelection #player2 .characters").children[1].dataset.character];
 }
 
-function updateBossChallengerHealthbarPosition() {
-    document.querySelector(':root').style.setProperty('--bossChallengerHealthX', challenger.x * CANVAS_UNIT + 'px');
-    document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
+export function setupGameUI() {
+    setupChallengerHealthBar();
+    setupChallengerSpecialChargeBar();
+    setupBossHealthBar();
+    setupBossAbilities();
 }
 
-function updateBossAbilitiesUI(){
-    let bossAbilities = document.querySelectorAll("article.game .boss .boss-abilities > div");
-    Array.prototype.forEach.call(bossAbilities, function (bossAbility, index) {
-        let height = 100 - (100 / boss["ability"+(index + 1)+"CoolDownRequired"] * boss["ability"+(index + 1)+"CoolDown"]);
-        bossAbility.querySelector(".ability-wrapper .overlay > div").style.height = height + "%"
+export function showPage(pageClass) {
+    var pages = document.querySelectorAll("main > article");
+    Array.prototype.forEach.call(pages, function (page) {
+        page.classList.add("hidePage");
     });
+    document.querySelector("article." + pageClass).classList.remove("hidePage");
 }
 
 export function updateGameUI() {
@@ -126,60 +124,6 @@ function updateChallengerHealthbar() {
     });
 }
 
-function convert_color(c) {
-    var color;
-    if (c.indexOf('rgb') == -1) {
-        color = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
-        color = color ? [
-            parseInt(color[1], 16),
-            parseInt(color[2], 16),
-            parseInt(color[3], 16)
-        ] : [255, 255, 255];
-    } else {
-        color = c.split('(')[1].split(')')[0].split(',');
-        for (var i = 0; i < color.length; i++) {
-            color[i] = parseInt(color[i]);
-        }
-    }
-    return color;
-};
-
-function getHealthbarColors(c1, c2, st) {
-    c1 = convert_color(c1);
-    c2 = convert_color(c2);
-    var s_r = Math.floor((c1[0] - c2[0]) / st);
-    var s_g = Math.floor((c1[1] - c2[1]) / st);
-    var s_b = Math.floor((c1[2] - c2[2]) / st);
-    var steps = {};
-    var cth = function (c) {
-        var h = c.toString(16);
-        return h.length == 1 ? "0" + h : h;
-    };
-    var toHEX = function (v) {
-        return "#" + cth(v[0]) + cth(v[1]) + cth(v[2]);
-    };
-    var toRGB = function (v) {
-        return 'rgb(' + v.join(',') + ')';
-    };
-    steps[toRGB(c1)] = {
-        hex: toHEX(c1).toUpperCase(),
-        rgb: toRGB(c1)
-    };
-    for (var i = 0; i < st; i++) {
-        if ((c1[0] - s_r) > 0) c1[0] -= s_r;
-        if ((c1[1] - s_g) > 0) c1[1] -= s_g;
-        if ((c1[2] - s_b) > 0) c1[2] -= s_b;
-        c1[0] = (c1[0] > 255) ? 255 : c1[0];
-        c1[1] = (c1[1] > 255) ? 255 : c1[1];
-        c1[2] = (c1[2] > 255) ? 255 : c1[2];
-        if (!steps[toRGB(c1)]) steps[toRGB(c1)] = {
-            hex: toHEX(c1).toUpperCase(),
-            rgb: toRGB(c1)
-        };
-    }
-    return steps;
-};
-
 function updateBossHealthbar() {
     var colors = getHealthbarColors('rgb(255, 0, 0)', 'rgb(0, 128, 0)', 100);
     let playersHealthBars = document.querySelectorAll("article.game .player .boss-healthbar");
@@ -200,121 +144,29 @@ function updateChallengerSpecialCharge() {
     }
 }
 
-function setupChallengerSpecialChargeBar() {
-    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
-    for (let i = 0; i < barCount; i++) {
-        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
-    }
-}
-
-function setupChallengerHealthBar() {
-    let healthCount = CHARACTER_DATA[getSelectedCharacterPlayer1()]["challenger"]["stats"]["health"];
-    let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        var hearts = "";
-        for (let i = 0; i < healthCount; i++) {
-            hearts += '<div class="heart"></div>';
-        }
-        hBar.innerHTML = hearts;
-    });
-}
-
 function updateDebugUI() {
     document.querySelector('#currentFPS > span').innerHTML = currentFPS;
-   /*  if(currentFPS >= 58){
-        document.querySelector('#currentFPS').style.color = "green";
-    }else if(currentFPS >= 45){
-        document.querySelector('#currentFPS').style.color = "orange";
-    }else{
-        document.querySelector('#currentFPS').style.color = "red";
-    } */
     document.querySelector('#canvasRenderTime > span').innerHTML = canvasRenderTime;
     document.querySelector('#gameLogicTime > span').innerHTML = gameLogicTime;
     document.querySelector('#totalFrameCalculationTime > span').innerHTML = totalFrameCalculationTime;
-    /* if(totalFrameCalculationTime <= 16){
-        document.querySelector('#totalFrameCalculationTime').style.color = "green";
-    }else if(totalFrameCalculationTime <= 20){
-        document.querySelector('#totalFrameCalculationTime').style.color = "orange";
-    }else{
-        document.querySelector('#totalFrameCalculationTime').style.color = "red";
-    } */
 }
 
-function setupGame() {
-    setupChallengerHealthBar();
-    setupChallengerSpecialChargeBar();
-    setupBossHealthBar();
-    setupBossAbilities();
+
+function updateBossChallengerHealthbarPosition() {
+    document.querySelector(':root').style.setProperty('--bossChallengerHealthX', challenger.x * CANVAS_UNIT + 'px');
+    document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
 }
 
-function startGame() {
-    showPage("game");
-    loadGame(getSelectedCharacterPlayer1(), getSelectedCharacterPlayer2());
-    setupGame();
+function updateBossAbilitiesUI(){
+    let bossAbilities = document.querySelectorAll("article.game .boss .boss-abilities > div");
+    Array.prototype.forEach.call(bossAbilities, function (bossAbility, index) {
+        let height = 100 - (100 / boss["ability"+(index + 1)+"CoolDownRequired"] * boss["ability"+(index + 1)+"CoolDown"]);
+        bossAbility.querySelector(".ability-wrapper .overlay > div").style.height = height + "%"
+    });
 }
-
-let roundEndActive = false;
 
 export function showRoundEndScreen(){
-    roundEndActive = true;
     document.querySelector("article.game .roundEndScreen").classList.add("active");
-
-}
-
-function setupBossAbilities(){
-    let bossAbilitiesPlayers = document.querySelectorAll("article.game .player .boss-abilities");
-    Array.prototype.forEach.call(bossAbilitiesPlayers, function (bossAbilities) {
-        for (var  index in boss.abilities) {
-            bossAbilities.innerHTML += 
-            '<div class="ability-wrapper" data-ability="'+index+'">'+
-            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
-            '<div class="overlay">'+
-            '<span></span>'+
-            '<div></div>'+
-            '</div>'+
-            '</div>';
-        }
-    });
-}
-
-function setupBossHealthBar() {
-    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        hBar.innerHTML = '<div class="boss-desc">' +
-            '<div>' +
-            '<img src="' + CHARACTER_DATA[getSelectedCharacterPlayer2()]["spriteUrl"] + '">' +
-            '<p>' + CHARACTER_DATA[getSelectedCharacterPlayer2()]["name"] + '</p>' +
-            '</div>' +
-            '<span>0%</span>' +
-            '</div>' +
-            '<div class="life-bar">' +
-            '<div></div>' +
-            '</div>';
-    });
-}
-
-function showPage(pageClass) {
-    var pages = document.querySelectorAll("main > article");
-    Array.prototype.forEach.call(pages, function (page) {
-        page.classList.add("hidePage");
-    });
-    document.querySelector("article." + pageClass).classList.remove("hidePage");
-}
-
-function getCurrentPage() {
-    var pages = document.querySelectorAll("main > article");
-    var r = ""
-    Array.prototype.forEach.call(pages, function (page) {
-        if (!page.classList.contains("hidePage")) {
-            r = page;
-        }
-    });
-    return r;
-}
-
-function unRdyUpButton() {
-    document.querySelector("#rdyButton1").classList.remove("ready");
-    document.querySelector("#rdyButton2").classList.remove("ready");
 }
 
 function rdyUpPlayer1(rdyButton) {
@@ -331,7 +183,7 @@ function rdyUpPlayer2(rdyButton) {
 
 function checkRdyButton() {
     if (rdyUpd[0] && rdyUpd[1]) {
-        startGame()
+        goToState(GAMESTATE.GAMESTART_CUTSCENE);
     }
 }
 
@@ -390,40 +242,6 @@ function loadCharacterSelectionScreen() {
             }
         });
     });
-}
-
-const highestStats = getHighestStats();
-
-function getHighestStats() {
-    let stats = {
-        "challenger": [],
-        "boss": [],
-    };
-    for (var key in CHARACTER_DATA) {
-        for (const k in CHARACTER_DATA[key]["challenger"]["stats"]) {
-            if (stats["challenger"][k] !== undefined) {
-                if (CHARACTER_DATA[key]["challenger"]["stats"][k] >= stats["challenger"][k]) {
-                    stats["challenger"][k] = CHARACTER_DATA[key]["challenger"]["stats"][k];
-                }
-            } else {
-                stats["challenger"][k] = CHARACTER_DATA[key]["challenger"]["stats"][k];
-            }
-        }
-        for (const k in CHARACTER_DATA[key]["boss"]["stats"]) {
-            if (stats["boss"][k] !== undefined) {
-                if (CHARACTER_DATA[key]["boss"]["stats"][k] >= stats["boss"][k]) {
-                    stats["boss"][k] = CHARACTER_DATA[key]["boss"]["stats"][k];
-                }
-            } else {
-                stats["boss"][k] = CHARACTER_DATA[key]["boss"]["stats"][k];
-            }
-        }
-    }
-    return stats;
-}
-
-function calculateStat(stat, value, player) {
-    return 100 / highestStats[player][stat] * value;
 }
 
 function loadCharactersUI(player) {
@@ -522,3 +340,142 @@ function loadCharactersUI(player) {
     }
     player.querySelector(".characters").innerHTML = characters;
 }
+
+const highestStats = getHighestStats();
+
+function calculateStat(stat, value, player) {
+    return 100 / highestStats[player][stat] * value;
+}
+
+function getHighestStats() {
+    let stats = {
+        "challenger": [],
+        "boss": [],
+    };
+    for (var key in CHARACTER_DATA) {
+        for (const k in CHARACTER_DATA[key]["challenger"]["stats"]) {
+            if (stats["challenger"][k] !== undefined) {
+                if (CHARACTER_DATA[key]["challenger"]["stats"][k] >= stats["challenger"][k]) {
+                    stats["challenger"][k] = CHARACTER_DATA[key]["challenger"]["stats"][k];
+                }
+            } else {
+                stats["challenger"][k] = CHARACTER_DATA[key]["challenger"]["stats"][k];
+            }
+        }
+        for (const k in CHARACTER_DATA[key]["boss"]["stats"]) {
+            if (stats["boss"][k] !== undefined) {
+                if (CHARACTER_DATA[key]["boss"]["stats"][k] >= stats["boss"][k]) {
+                    stats["boss"][k] = CHARACTER_DATA[key]["boss"]["stats"][k];
+                }
+            } else {
+                stats["boss"][k] = CHARACTER_DATA[key]["boss"]["stats"][k];
+            }
+        }
+    }
+    return stats;
+}
+
+function setupChallengerHealthBar() {
+    let healthCount = CHARACTER_DATA[getSelectedCharacters()[0]]["challenger"]["stats"]["health"];
+    let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
+    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
+        var hearts = "";
+        for (let i = 0; i < healthCount; i++) {
+            hearts += '<div class="heart"></div>';
+        }
+        hBar.innerHTML = hearts;
+    });
+}
+
+function setupChallengerSpecialChargeBar() {
+    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
+    for (let i = 0; i < barCount; i++) {
+        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
+    }
+}
+
+function setupBossAbilities(){
+    let bossAbilitiesPlayers = document.querySelectorAll("article.game .player .boss-abilities");
+    Array.prototype.forEach.call(bossAbilitiesPlayers, function (bossAbilities) {
+        for (var  index in boss.abilities) {
+            bossAbilities.innerHTML += 
+            '<div class="ability-wrapper" data-ability="'+index+'">'+
+            '<img src="'+boss.abilities[index].iconUrl+'" alt="'+boss.abilities[index].abilityName+'">'+
+            '<div class="overlay">'+
+            '<span></span>'+
+            '<div></div>'+
+            '</div>'+
+            '</div>';
+        }
+    });
+}
+
+function setupBossHealthBar() {
+    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
+    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
+        hBar.innerHTML = '<div class="boss-desc">' +
+            '<div>' +
+            '<img src="' + CHARACTER_DATA[getSelectedCharacters()[1]]["spriteUrl"] + '">' +
+            '<p>' + CHARACTER_DATA[getSelectedCharacters()[1]]["name"] + '</p>' +
+            '</div>' +
+            '<span>0%</span>' +
+            '</div>' +
+            '<div class="life-bar">' +
+            '<div></div>' +
+            '</div>';
+    });
+}
+
+function convert_color(c) {
+    var color;
+    if (c.indexOf('rgb') == -1) {
+        color = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c);
+        color = color ? [
+            parseInt(color[1], 16),
+            parseInt(color[2], 16),
+            parseInt(color[3], 16)
+        ] : [255, 255, 255];
+    } else {
+        color = c.split('(')[1].split(')')[0].split(',');
+        for (var i = 0; i < color.length; i++) {
+            color[i] = parseInt(color[i]);
+        }
+    }
+    return color;
+};
+
+function getHealthbarColors(c1, c2, st) {
+    c1 = convert_color(c1);
+    c2 = convert_color(c2);
+    var s_r = Math.floor((c1[0] - c2[0]) / st);
+    var s_g = Math.floor((c1[1] - c2[1]) / st);
+    var s_b = Math.floor((c1[2] - c2[2]) / st);
+    var steps = {};
+    var cth = function (c) {
+        var h = c.toString(16);
+        return h.length == 1 ? "0" + h : h;
+    };
+    var toHEX = function (v) {
+        return "#" + cth(v[0]) + cth(v[1]) + cth(v[2]);
+    };
+    var toRGB = function (v) {
+        return 'rgb(' + v.join(',') + ')';
+    };
+    steps[toRGB(c1)] = {
+        hex: toHEX(c1).toUpperCase(),
+        rgb: toRGB(c1)
+    };
+    for (var i = 0; i < st; i++) {
+        if ((c1[0] - s_r) > 0) c1[0] -= s_r;
+        if ((c1[1] - s_g) > 0) c1[1] -= s_g;
+        if ((c1[2] - s_b) > 0) c1[2] -= s_b;
+        c1[0] = (c1[0] > 255) ? 255 : c1[0];
+        c1[1] = (c1[1] > 255) ? 255 : c1[1];
+        c1[2] = (c1[2] > 255) ? 255 : c1[2];
+        if (!steps[toRGB(c1)]) steps[toRGB(c1)] = {
+            hex: toHEX(c1).toUpperCase(),
+            rgb: toRGB(c1)
+        };
+    }
+    return steps;
+};
