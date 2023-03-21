@@ -25,6 +25,7 @@ export class Challenger {
         this.fireRateTracker = 0;
         this.bulletDamage = challengerData.stats.bulletDamage;
         this.bulletSpeed = challengerData.bulletSpeed;
+        this.bullets = 2;
 
         this.moveSpeed = challengerData.stats.moveSpeed;
         this.shiftSpeed = challengerData.shiftSpeed;
@@ -61,6 +62,17 @@ export class Challenger {
         }
         return this.currentHealth === 0;
     }
+    reset() {
+        this.x = BOARD_WIDTH / 2;
+        this.y = BOARD_HEIGHT * 5 / 6;
+        this.currentHealth = this.health;
+        this.isInvincible = false;
+        this.iFramesCounter = 0;
+        this.fireRateTracker = 0;
+        this.specialCharge = 0;
+        this.specialActiveFor = 0;
+        this.specialActive = false;
+    }
     #move() {
         let xSpeed = 0;
         xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
@@ -90,22 +102,37 @@ export class Challenger {
     }
     #shootBullets() {
         if (this.fireRateTracker >= this.fireRateInFrames) {
-            let bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 10, [this.homing, 0, 0])
-            challengerBullets.push(bullet);
-            this.fireRateTracker = 0;
+            for (let i = 0; i < this.bullets; i++) {
+                let bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 10, [this.homing, 0, 0, i, this.bullets])
+                challengerBullets.push(bullet);
+                this.fireRateTracker = 0;
+            }
         } else {
             this.fireRateTracker++
         }
 
         function trajectory() {
             let homing = this.attributes[0],
-                angle = Math.atan2(boss.y-this.y, boss.x-this.x),
-                maxSpeed = 0.5,
-                x = Math.cos(angle)*(maxSpeed*(homing+(homing/2)))+(boss.xSpeedNormalized*homing/50)+this.attributes[1],
-                y = Math.sin(angle)*(maxSpeed*(homing))/3+(boss.ySpeedNormalized*homing/50)+this.attributes[2];
-            this.attributes[1] = x;
-            this.attributes[2] = y;
-            // console.log(boss.xSpeedNormalized)
+                x = 0,
+                y = 0;
+            if (this.attributes[4] == 1) {
+                let angle = Math.atan2(boss.y-this.y, boss.x-this.x);
+                x = Math.cos(angle)*(maxSpeed*(homing+(homing/4)))+this.attributes[1];
+                y = Math.sin(angle)*(maxSpeed*(homing))/3+this.attributes[2];
+                // x = Math.cos(angle)*(maxSpeed*(homing+(homing/2)))+(boss.xSpeedNormalized*homing/50)+this.attributes[1],
+                // y = Math.sin(angle)*(maxSpeed*(homing))/3+(boss.ySpeedNormalized*homing/50)+this.attributes[2];
+                this.attributes[1] = x;
+                this.attributes[2] = y;
+            } else {
+                let c = Math.PI / ((10-this.attributes[4])*2)**(0.011*this.attributes[4]**2-0.178*this.attributes[4]+1.211),
+                    maxSpeed = 0.5,
+                    angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (this.attributes[4]-1) * this.attributes[3]);
+                x = Math.sin(c / (this.attributes[4]-1) * this.attributes[3] + Math.PI - c / 2) * 10 + this.attributes[1];
+                y = Math.cos(c / (this.attributes[4]-1) * this.attributes[3] + Math.PI - c / 2) - 20 + this.attributes[2];
+                this.attributes[1] += Math.cos(angle + c / (this.attributes[4] - 1) * this.attributes[3]) * (maxSpeed * (homing + homing / 3));
+                this.attributes[2] += Math.sin(angle + c / (this.attributes[4] - 1) * this.attributes[3]) * maxSpeed * homing / 4;
+                // console.log(this.attributes[4]);
+            }
             return [x, y-20]
         }
     }
