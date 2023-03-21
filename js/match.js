@@ -1,6 +1,5 @@
 import { FPS } from "./gameSettings.js";
 import { boss, challenger } from "./main.js";
-import { Round } from "./round.js"
 
 // exampleMatchSettings = {
 //     timeLimit: 120 * FPS,
@@ -19,6 +18,7 @@ export class Match {
         this.scoreP1 = 0;
         this.scoreP2 = 0;
         this.matchWinner;
+        this.swapSidesNeeded = true;
         this.matchSettings = {
             timeLimit: matchSettings.timeLimit,
             firstTo: matchSettings.firstTo,
@@ -42,6 +42,7 @@ export class Match {
     swapSides() {
         this.boss = PLAYER.ONE;
         this.challenger = PLAYER.TWO;
+        this.swapSidesNeeded = !this.swapSidesNeeded;
     }
     decideRoundWinner() {
         if (this.matchSettings.matchDecider === MATCH_DECIDING_FACTORS.DAMAGE_DEALT) {
@@ -95,6 +96,9 @@ export class Match {
                 }
             }
         }
+    }
+    hasRoundFinished(){
+        return this.swapSidesNeeded;
     }
     startNextRound() {
         this.previousRounds.push(this.currentRound);

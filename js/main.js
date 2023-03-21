@@ -3,7 +3,9 @@ import { Challenger } from "./challenger.js";
 import { Boss } from "./boss.js";
 import { FPS, GRACE_RANGE } from "./gameSettings.js";
 import { CHARACTER_DATA } from "./characters.js";
-import { updateGameUI, gamePaused,showRoundEndScreen } from "./frontend.js";
+import { updateGameUI, gamePaused } from "./frontend.js";
+import { Match, MATCH_DECIDING_FACTORS } from "./match.js";
+import { GAMESTATE, goToState } from "./gameStateManager.js";
 
 export let challenger;
 export let boss;
@@ -11,10 +13,18 @@ export let bossBullets = [];
 export let challengerBullets = [];
 let challengerCanvas;
 let bossCanvas;
+export let match;
+
+let matchSettings = {
+    timeLimit: 120 * FPS,
+    firstTo: 3,
+    matchDecider: MATCH_DECIDING_FACTORS.DAMAGE_DEALT,
+};
 
 export function loadGame([player1, player2]) {
     challenger = new Challenger(CHARACTER_DATA[player1].challenger);
     boss = new Boss(CHARACTER_DATA[player2].boss);
+    match = new Match(CHARACTER_DATA[player1], CHARACTER_DATA[player2], matchSettings);
 
     challengerCanvas = new GameCanvas(document.querySelector(".player1Canvas"));
     bossCanvas = new GameCanvas(document.querySelector(".player2Canvas"));
@@ -67,6 +77,7 @@ function gameLoop() {
 }
 
 function gameLogic() {
+    match.updateTime();
     challenger.gameTick();
     boss.gameTick();
     bossBullets.forEach(function (bullet, index) {
@@ -83,11 +94,6 @@ function gameLogic() {
     });
     hitDetection2ab();
     updateGameUI();
-}
-
-function gameOver() {
-    showRoundEndScreen();
-    console.log("G A M E   O V E R");
 }
 
 //(a-b)^2 = a^2 - 2ab + b^2
@@ -108,7 +114,7 @@ function hitDetection2ab() {
             bossBullets.splice(index, 1);
             let isGameOver = challenger.takeDamageAndCheckDead();
             if (isGameOver) {
-                gameOver();
+                goToState(GAMESTATE.CHALLENGER_DEATH);
             }
         }
         if (xDiffSquared + yDiffSquared < GRACE_RANGE + hitRange) {
@@ -129,7 +135,7 @@ function hitDetection2ab() {
             challengerBullets.splice(index, 1);
             let isGameOver = boss.takeDamageAndCheckDead(challenger.bulletDamage);
             if (isGameOver) {
-                gameOver();
+                goToState(GAMESTATE.GAMEPLAY_ENRAGE);
             }
         }
     });
