@@ -51,7 +51,7 @@ export const CHARACTER_DATA = {
         "boss": {
             // V I S U A L S
             "spriteUrl": "./img/nabil.jpg",
-            "spriteScaling": 0.04,
+            "spriteScaling": 30,
 
             // S T A T S 
             "stats": {
@@ -152,7 +152,7 @@ export const CHARACTER_DATA = {
 
             // V I S U A L S
             "spriteUrl": "./img/challenger.png",
-            "spriteScaling": 30,
+            "spriteScaling": 100,
             "radius": 5,
             "hitboxColor": "red",
             "bulletVisuals": {
@@ -191,7 +191,7 @@ export const CHARACTER_DATA = {
         "boss": {
             // V I S U A L S
             "spriteUrl": "./img/challenger.png",
-            "spriteScaling": 0.01,
+            "spriteScaling": 100,
 
             // S T A T S 
             "stats": {
@@ -330,8 +330,8 @@ export const CHARACTER_DATA = {
         // B O S S
         "boss": {
             // V I S U A L S
-            "spriteUrl": "./img/bg.png",
-            "spriteScaling": 0.01,
+            "spriteUrl": "./img/yoimiya/boss.png",
+            "spriteScaling": 110,
 
             // S T A T S 
             "stats": {

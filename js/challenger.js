@@ -62,6 +62,17 @@ export class Challenger {
         }
         return this.currentHealth === 0;
     }
+    reset() {
+        this.x = BOARD_WIDTH / 2;
+        this.y = BOARD_HEIGHT * 5 / 6;
+        this.currentHealth = this.health;
+        this.isInvincible = false;
+        this.iFramesCounter = 0;
+        this.fireRateTracker = 0;
+        this.specialCharge = 0;
+        this.specialActiveFor = 0;
+        this.specialActive = false;
+    }
     #move() {
         let xSpeed = 0;
         xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
