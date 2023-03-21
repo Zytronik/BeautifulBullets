@@ -62,7 +62,8 @@ export class Boss {
             newX += this.xSpeedNormalized;
             newY += this.ySpeedNormalized;
             this.x = (newX >= 0 && newX <= BOARD_WIDTH) ? newX : this.x;
-            this.y = (newY >= BOARD_HEIGHT * 3 / 4 && newY <= BOARD_HEIGHT) ? newY : this.y;
+            this.y = (newY >= 0 && newY <= BOARD_HEIGHT * 2 / 7) ? newY : this.y;
+            console.log((newY >= 0 && newY <= BOARD_HEIGHT * 2 / 4))
         }
     }
     #castAbilities() {

@@ -74,8 +74,8 @@ export class GameCanvas {
     #drawBoss() {
         //can potentially be stored
         let bossAspectRatio = boss.sprite.width / boss.sprite.height;
-        let bossWidth = CANVAS_UNIT * boss.sprite.width * bossAspectRatio * boss.spriteScaling;
-        let bossHeight = CANVAS_UNIT * boss.sprite.height * boss.spriteScaling;
+        let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
+        let bossHeight = CANVAS_UNIT * boss.spriteScaling;
         this.characterCtx.drawImage(
             boss.sprite,
             CANVAS_UNIT * boss.x - bossWidth / 2,
