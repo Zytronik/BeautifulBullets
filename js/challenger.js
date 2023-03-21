@@ -38,6 +38,8 @@ export class Challenger {
         this.specialDuration = challengerData.special.duration;
         this.specialActiveFor = 0;
         this.specialActive = false;
+        
+        this.timeInGraceInFrames = 0;
     }
     gameTick() {
         this.#move();
@@ -52,6 +54,7 @@ export class Challenger {
         } else {
             this.specialCharge += this.specialGraceChargeSpeed;
         }
+        this.timeInGraceInFrames++;
     }
     takeDamageAndCheckDead() {
         if (!this.isInvincible) {
@@ -71,6 +74,7 @@ export class Challenger {
         this.specialCharge = 0;
         this.specialActiveFor = 0;
         this.specialActive = false;
+        this.timeInGraceInFrames = 0;
     }
     #move() {
         let xSpeed = 0;
