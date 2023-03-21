@@ -25,7 +25,7 @@ export class Challenger {
         this.fireRateTracker = 0;
         this.bulletDamage = challengerData.stats.bulletDamage;
         this.bulletSpeed = challengerData.bulletSpeed;
-        this.bullets = 2;
+        this.bullets = 1;
 
         this.moveSpeed = challengerData.stats.moveSpeed;
         this.shiftSpeed = challengerData.shiftSpeed;
@@ -113,6 +113,7 @@ export class Challenger {
 
         function trajectory() {
             let homing = this.attributes[0],
+                maxSpeed = 0.5,
                 x = 0,
                 y = 0;
             if (this.attributes[4] == 1) {
@@ -125,7 +126,6 @@ export class Challenger {
                 this.attributes[2] = y;
             } else {
                 let c = Math.PI / ((10-this.attributes[4])*2)**(0.011*this.attributes[4]**2-0.178*this.attributes[4]+1.211),
-                    maxSpeed = 0.5,
                     angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (this.attributes[4]-1) * this.attributes[3]);
                 x = Math.sin(c / (this.attributes[4]-1) * this.attributes[3] + Math.PI - c / 2) * 10 + this.attributes[1];
                 y = Math.cos(c / (this.attributes[4]-1) * this.attributes[3] + Math.PI - c / 2) - 20 + this.attributes[2];
