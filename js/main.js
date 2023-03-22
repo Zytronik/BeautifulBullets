@@ -6,7 +6,7 @@ import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./data/match.js";
 import { FPS, GRACE_RANGE } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
-import { GO_BACK_BUTTON } from "./settings/inputSettings.js";
+import { GO_BACK_BUTTON, INPUTS_CHEATS } from "./settings/inputSettings.js";
 
 export let challenger;
 export let boss;
@@ -176,5 +176,13 @@ export function handleGoBackButton() {
         } else {
             goToState(GAMESTATE.GAMEPLAY_REGULAR);
         }
+    }
+}
+
+export function challengerImmortality() {
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
+        challenger.currentHealth = -1;
+        challenger.bulletDamage = 0;
+        console.log("You dirty Cheater");
     }
 }

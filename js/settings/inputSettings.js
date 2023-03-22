@@ -1,4 +1,4 @@
-import { handleGoBackButton } from "../main.js";
+import { challengerImmortality, handleGoBackButton } from "../main.js";
 
 export const INPUTS_CHALLENGER = {
     left: false,
@@ -16,6 +16,13 @@ export const INPUTS_BOSS = {
     ability1: false,
     ability2: false,
     ability3: false,
+}
+
+export const INPUTS_CHEATS = {
+    h: false,
+    a: false,
+    c: false,
+    k: false,
 }
 
 export let CHALLENGER_BUTTONS = {
@@ -38,6 +45,13 @@ export let BOSS_BUTTONS = {
 }
 
 export let GO_BACK_BUTTON = "Escape";
+
+export let CHEAT_BUTTONS = {
+    h: "KeyH",
+    a: "KeyA",
+    c: "KeyC",
+    k: "KeyK",
+}
 
 document.addEventListener("keydown", (event) => {
     //Challenger
@@ -76,6 +90,21 @@ document.addEventListener("keydown", (event) => {
     if (event.code === GO_BACK_BUTTON) {
         handleGoBackButton();
     }
+
+    // ***** Super Secret Sauce Cheaty Cheat Code Section *****
+    if (event.code === CHEAT_BUTTONS.h) {
+        INPUTS_CHEATS.h = true;
+    } else if (event.code === CHEAT_BUTTONS.a) {
+        INPUTS_CHEATS.a = true;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = true;
+    } else if (event.code === CHEAT_BUTTONS.k) {
+        INPUTS_CHEATS.k = true;
+    }
+
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k) {
+        challengerImmortality();
+    }
 });
 
 document.addEventListener("keyup", (event) => {
@@ -109,5 +138,16 @@ document.addEventListener("keyup", (event) => {
         INPUTS_BOSS.ability2 = false;
     } else if (event.code === BOSS_BUTTONS.ability3) {
         INPUTS_BOSS.ability3 = false;
+    }
+
+    // ***** Super Secret Sauce Cheaty Cheat Code Section *****
+    if (event.code === CHEAT_BUTTONS.h) {
+        INPUTS_CHEATS.h = false;
+    } else if (event.code === CHEAT_BUTTONS.a) {
+        INPUTS_CHEATS.a = false;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = false;
+    } else if (event.code === CHEAT_BUTTONS.k) {
+        INPUTS_CHEATS.k = false;
     }
 });

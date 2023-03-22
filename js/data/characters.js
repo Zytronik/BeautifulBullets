@@ -505,9 +505,6 @@ export const CHARACTER_DATA = {
                         if (Math.random() <= 0.997 && this.attributes[4] == false) {
                             x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI/2) * 2 + boss.xSpeedNormalized;
                             y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI/2) * 2 + boss.ySpeedNormalized;
-                            // console.log(boss.xSpeedNormalized)
-                            // this.x = boss.x - this.attributes[5]
-                            // this.y = boss.y - this.attributes[6]
                             this.attributes[7] = this.x;
                             this.attributes[8] = this.y;
                             this.attributes[2] += 0.4;
