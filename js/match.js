@@ -1,5 +1,5 @@
 import { FPS } from "./gameSettings.js";
-import { boss, challenger } from "./main.js";
+import { boss, challenger } from "./gameLoop.js";
 
 // exampleMatchSettings = {
 //     timeLimit: 120 * FPS,

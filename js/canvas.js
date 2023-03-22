@@ -1,5 +1,5 @@
 import { INPUTS_CHALLENGER } from "./inputSettings.js"
-import { challenger, boss, bossBullets, challengerBullets } from "./main.js";
+import { challenger, boss, bossBullets, challengerBullets } from "./gameLoop.js";
 import { BOARD_WIDTH } from "./gameSettings.js";
 
 export let CANVAS_UNIT;
@@ -102,7 +102,7 @@ export class GameCanvas {
         });
         challengerBullets.forEach(bullet => {
             this.bulletCtx.beginPath();
-            this.bulletCtx.fillStyle = 'red';
+            this.bulletCtx.fillStyle = bullet.color;
             this.bulletCtx.arc(
                 CANVAS_UNIT * bullet.x,
                 CANVAS_UNIT * bullet.y,

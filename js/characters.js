@@ -1,4 +1,4 @@
-import { boss, bossBullets, challenger, challengerBullets } from "./main.js";
+import { boss, bossBullets, challenger, challengerBullets } from "./gameLoop.js";
 import { Bullet } from "./bullet.js";
 import { FPS } from "./gameSettings.js";
 

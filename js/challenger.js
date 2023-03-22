@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "./gameSettings.js";
 import { INPUTS_CHALLENGER } from "./inputSettings.js";
 import { Bullet } from "./bullet.js";
-import { challengerBullets, boss } from "./main.js";
+import { challengerBullets, boss } from "./gameLoop.js";
 
 export class Challenger {
     constructor(challengerData) {

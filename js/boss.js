@@ -30,6 +30,10 @@ export class Boss {
         this.passiveFrequency = bossData.passive.frequency * FPS;
         this.passiveCoolDown = bossData.passive.frequency * FPS;
 
+        this.isEnraged = false;
+        this.enrageAbility
+        this.enrageFrequency = bossData.passive.frequency * FPS;
+        this.enrageCoolDown = bossData.passive.frequency * FPS;
         // this.enrage = bossData.enrage;
     }
     gameTick() {

@@ -97,12 +97,13 @@ function gameLogic() {
             challengerBullets.splice(index, 1);
         }
     });
-    hitDetection2ab();
+    hitDetectionChallenger();
+    hitDetectionBoss();
     updateGameUI();
 }
 
 //(a-b)^2 = a^2 - 2ab + b^2
-function hitDetection2ab() {
+function hitDetectionChallenger() {
     // TODO:
     // freshly spawned bullet shouldnt hurt
 
@@ -126,7 +127,9 @@ function hitDetection2ab() {
             challenger.gainGraceCharge();
         }
     });
+}
 
+function hitDetectionBoss(){
     const bossX = boss.x;
     const bossX2 = boss.x * boss.x;
     const bossY = boss.y;
@@ -138,8 +141,8 @@ function hitDetection2ab() {
         let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
         if (xDiffSquared + yDiffSquared < hitRange) {
             challengerBullets.splice(index, 1);
-            let isGameOver = boss.takeDamageAndCheckDead(challenger.bulletDamage);
-            if (isGameOver) {
+            let activateEnrage = boss.takeDamageAndCheckDead(challenger.bulletDamage);
+            if (activateEnrage) {
                 goToState(GAMESTATE.GAMEPLAY_ENRAGE);
             }
         }
