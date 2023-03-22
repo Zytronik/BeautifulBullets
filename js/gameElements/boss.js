@@ -75,6 +75,9 @@ export class Boss {
             newY += this.ySpeedNormalized;
             this.x = (newX >= 0 && newX <= BOARD_WIDTH) ? newX : this.x;
             this.y = (newY >= 0 && newY <= BOARD_HEIGHT * 2 / 7) ? newY : this.y;
+        } else {
+            this.xSpeedNormalized = 0;
+            this.ySpeedNormalized = 0;
         }
     }
     #castAbilities() {
