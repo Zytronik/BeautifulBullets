@@ -1,4 +1,4 @@
-import {showPage, resetRdyUps, getSelectedCharacters, setupGameUI, pauseGame, resumeGame, showRoundEndScreen } from "./frontend.js";
+import {showPage, resetRdyUps, getSelectedCharacters, setupGameUI, pauseGame, resumeGame, showRoundEndScreen, switchSidesAnimations } from "./frontend.js";
 import { loadGame, match } from "./main.js";
 
 export let currentGameState;
@@ -74,18 +74,19 @@ function characterSelectionToGameStartCutscene() {
     console.log("character selection -> game start cutscene");
     showPage("game");
     resetRdyUps();
+    loadGame(getSelectedCharacters());
+    setupGameUI();
     currentGameState = GAMESTATE.GAMESTART_CUTSCENE;
     //TODO isch nur temporär
     goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
 function gameStartCutsceneToGameplayRegular() { 
     console.log("game start cutscene -> gameplay regular");
-    loadGame(getSelectedCharacters());
-    setupGameUI();
     currentGameState = GAMESTATE.GAMEPLAY_REGULAR;
 }
 function gameplayRegularToGameplayEnrage() { 
     console.log("gameplay regular -> gameplay enrage");
+    pauseGame();
     currentGameState = GAMESTATE.GAMEPLAY_ENRAGE;
 }
 function gameplayRegularToPauseScreen() {
@@ -118,7 +119,8 @@ function pauseScreenToGameplayRegular(){
     currentGameState = GAMESTATE.GAMEPLAY_REGULAR;
 }
 function pauseScreenToGameplayEnrage(){
-    console.log("pause screen -> gameplay enrage") 
+    console.log("pause screen -> gameplay enrage");
+    currentGameState = GAMESTATE.GAMEPLAY_ENRAGE;
 }
 function pauseScreenToMainMenu() { 
     console.log("pause screen -> main menu");
@@ -126,29 +128,37 @@ function pauseScreenToMainMenu() {
     currentGameState = GAMESTATE.MAIN_MENU;
 }
 function challengerDeathToSwitchingSidesCutscene() { 
-    console.log("challenger death -> switching sides cutscene") 
+    console.log("challenger death -> switching sides cutscene");
+    currentGameState = GAMESTATE.SWITCHING_SIDES_CUTSCENE;
+    switchSidesAnimations();
+    match.swapSides();
 }
 function challengerDeathToRoundOverCutscene(){
     console.log("challenger death -> round over cutscene");
-    showRoundEndScreen();
+    showRoundEndScreen(match.scoreP1, match.scoreP2);
     currentGameState = GAMESTATE.ROUNDOVER_CUTSCENE;
 }
 function challengerDeathToGameOverCutscene() { 
     console.log("challenger death -> game over cutscene");
+    currentGameState = GAMESTATE.challengerDeathToGameOverCutscene;
 }
 function switchingSidesCutsceneToGameStartCutscene() { 
     console.log("switching sides cutscene -> game start cutscene");
+    currentGameState = GAMESTATE.GAMESTART_CUTSCENE;
+    //TODO isch nur temporär
+    goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
 function roundOverCutsceneToGameStartCutscene(){
     console.log("round over cutscene -> game start cutscene");
-
     currentGameState = GAMESTATE.GAMESTART_CUTSCENE;
 }
 function gameOverCutsceneToResultScreen() { 
-    console.log("game over cutscene -> result screen") 
+    console.log("game over cutscene -> result screen");
+    currentGameState = GAMESTATE.RESULT_SCREEN;
 }
 function resultScreenToCharacterSelection() { 
-    console.log("result screen -> character selection") 
+    console.log("result screen -> character selection");
+    currentGameState = GAMESTATE.CHARACTER_SELECTION;
 }
 
 

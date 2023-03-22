@@ -89,6 +89,12 @@ article.hidePage {
 	text-align: right;
 }
 
+.fadeOut {
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
 /* Variables */
 :root {
 	--heartWidth: 25px;
@@ -206,6 +212,70 @@ article.game .player .canvas::after {
 	height: 100%;
 }
 
+article.game .switchingSides {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+	transition: 600ms;
+}
+
+article.game .switchingSides .switchingSides-wrapper {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.game .switchingSides.active .switchingSides-wrapper::before,
+article.game .switchingSides.active .switchingSides-wrapper::after {
+	height: 10%;
+}
+
+article.game .switchingSides .switchingSides-wrapper::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	background-color: black;
+	z-index: 2;
+	width: 100%;
+	height: 0%;
+	transition: 800ms;
+}
+
+article.game .switchingSides .switchingSides-wrapper::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: black;
+	z-index: 2;
+	width: 100%;
+	height: 0%;
+	transition: 800ms;
+}
+
+article.game .switchingSides.active .switchingSides-wrapper h3{
+	font-size: 65px;
+}
+
+article.game .switchingSides .switchingSides-wrapper h3 {
+	font-size: 5px;
+	transition: 800ms;
+	text-align: center;
+}
+
 article.game .roundEndScreen {
 	position: fixed;
 	top: 0;
@@ -220,7 +290,8 @@ article.game .roundEndScreen {
 	pointer-events: none;
 }
 
-article.game .roundEndScreen.active{
+article.game .roundEndScreen.active,
+article.game .switchingSides.active {
 	z-index: 100;
 	visibility: visible;
 	opacity: 1;
@@ -356,6 +427,7 @@ article.game .player-wrapper {
 
 article.game .challenger .boss-abilities {
 	display: none;
+	transition: 1000ms;
 }
 
 article.game .boss-abilities {
@@ -403,6 +475,7 @@ article.game .challenger-abilitie {
 	left: -20px;
 	background-color: white;
 	bottom: 0;
+	transition: 1000ms;
 }
 
 article.game .boss .challenger-abilitie {
@@ -438,6 +511,7 @@ article.game .challenger-abilitie .grace-bar>span:first-of-type {
 
 article.game .boss .boss-healthbar {
 	top: 100%;
+	transition: 1000ms;
 }
 
 article.game .boss-healthbar {

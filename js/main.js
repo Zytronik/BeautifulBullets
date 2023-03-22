@@ -11,8 +11,8 @@ export let challenger;
 export let boss;
 export let bossBullets = [];
 export let challengerBullets = [];
-let challengerCanvas;
-let bossCanvas;
+let player1Canvas;
+let player2Canvas;
 export let match;
 
 let matchSettings = {
@@ -21,22 +21,27 @@ let matchSettings = {
     matchDecider: MATCH_DECIDING_FACTORS.DAMAGE_DEALT,
 };
 
+export function switchBossWithChallenger(currentChallenger, currentBoss){
+    challenger = new Challenger(CHARACTER_DATA[currentBoss].challenger);
+    boss = new Boss(CHARACTER_DATA[currentChallenger].boss);
+}
+
 export function loadGame([player1, player2]) {
     challenger = new Challenger(CHARACTER_DATA[player1].challenger);
     boss = new Boss(CHARACTER_DATA[player2].boss);
     match = new Match(CHARACTER_DATA[player1], CHARACTER_DATA[player2], matchSettings);
 
-    challengerCanvas = new GameCanvas(document.querySelector(".player1Canvas"));
-    bossCanvas = new GameCanvas(document.querySelector(".player2Canvas"));
+    player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
+    player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
 
     requestAnimationFrame(gameLoop);
 }
 
 window.onresize = function () {
     setTimeout(()=>{
-        if(challengerCanvas !== undefined && bossCanvas !== undefined){
-            challengerCanvas.resizeCanvas();
-            bossCanvas.resizeCanvas();
+        if(player1Canvas !== undefined && player2Canvas !== undefined){
+            player1Canvas.resizeCanvas();
+            player2Canvas.resizeCanvas();
         }
     }, 800);
 }
@@ -61,8 +66,8 @@ function gameLoop() {
     previousFrameAt = currentlyAt;
 
     let t1 = performance.now()
-    challengerCanvas.updateCanvas();
-    bossCanvas.updateCanvas();
+    player1Canvas.updateCanvas();
+    player2Canvas.updateCanvas();
     canvasRenderTime = Math.round(performance.now() - t1);
 
     t1 = performance.now();

@@ -36,7 +36,7 @@ export const CHARACTER_DATA = {
                 "use": function () {
                     bossBullets.length = 0;
                 },
-                "chargeRequired": 50,
+                "chargeRequired": 10,
                 "graceChargeSpeed": 30, // Charge per second in grace
                 "passiveChargeSpeed": 2, // Charge per second
                 "duration": 0,
@@ -107,7 +107,7 @@ export const CHARACTER_DATA = {
 
                     "abilityName": "Ability 1",
                     "description": "This is a description DEAL WITH IT",
-                    "iconUrl": "img/ability1.png",
+                    "iconUrl": "img/bg.png",
                 },
             },
             "passive": {
