@@ -97,6 +97,8 @@ export class GameCanvas {
                 2 * Math.PI
             );
             this.bulletCtx.fill();
+            //https://stackoverflow.com/questions/58315724/how-to-set-color-to-border-of-circle-canvas für border
+            // https://stackoverflow.com/questions/14193956/draw-arc-with-linear-gradient-in-html5-canvas für gradient
         });
         challengerBullets.forEach(bullet => {
             this.bulletCtx.beginPath();

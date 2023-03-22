@@ -135,7 +135,7 @@ function challengerDeathToSwitchingSidesCutscene() {
 }
 function challengerDeathToRoundOverCutscene(){
     console.log("challenger death -> round over cutscene");
-    showRoundEndScreen(match.scoreP1, match.scoreP2);
+    showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
     currentGameState = GAMESTATE.ROUNDOVER_CUTSCENE;
 }
 function challengerDeathToGameOverCutscene() { 
