@@ -35,6 +35,7 @@ export let INPUTS_PLAYER2 = {
     ability3: "Digit3",
 }
 
+let t1;
 document.addEventListener("keydown", (event) => {
     //Challenger
     if (event.code === INPUTS_PLAYER1.left) {
@@ -44,6 +45,7 @@ document.addEventListener("keydown", (event) => {
     } else if (event.code === INPUTS_PLAYER1.right) {
         INPUTS_CHALLENGER.right = true;
     } else if (event.code === INPUTS_PLAYER1.down) {
+        t1 = performance.now()
         INPUTS_CHALLENGER.down = true;
     } else if (event.code === INPUTS_PLAYER1.shift) {
         INPUTS_CHALLENGER.shift = true;
@@ -78,6 +80,7 @@ document.addEventListener("keyup", (event) => {
     } else if (event.code === INPUTS_PLAYER1.right) {
         INPUTS_CHALLENGER.right = false;
     } else if (event.code === INPUTS_PLAYER1.down) {
+        console.log(performance.now() - t1)
         INPUTS_CHALLENGER.down = false;
     } else if (event.code === INPUTS_PLAYER1.shift) {
         INPUTS_CHALLENGER.shift = false;
