@@ -27,3 +27,56 @@ export class Bullet {
         return outsideX || outsideY;
     }
 }
+
+/*
+animations
+
+challenger
+	idle
+	left
+	right
+	down
+	up
+	special
+
+	death
+	intro
+	sideswitch 
+
+boss	
+	idle
+	left
+	right
+	down
+	up
+	a1
+	a2
+	a3
+	
+	enrage timeup
+	enrage death
+	intro
+	sideswitch 
+
+background
+	layer1
+	layer2
+	layer3
+
+
+
+bulletManager
+	challengerBullets
+	bossBullets
+        ability1
+        ability2
+        ability3
+        passive
+
+hitableObject
+
+
+bullet
+	traillength
+	trailhistory
+*/
