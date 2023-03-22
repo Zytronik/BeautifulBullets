@@ -42,9 +42,16 @@ STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.CHARACTER_SELECTION
 
 currentGameState = GAMESTATE.MAIN_MENU;
 export function goToState(GAMESTATE) {
+    // Find out where the spaghetti beginns :)
+    try { throw Error(); }
+    catch (e) { 
+        console.debug("Function callstack:\n", e.stack);
+    }
+
     let transitionMethod = STATE_TRANSITION_MAP.get(currentGameState + GAMESTATE);
     if (transitionMethod == null) {
-        console.error(`Illegal GameStateTransition. CurrentGameState: ${currentGameState}, given next GameState: ${GAMESTATE}. \nNo transition-method found.`)
+        console.error(`Illegal GameStateTransition. CurrentGameState: ${currentGameState}, desired next GameState: ${GAMESTATE}. 
+        \nNo transition-method found for ${currentGameState} -> ${GAMESTATE}.`)
     } else {
         transitionMethod();
     }
