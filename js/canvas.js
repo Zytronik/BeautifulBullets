@@ -100,7 +100,7 @@ export class GameCanvas {
         });
         challengerBullets.forEach(bullet => {
             this.bulletCtx.beginPath();
-            this.bulletCtx.fillStyle = 'red';
+            this.bulletCtx.fillStyle = bullet.color;
             this.bulletCtx.arc(
                 CANVAS_UNIT * bullet.x,
                 CANVAS_UNIT * bullet.y,
