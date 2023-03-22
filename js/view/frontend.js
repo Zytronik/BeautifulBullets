@@ -113,7 +113,6 @@ export function updateGameUI() {
 }
 
 export function switchSidesAnimations(){
-    gamePaused = true;
     fadeOutUI();
     setTimeout(()=>{
         document.querySelector("article.game .switchingSides").classList.add("active");
@@ -131,7 +130,6 @@ export function switchSidesAnimations(){
             setTimeout(()=>{
                 fadeInUI();
                 setTimeout(()=>{
-                    gamePaused = false;
                     goToState(GAMESTATE.GAMESTART_CUTSCENE);
                 }, 900);
             }, 500);

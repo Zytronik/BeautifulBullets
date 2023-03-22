@@ -1,4 +1,4 @@
-import { MATCH_DECIDING_FACTORS } from "../gameElements/match.js";
+import { MATCH_DECIDING_FACTORS } from "../data/match.js";
 
 export const FPS = 60;
 export const BOARD_WIDTH = 666;

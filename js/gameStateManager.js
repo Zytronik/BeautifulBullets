@@ -89,6 +89,7 @@ function characterSelectionToGameStartCutscene() {
 }
 function gameStartCutsceneToGameplayRegular() {
     console.log("game start cutscene -> gameplay regular");
+    resumeGameLogic();
     currentGameState = GAMESTATE.GAMEPLAY_REGULAR;
 }
 function gameplayRegularToGameplayEnrage() {
@@ -140,6 +141,7 @@ function pauseScreenToMainMenu() {
 function challengerDeathToSwitchingSidesCutscene() {
     console.log("challenger death -> switching sides cutscene");
     currentGameState = GAMESTATE.SWITCHING_SIDES_CUTSCENE;
+    pauseGameLogic();
     switchSidesAnimations();
     match.swapSides();
 }

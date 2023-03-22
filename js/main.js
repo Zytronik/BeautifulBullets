@@ -3,9 +3,10 @@ import { GameCanvas } from "./view/canvas.js";
 import { updateGameUI } from "./view/frontend.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
-import { Match } from "./gameElements/match.js";
+import { Match } from "./data/match.js";
 import { FPS, GRACE_RANGE } from "./settings/gameSettings.js";
 import { GAMESTATE, goToState } from "./gameStateManager.js";
+import { INPUTS_CHALLENGER } from "./settings/inputSettings.js";
 
 export let challenger;
 export let boss;
