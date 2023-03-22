@@ -341,11 +341,15 @@ article.game .roundEndScreen .generalStats {
 	top: 0;
 	left: 50%;
 	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 article.game .roundEndScreen .generalStats h3 {
 	font-size: 45px;
 	opacity: 0;
+	margin-bottom: 10px;
 }
 
 article.game .roundEndScreen .roundStatsPlayer1,

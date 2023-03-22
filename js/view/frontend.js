@@ -139,13 +139,16 @@ export function switchSidesAnimations(){
     }, 900);
 }
 
-export function showRoundEndScreen(scoreP1, scoreP2){
-    console.log(player1);
+export function showRoundEndScreen(scoreP1, scoreP2, firstTo){
+    document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = firstTo;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 .score").innerHTML = scoreP1;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 .score").innerHTML = scoreP2;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1].name;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2].name;
     document.querySelector("article.game .roundEndScreen").classList.add("active");
+    setTimeout(()=>{
+        document.querySelector("article.game .roundEndScreen").classList.remove("active");
+    }, 3000);
 }
 
 function switchUI(){
