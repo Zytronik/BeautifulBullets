@@ -1,5 +1,5 @@
 import {showPage, resetRdyUps, getSelectedCharacters, setupGameUI, pauseGame, resumeGame, showRoundEndScreen, switchSidesAnimations } from "./frontend.js";
-import { loadGame, match } from "./main.js";
+import { loadGame, match } from "./gameLoop.js";
 
 export let currentGameState;
 export const GAMESTATE = {

@@ -1,4 +1,4 @@
-import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger } from "./main.js";
+import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger } from "./gameLoop.js";
 import { CHARACTER_DATA } from "./characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE, currentGameState } from "./gameStateManager.js";
