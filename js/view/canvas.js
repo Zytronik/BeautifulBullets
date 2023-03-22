@@ -1,6 +1,6 @@
-import { INPUTS_CHALLENGER } from "./inputSettings.js"
-import { challenger, boss, bossBullets, challengerBullets } from "./gameLoop.js";
-import { BOARD_WIDTH } from "./gameSettings.js";
+import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
+import { challenger, boss, bossBullets, challengerBullets } from "../main.js";
+import { BOARD_WIDTH } from "../settings/gameSettings.js";
 
 export let CANVAS_UNIT;
 

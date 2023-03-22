@@ -1,5 +1,5 @@
-import { BOARD_WIDTH, BOARD_HEIGHT, FPS } from "./gameSettings.js";
-import { INPUTS_BOSS } from "./inputSettings.js";
+import { BOARD_WIDTH, BOARD_HEIGHT, FPS } from "../settings/gameSettings.js";
+import { INPUTS_BOSS } from "../settings/inputSettings.js";
 
 export class Boss {
     constructor(bossData) {

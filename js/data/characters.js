@@ -1,6 +1,6 @@
-import { boss, bossBullets, challenger, challengerBullets } from "./gameLoop.js";
-import { Bullet } from "./bullet.js";
-import { FPS } from "./gameSettings.js";
+import { boss, bossBullets, challenger } from "../main.js";
+import { Bullet } from "../gameElements/bullet.js";
+import { FPS } from "../settings/gameSettings.js";
 
 export const CHARACTER_DATA = {
     "johnCena": {

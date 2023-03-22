@@ -1,7 +1,7 @@
-import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger } from "./gameLoop.js";
-import { CHARACTER_DATA } from "./characters.js";
+import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger } from "../main.js";
+import { CHARACTER_DATA } from "../data/characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
-import { goToState, GAMESTATE, currentGameState } from "./gameStateManager.js";
+import { goToState, GAMESTATE, currentGameState } from "../gameStateManager.js";
 
 window.onload = function () {
     //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
@@ -65,7 +65,6 @@ window.onload = function () {
 }
 
 let rdyUpd = [false, false];
-export let gamePaused = false;
 let currentBoss;
 let currentChallenger;
 let player1;
@@ -77,13 +76,11 @@ export function resetRdyUps(){
     document.querySelector("#rdyButton2").classList.remove("ready");
 }
 
-export function resumeGame(){
-    gamePaused = false;
+export function closePauseScreen(){
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
 }
 
-export function pauseGame(){
-    gamePaused = true;
+export function showPauseScreen(){
     document.querySelector("article.game .pauseScreen").classList.add("paused");
 }
 

@@ -1,10 +1,10 @@
-import { GameCanvas } from "./canvas.js";
-import { Challenger } from "./challenger.js";
-import { Boss } from "./boss.js";
-import { FPS, GRACE_RANGE } from "./gameSettings.js";
-import { CHARACTER_DATA } from "./characters.js";
-import { updateGameUI, gamePaused } from "./frontend.js";
-import { Match, MATCH_DECIDING_FACTORS } from "./match.js";
+import { CHARACTER_DATA } from "./data/characters.js";
+import { GameCanvas } from "./view/canvas.js";
+import { updateGameUI } from "./view/frontend.js";
+import { Boss } from "./gameElements/boss.js";
+import { Challenger } from "./gameElements/challenger.js";
+import { Match } from "./gameElements/match.js";
+import { FPS, GRACE_RANGE } from "./settings/gameSettings.js";
 import { GAMESTATE, goToState } from "./gameStateManager.js";
 
 export let challenger;
@@ -14,14 +14,7 @@ export let challengerBullets = [];
 let player1Canvas;
 let player2Canvas;
 export let match;
-
-let matchSettings = {
-    timeLimit: 120 * FPS,
-    firstTo: 3,
-    matchDecider: MATCH_DECIDING_FACTORS.DAMAGE_DEALT,
-};
-
-export function switchBossWithChallenger(currentChallenger, currentBoss){
+export function switchBossWithChallenger(currentChallenger, currentBoss) {
     challenger = new Challenger(CHARACTER_DATA[currentBoss].challenger);
     boss = new Boss(CHARACTER_DATA[currentChallenger].boss);
 }
@@ -29,7 +22,7 @@ export function switchBossWithChallenger(currentChallenger, currentBoss){
 export function loadGame([player1, player2]) {
     challenger = new Challenger(CHARACTER_DATA[player1].challenger);
     boss = new Boss(CHARACTER_DATA[player2].boss);
-    match = new Match(CHARACTER_DATA[player1], CHARACTER_DATA[player2], matchSettings);
+    match = new Match(CHARACTER_DATA[player1], CHARACTER_DATA[player2]);
 
     player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
     player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
@@ -38,8 +31,8 @@ export function loadGame([player1, player2]) {
 }
 
 window.onresize = function () {
-    setTimeout(()=>{
-        if(player1Canvas !== undefined && player2Canvas !== undefined){
+    setTimeout(() => {
+        if (player1Canvas !== undefined && player2Canvas !== undefined) {
             player1Canvas.resizeCanvas();
             player2Canvas.resizeCanvas();
         }
@@ -53,13 +46,14 @@ export let currentFPS = 0;
 export let canvasRenderTime = 0;
 export let gameLogicTime = 0;
 export let totalFrameCalculationTime = 0;
+let gamePaused = false;
 function gameLoop() {
     //Wait for next frame on high refreshrates
     do {
         currentlyAt = performance.now();
     } while (currentlyAt < nextCalculationAt);
     let amountWaitedTooLong = currentlyAt - nextCalculationAt;
-    if (amountWaitedTooLong > 1000/FPS) {
+    if (amountWaitedTooLong > 1000 / FPS) {
         amountWaitedTooLong = 0
     }
     currentFPS = Math.round(1000 / (currentlyAt - previousFrameAt));
@@ -71,14 +65,15 @@ function gameLoop() {
     canvasRenderTime = Math.round(performance.now() - t1);
 
     t1 = performance.now();
-    if(!gamePaused){
-        gameLogic();
-    }
+    gameLogic();
     gameLogicTime = Math.round(performance.now() - t1);
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
 
     nextCalculationAt = currentlyAt + 1000 / FPS - amountWaitedTooLong;
-    requestAnimationFrame(gameLoop);
+
+    if (!gamePaused) {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 function gameLogic() {
@@ -100,6 +95,13 @@ function gameLogic() {
     hitDetectionChallenger();
     hitDetectionBoss();
     updateGameUI();
+}
+export function pauseGameLogic() {
+    gamePaused = true;
+}
+export function resumeGameLogic() {
+    gamePaused = false;
+    requestAnimationFrame(gameLoop);
 }
 
 //(a-b)^2 = a^2 - 2ab + b^2
@@ -129,7 +131,7 @@ function hitDetectionChallenger() {
     });
 }
 
-function hitDetectionBoss(){
+function hitDetectionBoss() {
     const bossX = boss.x;
     const bossX2 = boss.x * boss.x;
     const bossY = boss.y;
