@@ -96,10 +96,6 @@ function gameLogic() {
     hitDetectionChallenger();
     hitDetectionBoss();
     updateGameUI();
-
-    if (INPUTS_CHALLENGER.down) {
-        console.log("down pressed - main")
-    }
 }
 export function pauseGameLogic() {
     gamePaused = true;
