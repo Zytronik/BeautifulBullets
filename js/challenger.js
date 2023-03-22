@@ -36,8 +36,8 @@ export class Challenger {
         this.specialChargeRequired = challengerData.special.chargeRequired;
         this.specialGraceChargeSpeed = challengerData.special.graceChargeSpeed / FPS;
         this.specialPassiveChargeSpeed = challengerData.special.passiveChargeSpeed / FPS;
-        this.specialCoolDownRequired = challengerData.abilities.special.coolDown * FPS;
-        this.specialCoolDown = challengerData.abilities.special.coolDown * FPS;
+        this.specialCoolDownRequired = challengerData.special.coolDown * FPS;
+        this.specialCoolDown = challengerData.special.coolDown * FPS;
         this.specialDuration = challengerData.special.duration * FPS;
         this.specialActiveFor = 0;
         this.specialActive = false;
