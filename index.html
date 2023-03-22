@@ -4,18 +4,17 @@
 <head>
 	<meta charset="utf-8">
 	<title>BeautifulBullets</title>
-	<script type="module" src='js/howler.min.js'></script>
-	<!-- https://github.com/goldfire/howler.js#documentation -->
-	<script type="module" src='js/frontend.js'></script>
 	<script type="module" src='js/main.js'></script>
-	<script type="module" src='js/canvas.js'></script>
-	<script type="module" src='js/boss.js'></script>
-	<script type="module" src='js/challenger.js'></script>
-	<script type="module" src='js/bullet.js'></script>
-	<script type="module" src='js/gameSettings.js'></script>
-	<script type="module" src='js/level.js'></script>
-	<script type="module" src='js/inputSettings.js'></script>
-	<script type="module" src='js/match.js'></script>
+	<script type="module" src='js/gameElements/boss.js'></script>
+	<script type="module" src='js/gameElements/bullet.js'></script>
+	<script type="module" src='js/gameElements/challenger.js'></script>
+	<script type="module" src='js/gameElements/match.js'></script>
+	<!-- https://github.com/goldfire/howler.js#documentation -->
+	<script type="module" src='js/settings/gameSettings.js'></script>
+	<script type="module" src='js/settings/inputSettings.js'></script>
+	<script type="module" src='js/sound/howler.min.js'></script>
+	<script type="module" src='js/view/canvas.js'></script>
+	<script type="module" src='js/view/frontend.js'></script>
 	<link href='css/style.css' rel='stylesheet' />
 </head>
 
@@ -91,15 +90,21 @@
 				<div class="roundEndScreen-wrapper">
 					<div class="generalStats">
 						<h3>Round End</h3>
+						<span></span>
 					</div>
 					<div class="roundStatsPlayer1">
-						<h4>Name Player 1</h4>
+						<h4></h4>
 						<span class="score">0</span>
 					</div>
 					<div class="roundStatsPlayer2">
-						<h4>Name Player 2</h4>
-						<span class="score">1</span>
+						<h4></h4>
+						<span class="score">0</span>
 					</div>
+				</div>
+			</section>
+			<section class="switchingSides">
+				<div class="switchingSides-wrapper">
+					<h3>Switching<br>Sides</h3>
 				</div>
 			</section>
 			<section>

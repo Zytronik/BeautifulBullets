@@ -1,4 +1,4 @@
-import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "./gameSettings.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 
 export class Bullet {
     constructor(x, y, visuals, trajectoryFunction, lifetimeInSeconds, attributes) {

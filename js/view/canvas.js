@@ -1,6 +1,6 @@
-import { INPUTS_CHALLENGER } from "./inputSettings.js"
-import { challenger, boss, bossBullets, challengerBullets } from "./main.js";
-import { BOARD_WIDTH } from "./gameSettings.js";
+import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
+import { challenger, boss, bossBullets, challengerBullets } from "../main.js";
+import { BOARD_WIDTH } from "../settings/gameSettings.js";
 
 export let CANVAS_UNIT;
 
@@ -97,10 +97,12 @@ export class GameCanvas {
                 2 * Math.PI
             );
             this.bulletCtx.fill();
+            //https://stackoverflow.com/questions/58315724/how-to-set-color-to-border-of-circle-canvas für border
+            // https://stackoverflow.com/questions/14193956/draw-arc-with-linear-gradient-in-html5-canvas für gradient
         });
         challengerBullets.forEach(bullet => {
             this.bulletCtx.beginPath();
-            this.bulletCtx.fillStyle = 'red';
+            this.bulletCtx.fillStyle = bullet.color;
             this.bulletCtx.arc(
                 CANVAS_UNIT * bullet.x,
                 CANVAS_UNIT * bullet.y,

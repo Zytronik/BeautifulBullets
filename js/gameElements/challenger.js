@@ -1,7 +1,7 @@
-import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "./gameSettings.js";
-import { INPUTS_CHALLENGER } from "./inputSettings.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
+import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
 import { Bullet } from "./bullet.js";
-import { challengerBullets, boss } from "./main.js";
+import { challengerBullets, boss } from "../main.js";
 
 export class Challenger {
     constructor(challengerData) {
@@ -36,10 +36,12 @@ export class Challenger {
         this.specialChargeRequired = challengerData.special.chargeRequired;
         this.specialGraceChargeSpeed = challengerData.special.graceChargeSpeed / FPS;
         this.specialPassiveChargeSpeed = challengerData.special.passiveChargeSpeed / FPS;
-        this.specialDuration = challengerData.special.duration;
+        this.specialCoolDownRequired = challengerData.special.coolDown * FPS;
+        this.specialCoolDown = challengerData.special.coolDown * FPS;
+        this.specialDuration = challengerData.special.duration * FPS;
         this.specialActiveFor = 0;
         this.specialActive = false;
-        
+
         this.timeInGraceInFrames = 0;
     }
     gameTick() {
@@ -121,29 +123,37 @@ export class Challenger {
                 x = 0,
                 y = 0;
             if (this.attributes[4] == 1) {
-                let angle = Math.atan2(boss.y-this.y, boss.x-this.x);
-                x = Math.cos(angle)*(maxSpeed*(homing+(homing/4)))+this.attributes[1];
-                y = Math.sin(angle)*(maxSpeed*(homing))/3+this.attributes[2];
+                let angle = Math.atan2(boss.y - this.y, boss.x - this.x);
+                x = Math.cos(angle) * (maxSpeed * (homing + (homing / 4))) + this.attributes[1];
+                y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + this.attributes[2];
                 // x = Math.cos(angle)*(maxSpeed*(homing+(homing/2)))+(boss.xSpeedNormalized*homing/50)+this.attributes[1],
                 // y = Math.sin(angle)*(maxSpeed*(homing))/3+(boss.ySpeedNormalized*homing/50)+this.attributes[2];
                 this.attributes[1] = x;
                 this.attributes[2] = y;
             } else {
-                let c = Math.PI / ((10-this.attributes[4])*2)**(0.011*this.attributes[4]**2-0.178*this.attributes[4]+1.211),
-                    angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (this.attributes[4]-1) * this.attributes[3]);
-                x = Math.sin(c / (this.attributes[4]-1) * this.attributes[3] + Math.PI - c / 2) * 10 + this.attributes[1];
-                y = Math.cos(c / (this.attributes[4]-1) * this.attributes[3] + Math.PI - c / 2) - 20 + this.attributes[2];
+                let c = Math.PI / ((10 - this.attributes[4]) * 2) ** (0.011 * this.attributes[4] ** 2 - 0.178 * this.attributes[4] + 1.211),
+                    angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (this.attributes[4] - 1) * this.attributes[3]);
+                x = Math.sin(c / (this.attributes[4] - 1) * this.attributes[3] + Math.PI - c / 2) * 10 + this.attributes[1];
+                y = Math.cos(c / (this.attributes[4] - 1) * this.attributes[3] + Math.PI - c / 2) - 20 + this.attributes[2];
                 this.attributes[1] += Math.cos(angle + c / (this.attributes[4] - 1) * this.attributes[3]) * (maxSpeed * (homing + homing / 3));
                 this.attributes[2] += Math.sin(angle + c / (this.attributes[4] - 1) * this.attributes[3]) * maxSpeed * homing / 4;
                 // console.log(this.attributes[4]);
             }
-            return [x, y-20]
+            return [x, y - 20]
         }
     }
     #specialAbility() {
-        if (INPUTS_CHALLENGER.special && this.specialCharge >= this.specialChargeRequired) {
-            this.useSpecialAbility();
+        if (this.specialCoolDown <= this.specialCoolDownRequired) {
+            this.specialCoolDown++;
+        } else if (INPUTS_CHALLENGER.special && this.specialCharge >= this.specialChargeRequired && !this.specialActive) {
+            this.specialActive = true;
             this.specialCharge -= this.specialChargeRequired;
+            this.specialCoolDown = 0;
+            this.specialActiveFor = 0;
+        }
+        if (this.specialActive && this.specialActiveFor <= this.specialDuration) {
+            this.useSpecialAbility();
+            this.specialActiveFor++;
         }
     }
     #iframesTimeout() {
