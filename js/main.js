@@ -5,8 +5,8 @@ import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./data/match.js";
 import { FPS, GRACE_RANGE } from "./settings/gameSettings.js";
-import { GAMESTATE, goToState } from "./gameStateManager.js";
-import { INPUTS_CHALLENGER } from "./settings/inputSettings.js";
+import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
+import { GO_BACK_BUTTON } from "./settings/inputSettings.js";
 
 export let challenger;
 export let boss;
@@ -77,6 +77,7 @@ function gameLoop() {
     }
 }
 
+export let isGameStateEnraged = true;
 function gameLogic() {
     match.updateTime();
     challenger.gameTick();
@@ -103,6 +104,12 @@ export function pauseGameLogic() {
 export function resumeGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
+}
+export function setGameStateRegular() {
+    isGameStateEnraged = false;
+}
+export function setGameStateEnraged() {
+    isGameStateEnraged = true;
 }
 
 //(a-b)^2 = a^2 - 2ab + b^2
@@ -146,8 +153,28 @@ function hitDetectionBoss() {
             challengerBullets.splice(index, 1);
             let activateEnrage = boss.takeDamageAndCheckDead(challenger.bulletDamage);
             if (activateEnrage) {
-                goToState(GAMESTATE.GAMEPLAY_ENRAGE);
+                goToState(GAMESTATE.GAMEPLAY_ENRAGED);
             }
         }
     });
+}
+
+export function handleGoBackButton() {
+    if (currentGameState === GAMESTATE.SETTINGS) {
+        goToState(GAMESTATE.MAIN_MENU);
+    }
+
+    if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {
+        goToState(GAMESTATE.MAIN_MENU);
+    }
+
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR) {
+        goToState(GAMESTATE.PAUSE_SCREEN);
+    } else if (currentGameState === GAMESTATE.PAUSE_SCREEN) {
+        if (isGameStateEnraged) {
+            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+        } else {
+            goToState(GAMESTATE.GAMEPLAY_REGULAR);
+        }
+    }
 }

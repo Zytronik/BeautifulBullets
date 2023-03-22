@@ -1,4 +1,4 @@
-import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger } from "../main.js";
+import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger, isGameStateEnraged } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE, currentGameState } from "../gameStateManager.js";
@@ -29,7 +29,11 @@ window.onload = function () {
     });
 
     document.querySelector("#resumeGame").addEventListener("click", function (e) {
-        goToState(GAMESTATE.GAMEPLAY_REGULAR);
+        if (isGameStateEnraged) {
+            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+        } else {
+            goToState(GAMESTATE.GAMEPLAY_REGULAR);
+        }
     });
 
     document.querySelector("#quitGame").addEventListener("click", function (e) {
@@ -37,31 +41,6 @@ window.onload = function () {
     });
 
     loadCharacterSelectionScreen();
-
-    document.onkeydown = function (evt) {
-        evt = evt || window.event;
-        var isEscape = false;
-        if ("key" in evt) {
-            isEscape = (evt.key === "Escape" || evt.key === "Esc");
-        } else {
-            isEscape = (evt.keyCode === 27);
-        }
-        if (isEscape) {
-            if(currentGameState === GAMESTATE.SETTINGS){
-                goToState(GAMESTATE.MAIN_MENU);
-            }
-
-            if(currentGameState === GAMESTATE.CHARACTER_SELECTION){
-                goToState(GAMESTATE.MAIN_MENU);
-            }
-
-            if(currentGameState === GAMESTATE.GAMEPLAY_REGULAR){
-                goToState(GAMESTATE.PAUSE_SCREEN);
-            }else if(currentGameState === GAMESTATE.PAUSE_SCREEN){
-                goToState(GAMESTATE.GAMEPLAY_REGULAR);
-            }
-        }
-    };
 }
 
 let rdyUpd = [false, false];
@@ -427,7 +406,6 @@ function getHighestStats() {
 }
 
 function setupChallengerHealthBar() {
-    console.log("test");
     let healthCount = CHARACTER_DATA[getSelectedCharacters()[0]]["challenger"]["stats"]["health"];
     let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
     Array.prototype.forEach.call(playersHealthBar, function (hBar) {
@@ -440,7 +418,6 @@ function setupChallengerHealthBar() {
         }
         hBar.innerHTML = hearts;
     });
-    console.log("test2");
 }
 
 function setupChallengerSpecialChargeBar() {

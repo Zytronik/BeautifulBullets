@@ -1,3 +1,5 @@
+import { handleGoBackButton } from "../main.js";
+
 export const INPUTS_CHALLENGER = {
     left: false,
     right: false,
@@ -16,7 +18,7 @@ export const INPUTS_BOSS = {
     ability3: false,
 }
 
-export let INPUTS_PLAYER1 = {
+export let CHALLENGER_BUTTONS = {
     left: "ArrowLeft",
     right: "ArrowRight",
     down: "ArrowDown",
@@ -25,7 +27,7 @@ export let INPUTS_PLAYER1 = {
     special: "Period",
 }
 
-export let INPUTS_PLAYER2 = {
+export let BOSS_BUTTONS = {
     left: "KeyA",
     right: "KeyD",
     down: "KeyS",
@@ -35,72 +37,77 @@ export let INPUTS_PLAYER2 = {
     ability3: "Digit3",
 }
 
+export let GO_BACK_BUTTON = "Escape";
+
 document.addEventListener("keydown", (event) => {
     //Challenger
-    if (event.code === INPUTS_PLAYER1.left) {
+    if (event.code === CHALLENGER_BUTTONS.left) {
         INPUTS_CHALLENGER.left = true;
-    } else if (event.code === INPUTS_PLAYER1.up) {
+    } else if (event.code === CHALLENGER_BUTTONS.up) {
         INPUTS_CHALLENGER.up = true;
-    } else if (event.code === INPUTS_PLAYER1.right) {
+    } else if (event.code === CHALLENGER_BUTTONS.right) {
         INPUTS_CHALLENGER.right = true;
-    } else if (event.code === INPUTS_PLAYER1.down) {
-        t1 = performance.now()
+    } else if (event.code === CHALLENGER_BUTTONS.down) {
         INPUTS_CHALLENGER.down = true;
-    } else if (event.code === INPUTS_PLAYER1.shift) {
+    } else if (event.code === CHALLENGER_BUTTONS.shift) {
         INPUTS_CHALLENGER.shift = true;
-    } else if (event.code === INPUTS_PLAYER1.special) {
+    } else if (event.code === CHALLENGER_BUTTONS.special) {
         INPUTS_CHALLENGER.special = true;
     }
 
     //Boss
-    else if (event.code === INPUTS_PLAYER2.left) {
+    else if (event.code === BOSS_BUTTONS.left) {
         INPUTS_BOSS.left = true;
-    } else if (event.code === INPUTS_PLAYER2.up) {
+    } else if (event.code === BOSS_BUTTONS.up) {
         INPUTS_BOSS.up = true;
-    } else if (event.code === INPUTS_PLAYER2.right) {
+    } else if (event.code === BOSS_BUTTONS.right) {
         INPUTS_BOSS.right = true;
-    } else if (event.code === INPUTS_PLAYER2.down) {
+    } else if (event.code === BOSS_BUTTONS.down) {
         INPUTS_BOSS.down = true;
-    } else if (event.code === INPUTS_PLAYER2.ability1) {
+    } else if (event.code === BOSS_BUTTONS.ability1) {
         INPUTS_BOSS.ability1 = true;
-    } else if (event.code === INPUTS_PLAYER2.ability2) {
+    } else if (event.code === BOSS_BUTTONS.ability2) {
         INPUTS_BOSS.ability2 = true;
-    } else if (event.code === INPUTS_PLAYER2.ability3) {
+    } else if (event.code === BOSS_BUTTONS.ability3) {
         INPUTS_BOSS.ability3 = true;
+    }
+
+    //Single Inputs
+    if (event.code === GO_BACK_BUTTON) {
+        handleGoBackButton();
     }
 });
 
 document.addEventListener("keyup", (event) => {
     //Challenger
-    if (event.code === INPUTS_PLAYER1.left) {
+    if (event.code === CHALLENGER_BUTTONS.left) {
         INPUTS_CHALLENGER.left = false;
-    } else if (event.code === INPUTS_PLAYER1.up) {
+    } else if (event.code === CHALLENGER_BUTTONS.up) {
         INPUTS_CHALLENGER.up = false;
-    } else if (event.code === INPUTS_PLAYER1.right) {
+    } else if (event.code === CHALLENGER_BUTTONS.right) {
         INPUTS_CHALLENGER.right = false;
-    } else if (event.code === INPUTS_PLAYER1.down) {
+    } else if (event.code === CHALLENGER_BUTTONS.down) {
         INPUTS_CHALLENGER.down = false;
-    } else if (event.code === INPUTS_PLAYER1.shift) {
+    } else if (event.code === CHALLENGER_BUTTONS.shift) {
         INPUTS_CHALLENGER.shift = false;
-    }else if (event.code === INPUTS_PLAYER1.special) {
+    }else if (event.code === CHALLENGER_BUTTONS.special) {
         INPUTS_CHALLENGER.special = false;
     }
 
     //Boss
-    else if (event.code === INPUTS_PLAYER2.left) {
+    else if (event.code === BOSS_BUTTONS.left) {
         INPUTS_BOSS.left = false;
-    } else if (event.code === INPUTS_PLAYER2.up) {
+    } else if (event.code === BOSS_BUTTONS.up) {
         INPUTS_BOSS.up = false;
-    } else if (event.code === INPUTS_PLAYER2.right) {
+    } else if (event.code === BOSS_BUTTONS.right) {
         INPUTS_BOSS.right = false;
-    } else if (event.code === INPUTS_PLAYER2.down) {
+    } else if (event.code === BOSS_BUTTONS.down) {
         INPUTS_BOSS.down = false;
-    } else if (event.code === INPUTS_PLAYER2.ability1) {
+    } else if (event.code === BOSS_BUTTONS.ability1) {
         INPUTS_BOSS.ability1 = false;
-    } else if (event.code === INPUTS_PLAYER2.ability2) {
+    } else if (event.code === BOSS_BUTTONS.ability2) {
         INPUTS_BOSS.ability2 = false;
-    } else if (event.code === INPUTS_PLAYER2.ability3) {
+    } else if (event.code === BOSS_BUTTONS.ability3) {
         INPUTS_BOSS.ability3 = false;
     }
 });
-
