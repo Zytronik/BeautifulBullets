@@ -47,6 +47,7 @@ export class Match {
             this.challenger = PLAYER.TWO;
             this.boss = PLAYER.ONE;
         }
+        this.elapsedTimeInFrames = 0;
     }
     getChallenger() {
         return this.challenger === PLAYER.ONE ? this.player1Character.challenger : this.player2Character.challenger

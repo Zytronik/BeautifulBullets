@@ -25,7 +25,6 @@ export let totalFrameCalculationTime = 0;
 
 let loadOnFirstCall = true;
 export function main_loadGame([character1, character2]) {
-
     match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
 
     challenger = new Challenger(match.player1Character.challenger);
@@ -34,10 +33,8 @@ export function main_loadGame([character1, character2]) {
     boss = new Boss(match.player2Character.boss);
     bossBullets = [];
 
-
     isGameStateEnraged = false;
     gamePaused = true;
-
 
     if (loadOnFirstCall) {
         loadOnFirstCall = false;
@@ -106,6 +103,11 @@ export function main_pauseGameLogic() {
 export function main_resumeGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
+}
+
+export function clearAllBullets(){
+    challengerBullets = []
+    bossBullets = []
 }
 
 export function main_setGameStateRegular() {

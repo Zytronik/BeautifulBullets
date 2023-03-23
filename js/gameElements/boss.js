@@ -43,8 +43,10 @@ export class Boss {
         this.#castAbilities();
     }
     takeDamageAndCheckDead(damageAmount) {
-        this.currentHealth -= damageAmount;
-        return this.currentHealth <= 0
+        if (!isGameStateEnraged) {
+            this.currentHealth -= damageAmount;
+            return this.currentHealth <= 0
+        }
     }
     reset() {
         this.x = BOARD_WIDTH / 2;

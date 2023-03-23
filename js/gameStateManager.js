@@ -1,7 +1,7 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
 import { frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
-import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_resumeGameLogic, main_setGameStateRegular, main_switchSides } from "./main.js";
+import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_resumeGameLogic, main_setGameStateRegular, main_switchSides, main_setGameStateEnraged, clearAllBullets } from "./main.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -31,8 +31,8 @@ STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.TIME_OVER_CUTSCE
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.BOSS_DEATH_CUTSCENE, gameplayRegularToBossDeathCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
-STATE_TRANSITION_MAP.set(GAMESTATE.TIME_OVER_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, timeOverCutsceneToGameplayEnraged);
-STATE_TRANSITION_MAP.set(GAMESTATE.BOSS_DEATH_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, bossDeathCutsceneToGameplayEnraged);
+STATE_TRANSITION_MAP.set(GAMESTATE.TIME_OVER_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, cutsceneToGameplayEnraged);
+STATE_TRANSITION_MAP.set(GAMESTATE.BOSS_DEATH_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, cutsceneToGameplayEnraged);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
 STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_REGULAR, pauseScreenToGameplay);
@@ -50,14 +50,15 @@ STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.CHARACTER_SELECTION
 currentGameState = GAMESTATE.MAIN_MENU;
 export function goToState(GAMESTATE) {
     // Helps with finding where the spaghetti began :)
-    try { throw Error(); }
-    catch (e) {
-        console.debug("Function callstack:\n", e.stack);
-    }
+    // try { throw Error() }
+    // catch (e) {
+    //     console.debug("Function callstack:\n", e.stack);
+    // }
     let transitionMethod = STATE_TRANSITION_MAP.get(currentGameState + GAMESTATE);
     if (transitionMethod == null) {
         console.error(`Illegal GameStateTransition. CurrentGameState: ${currentGameState}, desired next GameState: ${GAMESTATE}. 
         \nNo transition-method found for ${currentGameState} -> ${GAMESTATE}.`);
+        console.error(Error());
     } else {
         console.debug(`${currentGameState} -> ${GAMESTATE}`);
         currentGameState = GAMESTATE;
@@ -65,19 +66,62 @@ export function goToState(GAMESTATE) {
     }
 }
 function mainMenuToSettings() {
+    /*
+        Backend:
+            - Load current settings
+        Frontend
+            - Close main menu
+            - Open settings
+    */ 
     frontend_showPage(PAGES.CONFIG);
 }
 function mainMenuToCharacterSelection() {
+    /*
+        Backend:
+            - Load characters
+        Frontend
+            - Close main menu
+            - Display character selection
+            - Reset ready buttons
+    */ 
     frontend_resetRdyUps();
     frontend_showPage(PAGES.CHARACTER_SELECTION);
 }
 function settingsToMainMenu() {
+    /*
+        Backend:
+            - Save & Apply settings
+        Frontend
+            - Close settings
+            - Open main menu
+    */ 
     frontend_showPage(PAGES.MAIN_MENU);
 }
 function characterSelectionToMainMenu() {
+    /*
+        Backend:
+            - 
+        Frontend
+            - Close character selection
+            - Open main menu
+    */ 
     frontend_showPage(PAGES.MAIN_MENU);
 }
 function characterSelectionToGameStartCutscene() {
+    /*
+        Backend:
+            - prepare game for start:
+                - player1 & player2 character
+                - challenger
+                - boss
+                - match
+                - empty bullets
+        Frontend
+            - Close character selection
+            - Open gameplay screen
+            - Play intro cutscene
+                - go to GAMEPLAY_REGULAR after cutscene
+    */ 
     frontend_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters());
     frontend_setupGameUI();
@@ -87,16 +131,27 @@ function characterSelectionToGameStartCutscene() {
     goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
 function gameStartCutsceneToGameplayRegular() {
+    /*
+        Backend:
+            - unpause game
+        Frontend
+            - Close character selection
+            - Open gameplay screen
+            - Play intro cutscene
+                - go to GAMEPLAY_REGULAR after cutscene
+    */ 
     main_resumeGameLogic();
     main_setGameStateRegular();
 }
 function gameplayRegularToTimeOverCutscene() {
     //TODO
-    goToState(GAMEPLAY_ENRAGED);
+    clearAllBullets();
+    goToState(GAMESTATE.GAMEPLAY_ENRAGED);
 }
 function gameplayRegularToBossDeathCutscene() {
     //TODO
-    goToState(GAMEPLAY_ENRAGED);
+    clearAllBullets();
+    goToState(GAMESTATE.GAMEPLAY_ENRAGED);
 }
 function gameplayToPauseScreen() {
     main_pauseGameLogic();
@@ -115,11 +170,9 @@ function gameplayToChallengerDeath() {
         }
     }
 }
-function timeOverCutsceneToGameplayEnraged() {
+function cutsceneToGameplayEnraged() {
     //TODO
-}
-function bossDeathCutsceneToGameplayEnraged() {
-    //TODO
+    main_setGameStateEnraged();
 }
 function pauseScreenToGameplay() {
     frontend_closePauseScreen();
@@ -134,12 +187,14 @@ function challengerDeathToSwitchingSidesCutscene() {
     main_pauseGameLogic();
     main_switchSides();
     frontend_switchSidesAnimations();
+    goToState(GAMESTATE.GAMESTART_CUTSCENE);
 }
 function challengerDeathToRoundOverCutscene() {
     main_pauseGameLogic();
     main_switchSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
     match.startNextRound();
+    goToState(GAMESTATE.GAMESTART_CUTSCENE);
 }
 function challengerDeathToGameOverCutscene() {
     //TODO
