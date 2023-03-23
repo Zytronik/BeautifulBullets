@@ -1,5 +1,5 @@
 import { CHARACTER_DATA } from "./data/characters.js";
-import { GameCanvas } from "./view/canvas.js";
+import { GameCanvas, convertMouseCoordinatesToCanvasCoordinates } from "./view/canvas.js";
 import { updateGameUI } from "./view/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
@@ -62,6 +62,7 @@ function gameLoop() {
     previousFrameAt = currentlyAt;
 
     let t1 = performance.now()
+    convertMouseCoordinatesToCanvasCoordinates();
     player1Canvas.updateCanvas();
     player2Canvas.updateCanvas();
     canvasRenderTime = Math.round(performance.now() - t1);
