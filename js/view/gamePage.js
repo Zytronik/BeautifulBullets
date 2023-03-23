@@ -1,8 +1,9 @@
-import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "../main.js";
+import { challenger, boss, currentFPS, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { player1SelectedCharacter, player2SelectedCharacter } from "./characterSelectionPage.js";
+import { convertFramecountIntoMinutesSeconds } from "../data/match.js";
 
 export function frontend_closePauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
@@ -25,6 +26,7 @@ export function updateGameUI() {
     updateChallengerHealthbar();
     updateBossHealthbar();
     updateBossAbilities();
+    updateTimer();
 }
 
 export function frontend_switchSidesAnimations() {
@@ -76,6 +78,17 @@ function switchUI() {
     updateChallengerHealthbar();
     frontend_setupGameUI();
     updateBossChallengerHealthbarPosition();
+}
+
+function updateTimer(){
+    let time = convertFramecountIntoMinutesSeconds(match.elapsedTimeInFrames);
+    document.querySelector("#gameTimer span").innerHTML = time[0] +":"+pad(time[1], 2);
+}
+
+function pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 function fadeOutUI() {

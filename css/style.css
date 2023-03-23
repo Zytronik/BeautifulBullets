@@ -178,12 +178,30 @@ article.game {
 	flex-direction: row;
 }
 
+article.game #gameTimer {
+	position: absolute;
+	left: 50%;
+	top: 3%;
+	transform: translateX(-50%);
+	margin-top: -10px;
+}
+
+article.game #gameTimer span {
+	font-size: 60px;
+}
+
 article.game section {
 	width: 50%;
 	height: 100%;
+	position: relative;
 }
 
-article.game section:last-of-type {
+article.game section:last-of-type::before {
+	content: "";
+	position: absolute;
+	height: 70%;
+	left: 0;
+	top: 15%;
 	border-left: 2px dotted white;
 }
 
