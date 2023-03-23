@@ -179,7 +179,7 @@ export function handleGoBackButton() {
     }
 }
 
-export function challengerImmortality() {
+export function cheats() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = -1;
         challenger.bulletDamage = 0;

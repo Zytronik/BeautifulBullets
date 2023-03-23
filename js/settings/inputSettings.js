@@ -23,6 +23,10 @@ export const INPUTS_CHEATS = {
     a: false,
     c: false,
     k: false,
+    hb: false,
+    ab: false,
+    cb: false,
+    kb: false,
 }
 
 export let CHALLENGER_BUTTONS = {
@@ -101,9 +105,19 @@ document.addEventListener("keydown", (event) => {
     } else if (event.code === CHEAT_BUTTONS.k) {
         INPUTS_CHEATS.k = true;
     }
-
-    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k) {
-        challengerImmortality();
+    
+    if (INPUTS_CHEATS.h && !INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k) {
+        INPUTS_CHEATS.hb = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb) {
+        INPUTS_CHEATS.ab = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab) {
+        INPUTS_CHEATS.cb = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab && INPUTS_CHEATS.cb) {
+        INPUTS_CHEATS.kb = true;
+        cheats();
     }
 });
 
@@ -143,11 +157,15 @@ document.addEventListener("keyup", (event) => {
     // ***** Super Secret Sauce Cheaty Cheat Code Section *****
     if (event.code === CHEAT_BUTTONS.h) {
         INPUTS_CHEATS.h = false;
+        INPUTS_CHEATS.hb = false;
     } else if (event.code === CHEAT_BUTTONS.a) {
         INPUTS_CHEATS.a = false;
+        INPUTS_CHEATS.ab = false;
     } else if (event.code === CHEAT_BUTTONS.c) {
         INPUTS_CHEATS.c = false;
+        INPUTS_CHEATS.cb = false;
     } else if (event.code === CHEAT_BUTTONS.k) {
         INPUTS_CHEATS.k = false;
+        INPUTS_CHEATS.kb = false;
     }
 });
