@@ -1,5 +1,6 @@
 import { CHARACTER_DATA } from "../data/characters.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
+import { highestStats } from "./windowOnLoad.js";
 
 let rdyUpd = [false, false];
 export let player1SelectedCharacter;
@@ -173,13 +174,11 @@ function loadCharactersUI(player) {
     player.querySelector(".characters").innerHTML = characters;
 }
 
-const highestStats = getHighestStats();
-
 function calculateStat(stat, value, player) {
     return 100 / highestStats[player][stat] * value;
 }
 
-function getHighestStats() {
+export function getHighestStats() {
     let stats = {
         "challenger": [],
         "boss": [],
