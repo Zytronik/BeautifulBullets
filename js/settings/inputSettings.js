@@ -19,6 +19,17 @@ export const INPUTS_BOSS = {
     ability3: false,
 }
 
+export const INPUTS_CHEATS = {
+    h: false,
+    a: false,
+    c: false,
+    k: false,
+    hb: false,
+    ab: false,
+    cb: false,
+    kb: false,
+}
+
 export let CHALLENGER_BUTTONS = {
     left: "ArrowLeft",
     right: "ArrowRight",
@@ -39,6 +50,13 @@ export let BOSS_BUTTONS = {
 }
 
 export let GO_BACK_BUTTON = "Escape";
+
+export let CHEAT_BUTTONS = {
+    h: "KeyH",
+    a: "KeyA",
+    c: "KeyC",
+    k: "KeyK",
+}
 
 document.addEventListener("keydown", (event) => {
     //Challenger
@@ -77,6 +95,56 @@ document.addEventListener("keydown", (event) => {
     if (event.code === GO_BACK_BUTTON) {
         main_handleGoBackButton();
     }
+
+    // ***** Super Secret Sauce Cheaty Cheat Code Section *****
+    if (event.code === CHEAT_BUTTONS.h) {
+        INPUTS_CHEATS.h = true;
+    } else if (event.code === CHEAT_BUTTONS.a) {
+        INPUTS_CHEATS.a = true;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = true;
+    } else if (event.code === CHEAT_BUTTONS.k) {
+        INPUTS_CHEATS.k = true;
+    }
+    
+    if (INPUTS_CHEATS.h && !INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k) {
+        INPUTS_CHEATS.hb = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb) {
+        INPUTS_CHEATS.ab = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab) {
+        INPUTS_CHEATS.cb = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab && INPUTS_CHEATS.cb) {
+        INPUTS_CHEATS.kb = true;
+        cheats();
+    }
+
+    // ***** Super Secret Sauce Cheaty Cheat Code Section *****
+    if (event.code === CHEAT_BUTTONS.h) {
+        INPUTS_CHEATS.h = true;
+    } else if (event.code === CHEAT_BUTTONS.a) {
+        INPUTS_CHEATS.a = true;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = true;
+    } else if (event.code === CHEAT_BUTTONS.k) {
+        INPUTS_CHEATS.k = true;
+    }
+    
+    if (INPUTS_CHEATS.h && !INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k) {
+        INPUTS_CHEATS.hb = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb) {
+        INPUTS_CHEATS.ab = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab) {
+        INPUTS_CHEATS.cb = true;
+    }
+    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab && INPUTS_CHEATS.cb) {
+        INPUTS_CHEATS.kb = true;
+        cheats();
+    }
 });
 
 document.addEventListener("keyup", (event) => {
@@ -110,5 +178,20 @@ document.addEventListener("keyup", (event) => {
         INPUTS_BOSS.ability2 = false;
     } else if (event.code === BOSS_BUTTONS.ability3) {
         INPUTS_BOSS.ability3 = false;
+    }
+
+    // ***** Super Secret Sauce Cheaty Cheat Code Section *****
+    if (event.code === CHEAT_BUTTONS.h) {
+        INPUTS_CHEATS.h = false;
+        INPUTS_CHEATS.hb = false;
+    } else if (event.code === CHEAT_BUTTONS.a) {
+        INPUTS_CHEATS.a = false;
+        INPUTS_CHEATS.ab = false;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = false;
+        INPUTS_CHEATS.cb = false;
+    } else if (event.code === CHEAT_BUTTONS.k) {
+        INPUTS_CHEATS.k = false;
+        INPUTS_CHEATS.kb = false;
     }
 });
