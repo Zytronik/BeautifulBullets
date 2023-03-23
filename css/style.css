@@ -714,7 +714,7 @@ article.characterSelection .rdyButton.ready::after {
 	color: black;
 }
 
-article.characterSelection #pageBack {
+article .pageBack {
 	position: absolute;
 	z-index: 10;
 	display: block;
@@ -722,7 +722,7 @@ article.characterSelection #pageBack {
 	padding: 1%
 }
 
-article.characterSelection #pageBack img {
+article .pageBack img {
 	width: 15px;
 }
 
@@ -979,4 +979,121 @@ article.characterSelection a.control_prev {
 article.characterSelection a.control_next {
 	right: 0;
 	border-radius: 2px 0 0 2px;
+}
+
+article.config section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	position: relative;
+}
+
+article.config h2 {
+	top: 2%;
+	left: 50%;
+	position: absolute;
+	margin: unset;
+	font-size: 40px;
+	transform: translateX(-50%);
+}
+
+article.config .player1 {
+	background-color: #0d0d0d;
+}
+
+article.config .player {
+	width: 50%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+article.config .player>div {
+	width: 85%;
+	height: 90%;
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: column;
+}
+
+article.config .player .setting {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+	padding: 5px 0;
+}
+
+article.config .player h3 {
+	margin-top: unset;
+}
+
+article.config .player .settings {
+	background-color: black;
+	padding: 3% 5%;
+	position: relative;
+	z-index: 1;
+}
+
+article.config .player .settings::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 6px;
+	bottom: 6px;
+	left: -9px;
+	right: -9px;
+	background: black;
+	z-index: -1;
+  }
+  article.config .player .settings::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 15px;
+	bottom: 15px;
+	left: -15px;
+	right: -15px;
+	background: black;
+	z-index: -1;
+  }
+
+article.config .player .setting > div:last-of-type {
+	background-color: #343434;
+	padding: 5px 0;
+	width: 20%;
+	cursor: pointer;
+	text-align: center;
+}
+
+article.config .player .setting > div:last-of-type:hover {
+	opacity: 0.6;
+}
+
+article.config .choosingKey {
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+	z-index: -2;
+}
+
+article.config .choosingKey.active {
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+	z-index: 100;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	font-size: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }

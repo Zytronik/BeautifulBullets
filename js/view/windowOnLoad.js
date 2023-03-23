@@ -1,6 +1,7 @@
 import { isGameStateEnraged } from "../main.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2, getHighestStats } from "./characterSelectionPage.js";
+import { setupConfigPage } from "./configPage.js";
 
 export let highestStats;
 
@@ -10,6 +11,7 @@ window.onload = function () {
     prepareFrontendButtons();
     prepareCharacterSelectionData();
     addMouseCoordinateEventListener();
+    setupConfigPage();
 }
 
 //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
@@ -28,7 +30,10 @@ function prepareFrontendButtons() {
     document.querySelector("#rdyButton2").addEventListener("click", function (e) {
         rdyUpPlayer2(this);
     });
-    document.querySelector("#pageBack").addEventListener("click", function (e) {
+    document.querySelector("article.characterSelection .pageBack").addEventListener("click", function (e) {
+        goToState(GAMESTATE.MAIN_MENU);
+    });
+    document.querySelector("article.config .pageBack").addEventListener("click", function (e) {
         goToState(GAMESTATE.MAIN_MENU);
     });
     document.querySelector("#resumeGame").addEventListener("click", function (e) {
