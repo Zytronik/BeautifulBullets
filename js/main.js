@@ -1,6 +1,6 @@
 import { CHARACTER_DATA } from "./data/characters.js";
 import { GameCanvas } from "./view/canvas.js";
-import { updateGameUI } from "./view/frontend.js";
+import { updateGameUI } from "./view/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./data/match.js";
@@ -22,9 +22,14 @@ export let currentFPS = 0;
 export let canvasRenderTime = 0;
 export let gameLogicTime = 0;
 export let totalFrameCalculationTime = 0;
+export let characterPlayer1;
+export let characterPlayer2;
 
 let loadOnFirstCall = true;
 export function main_loadGame([character1, character2]) {
+    characterPlayer1 = character1;
+    characterPlayer2 = character2;
+
     match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
 
     challenger = new Challenger(match.player1Character.challenger);
@@ -37,7 +42,7 @@ export function main_loadGame([character1, character2]) {
     isGameStateEnraged = false;
     gamePaused = true;
 
-    
+
     if (loadOnFirstCall) {
         loadOnFirstCall = false;
         player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
@@ -114,12 +119,15 @@ export function main_setGameStateEnraged() {
     isGameStateEnraged = true;
 }
 
-export function main_challengerDeath(){
+export function main_challengerDeath() {
     match.updateStats();
     goToState(GAMESTATE.CHALLENGER_DEATH);
 }
 
 export function main_switchSides() {
+    let temp = characterPlayer1;
+    characterPlayer1 = characterPlayer2;
+    characterPlayer2 = temp;
     match.swapSides();
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());
@@ -184,10 +192,6 @@ export function cheats() {
         console.log("You dirty Cheater");
     }
 }
-
-
-
-
 
 //TODO Move to BulletCollection
 function hitDetectionChallenger() {
