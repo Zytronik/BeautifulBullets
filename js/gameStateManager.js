@@ -1,4 +1,6 @@
-import { frontend_showPage, frontend_resetRdyUps, frontend_getSelectedCharacters, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/frontend.js";
+import { frontend_showPage, PAGES } from "./view/frontend.js";
+import { frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_resumeGameLogic, main_setGameStateRegular, main_switchSides } from "./main.js";
 
 export let currentGameState;
@@ -63,20 +65,20 @@ export function goToState(GAMESTATE) {
     }
 }
 function mainMenuToSettings() {
-    frontend_showPage("config");
+    frontend_showPage(PAGES.CONFIG);
 }
 function mainMenuToCharacterSelection() {
     frontend_resetRdyUps();
-    frontend_showPage("characterSelection");
+    frontend_showPage(PAGES.CHARACTER_SELECTION);
 }
 function settingsToMainMenu() {
-    frontend_showPage("titleScreen");
+    frontend_showPage(PAGES.MAIN_MENU);
 }
 function characterSelectionToMainMenu() {
-    frontend_showPage("titleScreen");
+    frontend_showPage(PAGES.MAIN_MENU);
 }
 function characterSelectionToGameStartCutscene() {
-    frontend_showPage("game");
+    frontend_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters());
     frontend_setupGameUI();
 
@@ -128,7 +130,9 @@ function pauseScreenToMainMenu() {
 function challengerDeathToSwitchingSidesCutscene() {
     main_pauseGameLogic();
     frontend_switchSidesAnimations();
-    main_switchSides();
+    setTimeout(() => {
+        main_switchSides();
+    }, 900);
 }
 function challengerDeathToRoundOverCutscene() {
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
