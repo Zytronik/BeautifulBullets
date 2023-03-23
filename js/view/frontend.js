@@ -61,7 +61,7 @@ export function frontend_showPauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.add("paused");
 }
 
-export function getSelectedCharacters() {
+export function frontend_getSelectedCharacters() {
     return [player1Character, player2Character];
 }
 
@@ -402,7 +402,7 @@ function getHighestStats() {
 }
 
 function setupChallengerHealthBar() {
-    let healthCount = CHARACTER_DATA[getSelectedCharacters()[0]]["challenger"]["stats"]["health"];
+    let healthCount = CHARACTER_DATA[frontend_getSelectedCharacters()[0]]["challenger"]["stats"]["health"];
     let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
     Array.prototype.forEach.call(playersHealthBar, function (hBar) {
         hBar.innerHTML = "";
@@ -452,8 +452,8 @@ function setupBossHealthBar() {
     Array.prototype.forEach.call(playersHealthBar, function (hBar) {
         hBar.innerHTML = '<div class="boss-desc">' +
             '<div>' +
-            '<img src="' + CHARACTER_DATA[getSelectedCharacters()[1]]["spriteUrl"] + '">' +
-            '<p>' + CHARACTER_DATA[getSelectedCharacters()[1]]["name"] + '</p>' +
+            '<img src="' + CHARACTER_DATA[frontend_getSelectedCharacters()[1]]["spriteUrl"] + '">' +
+            '<p>' + CHARACTER_DATA[frontend_getSelectedCharacters()[1]]["name"] + '</p>' +
             '</div>' +
             '<span>0%</span>' +
             '</div>' +

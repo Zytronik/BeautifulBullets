@@ -1,4 +1,4 @@
-import { frontend_showPage, frontend_resetRdyUps, getSelectedCharacters, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/frontend.js";
+import { frontend_showPage, frontend_resetRdyUps, frontend_getSelectedCharacters, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/frontend.js";
 import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_resumeGameLogic, main_setGameStateRegular, main_switchSides } from "./main.js";
 
 export let currentGameState;
@@ -77,7 +77,7 @@ function characterSelectionToMainMenu() {
 }
 function characterSelectionToGameStartCutscene() {
     frontend_showPage("game");
-    main_loadGame(getSelectedCharacters());
+    main_loadGame(frontend_getSelectedCharacters());
     frontend_setupGameUI();
 
     //TODO isch nur temporär
