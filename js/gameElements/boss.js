@@ -6,6 +6,9 @@ export class Boss {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT / 6;
 
+        this.healthBarSpriteUrl = bossData.healthBarSpriteUrl;
+        this.healthBarName = bossData.healthBarName;
+
         this.xSpeedNormalized = 0;
         this.ySpeedNormalized = 0;
 

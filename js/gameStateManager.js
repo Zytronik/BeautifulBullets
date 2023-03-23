@@ -129,13 +129,14 @@ function pauseScreenToMainMenu() {
 }
 function challengerDeathToSwitchingSidesCutscene() {
     main_pauseGameLogic();
+    main_switchSides();
     frontend_switchSidesAnimations();
-    setTimeout(() => {
-        main_switchSides();
-    }, 900);
 }
 function challengerDeathToRoundOverCutscene() {
+    main_pauseGameLogic();
+    main_switchSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
+    match.startNextRound();
 }
 function challengerDeathToGameOverCutscene() {
     //TODO
@@ -145,7 +146,10 @@ function switchingSidesCutsceneToGameStartCutscene() {
     goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
 function roundOverCutsceneToGameStartCutscene() {
-    //TODO
+    main_resumeGameLogic();
+    //TODO isch nur temporär
+    goToState(GAMESTATE.GAMEPLAY_REGULAR);
+
 }
 function gameOverCutsceneToResultScreen() {
     //TODO
