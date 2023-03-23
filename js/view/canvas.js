@@ -120,8 +120,7 @@ export function convertMouseCoordinatesToCanvasCoordinates() {
     const canvas = document.querySelector("article.game .boss canvas");
     const canvasTop = canvas.getBoundingClientRect().top;
     const canvasLeft = canvas.getBoundingClientRect().left;
-    let mouseX = canvas.width/BOARD_WIDTH * (mouseCoordinates[0] - canvasLeft);
-    let mouseY = canvas.height/BOARD_HEIGHT * (mouseCoordinates[1] - canvasTop);
+    let mouseX = (mouseCoordinates[0] - canvasLeft) / CANVAS_UNIT;
+    let mouseY = (mouseCoordinates[1] - canvasTop) / CANVAS_UNIT;
     return [mouseX, mouseY];
-
 }
