@@ -22,13 +22,9 @@ export let currentFPS = 0;
 export let canvasRenderTime = 0;
 export let gameLogicTime = 0;
 export let totalFrameCalculationTime = 0;
-export let characterPlayer1;
-export let characterPlayer2;
 
 let loadOnFirstCall = true;
 export function main_loadGame([character1, character2]) {
-    characterPlayer1 = character1;
-    characterPlayer2 = character2;
 
     match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
 
@@ -125,9 +121,6 @@ export function main_challengerDeath() {
 }
 
 export function main_switchSides() {
-    let temp = characterPlayer1;
-    characterPlayer1 = characterPlayer2;
-    characterPlayer2 = temp;
     match.swapSides();
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());

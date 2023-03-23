@@ -15,8 +15,8 @@ export class Challenger {
         this.hitboxColor = challengerData.hitboxColor;
         this.bulletVisuals = challengerData.bulletVisuals;
 
-        this.health = challengerData.stats.health;
-        this.currentHealth = this.health;
+        this.maxHealth = challengerData.stats.health;
+        this.currentHealth = this.maxHealth;
         this.isInvincible = false;
         this.iFramesCounter = 0;
 
@@ -70,7 +70,7 @@ export class Challenger {
     reset() {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT * 5 / 6;
-        this.currentHealth = this.health;
+        this.currentHealth = this.maxHealth;
         this.isInvincible = false;
         this.iFramesCounter = 0;
         this.fireRateTracker = 0;
