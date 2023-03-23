@@ -189,21 +189,21 @@ export function cheats() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = -1;
         challenger.bulletDamage = 0;
-        console.log("Challenger Health set to -1 and bulletDamage set to 0");
+        console.log("Challenger Health set to "+challenger.currentHealth+" and bulletDamage set to "+challenger.bulletDamage);
     }
 }
 
 export function lowerChallengerHealth() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
-        console.log("Challenger Health set to 1")
         challenger.currentHealth = 1;
+        console.log("Challenger Health set to "+challenger.currentHealth)
     }
 }
 
 export function lowerBossHealth() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
-        console.log("Boss Health set to 1")
         boss.currentHealth = 30;
+        console.log("Boss Health set to "+boss.currentHealth)
     }
 }
 
