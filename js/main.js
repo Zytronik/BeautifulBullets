@@ -157,6 +157,35 @@ export function main_closeGameLoop() {
     gamePaused = true;
 }
 
+export function handleGoBackButton() {
+    if (currentGameState === GAMESTATE.SETTINGS) {
+        goToState(GAMESTATE.MAIN_MENU);
+    }
+
+    if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {
+        goToState(GAMESTATE.MAIN_MENU);
+    }
+
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR) {
+        goToState(GAMESTATE.PAUSE_SCREEN);
+    } else if (currentGameState === GAMESTATE.PAUSE_SCREEN) {
+        if (isGameStateEnraged) {
+            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+        } else {
+            goToState(GAMESTATE.GAMEPLAY_REGULAR);
+        }
+    }
+}
+
+export function cheats() {
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
+        challenger.currentHealth = -1;
+        challenger.bulletDamage = 0;
+        console.log("You dirty Cheater");
+    }
+}
+
+
 
 
 
@@ -205,32 +234,4 @@ function hitDetectionBoss() {
             }
         }
     });
-}
-
-export function handleGoBackButton() {
-    if (currentGameState === GAMESTATE.SETTINGS) {
-        goToState(GAMESTATE.MAIN_MENU);
-    }
-
-    if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {
-        goToState(GAMESTATE.MAIN_MENU);
-    }
-
-    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR) {
-        goToState(GAMESTATE.PAUSE_SCREEN);
-    } else if (currentGameState === GAMESTATE.PAUSE_SCREEN) {
-        if (isGameStateEnraged) {
-            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
-        } else {
-            goToState(GAMESTATE.GAMEPLAY_REGULAR);
-        }
-    }
-}
-
-export function cheats() {
-    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
-        challenger.currentHealth = -1;
-        challenger.bulletDamage = 0;
-        console.log("You dirty Cheater");
-    }
 }

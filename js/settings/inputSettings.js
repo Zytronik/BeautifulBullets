@@ -1,4 +1,4 @@
-import { main_handleGoBackButton } from "../main.js";
+import { cheats, handleGoBackButton } from "../main.js";
 
 export const INPUTS_CHALLENGER = {
     left: false,
@@ -93,7 +93,7 @@ document.addEventListener("keydown", (event) => {
 
     //Single Inputs
     if (event.code === GO_BACK_BUTTON) {
-        main_handleGoBackButton();
+        handleGoBackButton();
     }
 
     // ***** Super Secret Sauce Cheaty Cheat Code Section *****
