@@ -33,14 +33,14 @@ export function frontend_switchSidesAnimations() {
         document.querySelector("article.game .switchingSides").classList.add("active");
         setTimeout(() => {
             document.querySelector("article.game .switchingSides").classList.remove("active");
-            switchUI();
             setTimeout(() => {
+                switchUI();
                 fadeInUI();
                 setTimeout(() => {
                     goToState(GAMESTATE.GAMESTART_CUTSCENE);
                 }, 900);
             }, 500);
-        }, 6000);
+        }, 5000);
     }, 900);
 }
 
@@ -50,17 +50,20 @@ export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 .score").innerHTML = scoreP2;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1SelectedCharacter].name;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2SelectedCharacter].name;
-    document.querySelector("article.game .roundEndScreen").classList.add("active");
-    switchUI();
+    fadeOutUI();
     setTimeout(() => {
-        fadeInUI();
-    }, 500);
-    setTimeout(() => {
-        document.querySelector("article.game .roundEndScreen").classList.remove("active");
+        document.querySelector("article.game .roundEndScreen").classList.add("active");
         setTimeout(() => {
-            goToState(GAMESTATE.GAMESTART_CUTSCENE);
-        }, 900);
-    }, 4000);
+            document.querySelector("article.game .roundEndScreen").classList.remove("active");
+            setTimeout(() => {
+                switchUI();
+                fadeInUI();
+                setTimeout(() => {
+                    goToState(GAMESTATE.GAMESTART_CUTSCENE);
+                }, 900);
+            }, 500);
+        }, 5000);
+    }, 900);
 }
 
 function switchUI() {
@@ -72,6 +75,7 @@ function switchUI() {
     oldBoss.classList.add("challenger");
     updateChallengerHealthbar();
     frontend_setupGameUI();
+    updateBossChallengerHealthbarPosition();
 }
 
 function fadeOutUI() {

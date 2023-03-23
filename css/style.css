@@ -93,6 +93,8 @@ article.hidePage {
 	visibility: hidden;
 	opacity: 0;
 	pointer-events: none;
+	transition: all 1000ms;
+	transition-property: opacity, visibility;
 }
 
 /* Variables */
@@ -479,7 +481,6 @@ article.game .challenger-abilitie {
 	left: -20px;
 	background-color: white;
 	bottom: 0;
-	transition: 1000ms;
 }
 
 article.game .boss .challenger-abilitie {
@@ -515,7 +516,8 @@ article.game .challenger-abilitie .grace-bar>span:first-of-type {
 
 article.game .boss .boss-healthbar {
 	top: 100%;
-	transition: 1000ms;
+	transition: all 1000ms;
+	transition-property: opacity, visibility;
 }
 
 article.game .boss-healthbar {
