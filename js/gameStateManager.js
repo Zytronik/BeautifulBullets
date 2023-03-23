@@ -104,12 +104,13 @@ function gameplayToPauseScreen() {
 }
 function gameplayToChallengerDeath() {
     if (match.hasMatchFinished()) {
-        goToState(GAMESTATE.RESULT_SCREEN)
+        goToState(GAMESTATE.GAMEOVER_CUTSCENE)
     } else {
-        if (match.hasRoundFinished()) {
-            match.decideRoundWinner();
+        console.log(match.isRoundInFirstHalf());
+        if (match.isRoundInFirstHalf()) {
             goToState(GAMESTATE.SWITCHING_SIDES_CUTSCENE);
         } else {
+            match.decideRoundWinner();
             goToState(GAMESTATE.ROUNDOVER_CUTSCENE);
         }
     }
