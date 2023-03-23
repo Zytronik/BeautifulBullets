@@ -1,5 +1,6 @@
 import { DEFAULT_MATCH_SETTINGS, FPS } from "../settings/gameSettings.js";
 import { boss, challenger } from "../main.js";
+import { GAMESTATE, goToState } from "../gameStateManager.js";
 
 export class Match {
     constructor(player1Character, player2Character, matchSettings = DEFAULT_MATCH_SETTINGS) {
@@ -15,13 +16,16 @@ export class Match {
         this.matchWinner;
         this.firstHalf = true;
         this.matchSettings = {
-            timeLimit: matchSettings.timeLimit,
+            timeLimitInFrames: matchSettings.timeLimitInFrames,
             firstTo: matchSettings.firstTo,
             matchDecider: matchSettings.matchDecider,
         }
     }
     updateTime() {
         this.elapsedTimeInFrames++;
+        if (this.elapsedTimeInFrames > this.matchSettings.timeLimitInFrames) {
+            goToState(GAMESTATE.TIME_OVER_CUTSCENE);
+        }
     }
     updateStats() {
         if (this.challenger === PLAYER.ONE) {
@@ -103,7 +107,7 @@ export class Match {
             }
         }
     }
-    hasRoundFinished() {
+    isRoundInFirstHalf() {
         return this.firstHalf;
     }
     startNextRound() {

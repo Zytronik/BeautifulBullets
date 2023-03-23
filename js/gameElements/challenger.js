@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
 import { Bullet } from "./bullet.js";
-import { challengerBullets, boss } from "../main.js";
+import { challengerBullets, boss, isGameStateEnraged } from "../main.js";
 
 export class Challenger {
     constructor(challengerData) {
@@ -46,18 +46,22 @@ export class Challenger {
     }
     gameTick() {
         this.#move();
-        this.#gainPassiveCharge();
-        this.#shootBullets();
         this.#specialAbility();
         this.#iframesTimeout();
+        if (!isGameStateEnraged) {
+            this.#gainPassiveCharge();
+            this.#shootBullets();
+        }
     }
     gainGraceCharge() {
-        if (this.specialCharge + this.specialGraceChargeSpeed > this.specialMaxCharge) {
-            this.specialCharge = this.specialMaxCharge;
-        } else {
-            this.specialCharge += this.specialGraceChargeSpeed;
+        if (!isGameStateEnraged) {
+            if (this.specialCharge + this.specialGraceChargeSpeed > this.specialMaxCharge) {
+                this.specialCharge = this.specialMaxCharge;
+            } else {
+                this.specialCharge += this.specialGraceChargeSpeed;
+            }
+            this.timeInGraceInFrames++;
         }
-        this.timeInGraceInFrames++;
     }
     takeDamageAndCheckDead() {
         if (!this.isInvincible) {

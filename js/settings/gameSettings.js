@@ -7,7 +7,7 @@ export const GRACE_RANGE = 9 ** 2;
 export const CHALLENGER_I_FRAMES = 10;
 
 export const DEFAULT_MATCH_SETTINGS = {
-    timeLimit: 120 * FPS,
+    timeLimitInFrames: 120 * FPS,
     firstTo: 3,
     matchDecider: MATCH_DECIDING_FACTORS.DAMAGE_DEALT,
 }

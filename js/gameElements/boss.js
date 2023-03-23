@@ -1,3 +1,4 @@
+import { isGameStateEnraged } from "../main.js";
 import { BOARD_WIDTH, BOARD_HEIGHT, FPS } from "../settings/gameSettings.js";
 import { INPUTS_BOSS } from "../settings/inputSettings.js";
 
@@ -30,11 +31,9 @@ export class Boss {
         this.passiveFrequency = bossData.passive.frequency * FPS;
         this.passiveCoolDown = bossData.passive.frequency * FPS;
 
-        this.isEnraged = false;
-        this.enrageAbility
-        this.enrageFrequency = bossData.passive.frequency * FPS;
-        this.enrageCoolDown = bossData.passive.frequency * FPS;
-        // this.enrage = bossData.enrage;
+        this.enragePassive;
+        this.enrageFrequency;
+        this.enrageCoolDown;
     }
     gameTick() {
         this.#move();
@@ -91,11 +90,21 @@ export class Boss {
             this.ability1CoolDown = 0;
         }
 
-        if (this.passiveCoolDown <= this.passiveFrequency) {
-            this.passiveCoolDown++;
+
+        if (!isGameStateEnraged) {
+            if (this.passiveCoolDown <= this.passiveFrequency) {
+                this.passiveCoolDown++;
+            } else {
+                this.passive.use();
+                this.passiveCoolDown = 0;
+            }
         } else {
-            this.passive.use();
-            this.passiveCoolDown = 0;
+            if (this.enrageCoolDown <= this.enrageFrequency) {
+                this.enrageCoolDown++;
+            } else {
+                this.enragePassive.use();
+                this.enrageCoolDown = 0;
+            }
         }
     }
 }

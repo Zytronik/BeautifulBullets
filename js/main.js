@@ -82,7 +82,6 @@ function gameLoop() {
 }
 
 function gameLogic() {
-    match.updateTime();
     challenger.gameTick();
     boss.gameTick();
     bossBullets.forEach(function (bullet, index) {
@@ -99,6 +98,7 @@ function gameLogic() {
     });
     hitDetectionChallenger();
     hitDetectionBoss();
+    match.updateTime();
     updateGameUI();
 }
 
@@ -120,6 +120,7 @@ export function main_setGameStateEnraged() {
 }
 
 export function main_challengerDeath() {
+    main_pauseGameLogic();
     match.updateStats();
     goToState(GAMESTATE.CHALLENGER_DEATH);
 }
@@ -232,9 +233,9 @@ function hitDetectionBoss() {
         let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
         if (xDiffSquared + yDiffSquared < hitRange) {
             challengerBullets.splice(index, 1);
-            let activateEnrage = boss.takeDamageAndCheckDead(challenger.bulletDamage);
-            if (activateEnrage) {
-                goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+            let bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
+            if (bossDied) {
+                goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);
             }
         }
     });
