@@ -29,22 +29,24 @@ STATE_TRANSITION_MAP.set(GAMESTATE.CHARACTER_SELECTION + GAMESTATE.GAMESTART_CUT
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMESTART_CUTSCENE + GAMESTATE.GAMEPLAY_REGULAR, gameStartCutsceneToGameplayRegular);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.TIME_OVER_CUTSCENE, gameplayRegularToTimeOverCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.BOSS_DEATH_CUTSCENE, gameplayRegularToBossDeathCutscene);
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
 STATE_TRANSITION_MAP.set(GAMESTATE.TIME_OVER_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, cutsceneToGameplayEnraged);
 STATE_TRANSITION_MAP.set(GAMESTATE.BOSS_DEATH_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, cutsceneToGameplayEnraged);
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
 STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_REGULAR, pauseScreenToGameplay);
 STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_ENRAGED, pauseScreenToGameplay);
 STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.MAIN_MENU, pauseScreenToMainMenu);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
 STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.SWITCHING_SIDES_CUTSCENE, challengerDeathToSwitchingSidesCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.ROUNDOVER_CUTSCENE, challengerDeathToRoundOverCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.GAMEOVER_CUTSCENE, challengerDeathToGameOverCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.SWITCHING_SIDES_CUTSCENE + GAMESTATE.GAMESTART_CUTSCENE, switchingSidesCutsceneToGameStartCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.ROUNDOVER_CUTSCENE + GAMESTATE.GAMESTART_CUTSCENE, roundOverCutsceneToGameStartCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.GAMEOVER_CUTSCENE + GAMESTATE.RESULT_SCREEN, gameOverCutsceneToResultScreen);
+STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.GAMESTART_CUTSCENE, resultScreenToGameStartCutscene);
 STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.CHARACTER_SELECTION, resultScreenToCharacterSelection);
+STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.MAIN_MENU, resultScreenToMainMenu);
 
 
 currentGameState = GAMESTATE.MAIN_MENU;
@@ -65,103 +67,201 @@ export function goToState(GAMESTATE) {
         transitionMethod();
     }
 }
+
 function mainMenuToSettings() {
-    /*
+    /* CURRENT STATE: SETTINGS
         Backend:
-            - Load current settings
-        Frontend
-            - Close main menu
-            - Open settings
-    */ 
+            - load current settings
+        Frontend:
+            - close main menu screen
+            - show settings screen
+    */
     frontend_showPage(PAGES.CONFIG);
 }
+
 function mainMenuToCharacterSelection() {
-    /*
+    /* CURRENT STATE: CHARACTER_SELECTION
         Backend:
-            - Load characters
-        Frontend
-            - Close main menu
-            - Display character selection
-            - Reset ready buttons
-    */ 
+            - load characters
+        Frontend:
+            - close main menu
+            - display character selection
+            - reset ready buttons
+    */
     frontend_resetRdyUps();
     frontend_showPage(PAGES.CHARACTER_SELECTION);
 }
+
 function settingsToMainMenu() {
-    /*
+    /* CURRENT STATE: MAIN_MENU
         Backend:
-            - Save & Apply settings
-        Frontend
-            - Close settings
-            - Open main menu
-    */ 
+            - save & apply settings
+        Frontend:
+            - close settings screen
+            - show main menu screen
+    */
     frontend_showPage(PAGES.MAIN_MENU);
 }
+
 function characterSelectionToMainMenu() {
-    /*
+    /* CURRENT STATE: MAIN_MENU
         Backend:
             - 
-        Frontend
-            - Close character selection
-            - Open main menu
-    */ 
+        Frontend:
+            - close character selection screen
+            - show main menu screen
+    */
     frontend_showPage(PAGES.MAIN_MENU);
 }
+
 function characterSelectionToGameStartCutscene() {
-    /*
+    /* CURRENT STATE: GAMESTART_CUTSCENE
         Backend:
-            - prepare game for start:
-                - player1 & player2 character
+            - load data:
+                - player1 & player2 from character selection
                 - challenger
                 - boss
-                - match
-                - empty bullets
-        Frontend
-            - Close character selection
-            - Open gameplay screen
-            - Play intro cutscene
-                - go to GAMEPLAY_REGULAR after cutscene
-    */ 
+                - create match
+            - pause gameplay
+            - clear bullets
+        Frontend:
+            - close character selection screen
+            - show gameplay screen
+            - play intro cutscene
+        StateManager:
+            - go to GAMEPLAY_REGULAR after cutscene
+    */
     frontend_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters());
     frontend_setupGameUI();
-
-    //TODO isch nur temporär
-    //showGameStartCutscene()
     goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
+
 function gameStartCutsceneToGameplayRegular() {
-    /*
+    /* CURRENT STATE: GAMEPLAY_REGULAR
         Backend:
-            - unpause game
-        Frontend
-            - Close character selection
-            - Open gameplay screen
-            - Play intro cutscene
-                - go to GAMEPLAY_REGULAR after cutscene
-    */ 
+            - start/resume game logic:
+                - challenger based on match
+                - boss based on match
+                - clear bullets
+                - set game state to regular
+                - unpause gameplay
+        Frontend:
+            - hide cutscene
+            - show ingame UI
+    */
     main_resumeGameLogic();
     main_setGameStateRegular();
 }
+
 function gameplayRegularToTimeOverCutscene() {
-    //TODO
+    /* CURRENT STATE: TIME_OVER_CUTSCENE
+        Backend:
+            - pause gameplay
+            - clear bullets
+        Frontend:
+            - hide game ui
+            - play time over cutscene
+        StateManager:
+            - go to GAMEPLAY_ENRAGED after cutscene
+    */
     clearAllBullets();
     goToState(GAMESTATE.GAMEPLAY_ENRAGED);
 }
+
 function gameplayRegularToBossDeathCutscene() {
-    //TODO
+    /* CURRENT STATE: BOSS_DEATH_CUTSCENE
+        Backend:
+            - pause gameplay
+            - clear bullets
+        Frontend:
+            - hide game ui
+            - play boss death cutscene
+        StateManager:
+            - go to GAMEPLAY_ENRAGED after cutscene
+    */
     clearAllBullets();
     goToState(GAMESTATE.GAMEPLAY_ENRAGED);
 }
+
+function cutsceneToGameplayEnraged() {
+    /* CURRENT STATE: GAMEPLAY_ENRAGE
+        Backend:
+            - unpause gameplay
+            - set game state to enraged
+
+                Enraged State:
+                    Boss:
+                        - Can't take any damage
+                        - Passive is replaced with enrage ability
+                        - Abilities potentially have lower CD (needs testing)
+                        - Rest stays the same as in regular gameplay
+                    Challenger:
+                        - Can't shoot anymore
+                        - Can't gain special charge
+                        - Has to try and survive as long as possible
+                        - One hit kills? 
+                            - Maybe if BOSS_DEATH was the trigger
+                            - On TIME_OVER challenger keeps its health
+
+        Frontend:
+            - hide cutscene
+            - show (enrage?) ingame UI
+    */
+    main_setGameStateEnraged();
+}
+
 function gameplayToPauseScreen() {
+    /* CURRENT STATE: PAUSE_SCREEN
+        Backend:
+            - pause gameplay
+        Frontend:
+            - show pause screen
+    */
     main_pauseGameLogic();
     frontend_showPauseScreen();
 }
+
+function pauseScreenToGameplay() {
+    /* CURRENT STATE: GAMEPLAY_REGULAR / GAMEPLAY_ENRAGE
+        Backend:
+            - unpause gameplay
+        Frontend:
+            - hide pause screen
+    */
+    frontend_closePauseScreen();
+    main_resumeGameLogic();
+}
+
+function pauseScreenToMainMenu() {
+    /* CURRENT STATE: MAIN_MENU
+        Backend:
+            - close gameloop and clear data
+        Frontend:
+            - hide game ui
+            - hide pause screen
+            - show main menu
+    */
+    frontend_closePauseScreen();
+    main_closeGameLoop();
+    frontend_showPage("titleScreen");
+}
+
 function gameplayToChallengerDeath() {
+    /* CURRENT STATE: CHALLENGER_DEATH
+        Backend:
+            - pause gameplay
+            - keep bullets to show how player died
+            - update match stats
+        Frontend:
+            - hide game ui
+            - play challenger death cutscene
+        StateManager:
+            - decide based on match status what state to go to
+    */
     if (match.hasMatchFinished()) {
         goToState(GAMESTATE.GAMEOVER_CUTSCENE)
     } else {
-        console.log(match.isRoundInFirstHalf());
         if (match.isRoundInFirstHalf()) {
             goToState(GAMESTATE.SWITCHING_SIDES_CUTSCENE);
         } else {
@@ -170,48 +270,133 @@ function gameplayToChallengerDeath() {
         }
     }
 }
-function cutsceneToGameplayEnraged() {
-    //TODO
-    main_setGameStateEnraged();
-}
-function pauseScreenToGameplay() {
-    frontend_closePauseScreen();
-    main_resumeGameLogic();
-}
-function pauseScreenToMainMenu() {
-    frontend_closePauseScreen();
-    main_closeGameLoop();
-    frontend_showPage("titleScreen");
-}
+
 function challengerDeathToSwitchingSidesCutscene() {
+    /* CURRENT STATE: SWITCHING_SIDES_CUTSCENE
+        Backend:
+            - pause gameplay
+            - clear bullets
+            - switch sides
+        Frontend:
+            - hide previous cutscene
+            - hide game ui
+            - play switching sides cutscene
+        StateManager:
+            - go to GAMESTART_CUTSCENE after cutscene
+    */
     main_pauseGameLogic();
     main_switchSides();
     frontend_switchSidesAnimations();
     goToState(GAMESTATE.GAMESTART_CUTSCENE);
 }
+
 function challengerDeathToRoundOverCutscene() {
+    /* CURRENT STATE: ROUND_OVER_CUTSCENE
+        Backend:
+            - pause gameplay
+            - clear bullets
+            - switch sides
+        Frontend:
+            - hide previous cutscene
+            - hide game ui
+            - play round over cutscene
+        StateManager:
+            - go to GAMESTART_CUTSCENE after cutscene
+    */
     main_pauseGameLogic();
     main_switchSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
     match.startNextRound();
     goToState(GAMESTATE.GAMESTART_CUTSCENE);
 }
-function challengerDeathToGameOverCutscene() {
-    //TODO
-}
-function switchingSidesCutsceneToGameStartCutscene() {
-    //TODO isch nur temporär
-    goToState(GAMESTATE.GAMEPLAY_REGULAR);
-}
-function roundOverCutsceneToGameStartCutscene() {
-    main_resumeGameLogic();
-    //TODO isch nur temporär
-    goToState(GAMESTATE.GAMEPLAY_REGULAR);
 
+function challengerDeathToGameOverCutscene() {
+    /* CURRENT STATE: GAMEOVER_CUTSCENE
+        Backend:
+            - pause gameplay
+            - keep bullets to show how game ended
+        Frontend:
+            - hide previous cutscene
+            - hide game ui
+            - play game over cutscene
+        StateManager:
+            - go to RESULT_SCREEN after cutscene
+    */
 }
+
+function switchingSidesCutsceneToGameStartCutscene() {
+    /* CURRENT STATE: GAMESTART_CUTSCENE
+        Backend:
+            -
+        Frontend:
+            - hide previous cutscene
+            - hide game ui
+            - play game over cutscene
+        StateManager:
+            - go to GAMEPLAY_REGULAR after cutscene
+    */
+    goToState(GAMESTATE.GAMEPLAY_REGULAR);
+}
+
+function roundOverCutsceneToGameStartCutscene() {
+    /* CURRENT STATE: GAMESTART_CUTSCENE
+        Backend:
+            - match: start next round
+        Frontend:
+        StateManager:
+            - go to GAMEPLAY_REGULAR after cutscene
+    */
+    goToState(GAMESTATE.GAMEPLAY_REGULAR);
+}
+
 function gameOverCutsceneToResultScreen() {
-    //TODO
+    /* CURRENT STATE: RESULT_SCREEN
+        Backend:
+            - keep data for a rematch
+        Frontend:
+            - close ingame screen
+            - show result screen
+    */
 }
+
+function resultScreenToGameStartCutscene() {
+    /* CURRENT STATE: GAMESTART_CUTSCENE
+    (similar to CHARACTER_SELECTION, just with previous character selection)
+        Backend:
+            - clear data but keep character selection
+            - load data:
+                - player1 & player2 characters from previous match
+                - challenger
+                - boss
+                - create match
+            - clear bullets
+            - pause gameplay
+        Frontend:
+            - close result screen
+            - show gameplay screen
+            - play intro cutscene
+        StateManager:
+            - go to GAMEPLAY_REGULAR after cutscene
+    */
+}
+
 function resultScreenToCharacterSelection() {
-    //TODO
+    /* CURRENT STATE: CHARACTER_SELECTION
+        Backend:
+            - close gameloop and clear data
+        Frontend:
+            - close ingame screen
+            - show character select screen
+            - reset ready buttons
+    */
+}
+
+function resultScreenToMainMenu() {
+    /* CURRENT STATE: MAIN_MENU
+        Backend:
+            - close gameloop and clear data
+        Frontend:
+            - close ingame screen
+            - show main menu screen
+    */
 }
