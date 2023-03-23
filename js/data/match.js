@@ -13,7 +13,7 @@ export class Match {
         this.scoreP1 = 0;
         this.scoreP2 = 0;
         this.matchWinner;
-        this.swapSidesNeeded = true;
+        this.firstHalf = true;
         this.matchSettings = {
             timeLimit: matchSettings.timeLimit,
             firstTo: matchSettings.firstTo,
@@ -35,9 +35,20 @@ export class Match {
         }
     }
     swapSides() {
-        this.boss = PLAYER.ONE;
-        this.challenger = PLAYER.TWO;
-        this.swapSidesNeeded = !this.swapSidesNeeded;
+        this.firstHalf = !this.firstHalf;
+        if (this.firstHalf) {
+            this.challenger = PLAYER.ONE;
+            this.boss = PLAYER.TWO;
+        } else {
+            this.challenger = PLAYER.TWO;
+            this.boss = PLAYER.ONE;
+        }
+    }
+    getChallenger() {
+        return this.challenger === PLAYER.ONE ? this.player1Character.challenger : this.player2Character.challenger
+    }
+    getBoss() {
+        return this.boss === PLAYER.ONE ? this.player1Character.boss : this.player2Character.boss
     }
     decideRoundWinner() {
         if (this.matchSettings.matchDecider === MATCH_DECIDING_FACTORS.DAMAGE_DEALT) {
@@ -92,8 +103,8 @@ export class Match {
             }
         }
     }
-    hasRoundFinished(){
-        return this.swapSidesNeeded;
+    hasRoundFinished() {
+        return this.firstHalf;
     }
     startNextRound() {
         this.previousRounds.push(this.currentRound);

@@ -6,48 +6,48 @@ import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./data/match.js";
 import { FPS, GRACE_RANGE } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
-import { GO_BACK_BUTTON } from "./settings/inputSettings.js";
 
 export let challenger;
+export let challengerBullets;
 export let boss;
-export let bossBullets = [];
-export let challengerBullets = [];
-let player1Canvas;
-let player2Canvas;
+export let bossBullets;
 export let match;
-export function switchBossWithChallenger(currentChallenger, currentBoss) {
-    challenger = new Challenger(CHARACTER_DATA[currentBoss].challenger);
-    boss = new Boss(CHARACTER_DATA[currentChallenger].boss);
-}
+export let isGameStateEnraged = false;
+let gamePaused = true;
 
-export function loadGame([player1, player2]) {
-    challenger = new Challenger(CHARACTER_DATA[player1].challenger);
-    boss = new Boss(CHARACTER_DATA[player2].boss);
-    match = new Match(CHARACTER_DATA[player1], CHARACTER_DATA[player2]);
+export let player1Canvas;
+export let player2Canvas;
 
-    player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
-    player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+export let currentFPS = 0;
+export let canvasRenderTime = 0;
+export let gameLogicTime = 0;
+export let totalFrameCalculationTime = 0;
 
-    requestAnimationFrame(gameLoop);
-}
+let loadOnFirstCall = true;
+export function main_loadGame([character1, character2]) {
+    match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
 
-window.onresize = function () {
-    setTimeout(() => {
-        if (player1Canvas !== undefined && player2Canvas !== undefined) {
-            player1Canvas.resizeCanvas();
-            player2Canvas.resizeCanvas();
-        }
-    }, 800);
+    challenger = new Challenger(match.player1Character.challenger);
+    challengerBullets = [];
+
+    boss = new Boss(match.player2Character.boss);
+    bossBullets = [];
+
+
+    isGameStateEnraged = false;
+    gamePaused = true;
+
+    
+    if (loadOnFirstCall) {
+        loadOnFirstCall = false;
+        player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
+        player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+    }
 }
 
 let previousFrameAt = 0;
 let currentlyAt = 0;
 let nextCalculationAt = 0;
-export let currentFPS = 0;
-export let canvasRenderTime = 0;
-export let gameLogicTime = 0;
-export let totalFrameCalculationTime = 0;
-let gamePaused = false;
 function gameLoop() {
     //Wait for next frame on high refreshrates
     do {
@@ -71,13 +71,11 @@ function gameLoop() {
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
 
     nextCalculationAt = currentlyAt + 1000 / FPS - amountWaitedTooLong;
-
     if (!gamePaused) {
         requestAnimationFrame(gameLoop);
     }
 }
 
-export let isGameStateEnraged = true;
 function gameLogic() {
     match.updateTime();
     challenger.gameTick();
@@ -98,21 +96,71 @@ function gameLogic() {
     hitDetectionBoss();
     updateGameUI();
 }
-export function pauseGameLogic() {
+
+export function main_pauseGameLogic() {
     gamePaused = true;
 }
-export function resumeGameLogic() {
+
+export function main_resumeGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
 }
-export function setGameStateRegular() {
+
+export function main_setGameStateRegular() {
     isGameStateEnraged = false;
 }
-export function setGameStateEnraged() {
+
+export function main_setGameStateEnraged() {
     isGameStateEnraged = true;
 }
 
-//(a-b)^2 = a^2 - 2ab + b^2
+export function main_challengerDeath(){
+    match.updateStats();
+    goToState(GAMESTATE.CHALLENGER_DEATH);
+}
+
+export function main_switchSides() {
+    match.swapSides();
+    challenger = new Challenger(match.getChallenger());
+    boss = new Boss(match.getBoss());
+    challengerBullets = [];
+    bossBullets = [];
+    isGameStateEnraged = false;
+}
+
+export function main_handleGoBackButton() {
+    if (currentGameState === GAMESTATE.SETTINGS) {
+        goToState(GAMESTATE.MAIN_MENU);
+    }
+
+    if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {
+        goToState(GAMESTATE.MAIN_MENU);
+    }
+
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR) {
+        goToState(GAMESTATE.PAUSE_SCREEN);
+    } else if (currentGameState === GAMESTATE.PAUSE_SCREEN) {
+        if (isGameStateEnraged) {
+            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+        } else {
+            goToState(GAMESTATE.GAMEPLAY_REGULAR);
+        }
+    }
+}
+
+export function main_closeGameLoop() {
+    challenger = null;
+    challengerBullets = null;
+    boss = null;
+    bossBullets = null;
+    isGameStateEnraged = false;
+    gamePaused = true;
+}
+
+
+
+
+//TODO Move to BulletCollection
 function hitDetectionChallenger() {
     // TODO:
     // freshly spawned bullet shouldnt hurt
@@ -128,9 +176,9 @@ function hitDetectionChallenger() {
         let hitRange = (challenger.radius + bullet.radius) * (challenger.radius + bullet.radius);
         if (xDiffSquared + yDiffSquared < hitRange) {
             bossBullets.splice(index, 1);
-            let isGameOver = challenger.takeDamageAndCheckDead();
-            if (isGameOver) {
-                goToState(GAMESTATE.CHALLENGER_DEATH);
+            let challengerDied = challenger.takeDamageAndCheckDead();
+            if (challengerDied) {
+                main_challengerDeath();
             }
         }
         if (xDiffSquared + yDiffSquared < GRACE_RANGE + hitRange) {
@@ -157,24 +205,4 @@ function hitDetectionBoss() {
             }
         }
     });
-}
-
-export function handleGoBackButton() {
-    if (currentGameState === GAMESTATE.SETTINGS) {
-        goToState(GAMESTATE.MAIN_MENU);
-    }
-
-    if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {
-        goToState(GAMESTATE.MAIN_MENU);
-    }
-
-    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR) {
-        goToState(GAMESTATE.PAUSE_SCREEN);
-    } else if (currentGameState === GAMESTATE.PAUSE_SCREEN) {
-        if (isGameStateEnraged) {
-            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
-        } else {
-            goToState(GAMESTATE.GAMEPLAY_REGULAR);
-        }
-    }
 }

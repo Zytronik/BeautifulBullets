@@ -17,7 +17,7 @@ export const CHARACTER_DATA = {
             "hitboxColor": "red",
             "bulletVisuals": {
                 "radius": 5,
-                "color": "blue"
+                "color": "white"
             },
 
             // S T A T S 

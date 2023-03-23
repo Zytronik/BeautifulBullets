@@ -1,5 +1,5 @@
-import { showPage, resetRdyUps, getSelectedCharacters, setupGameUI, showPauseScreen, closePauseScreen, showRoundEndScreen, switchSidesAnimations } from "./view/frontend.js";
-import { loadGame, match, pauseGameLogic, resumeGameLogic, setGameStateRegular } from "./main.js";
+import { frontend_showPage, frontend_resetRdyUps, getSelectedCharacters, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/frontend.js";
+import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_resumeGameLogic, main_setGameStateRegular, main_switchSides } from "./main.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -19,35 +19,35 @@ export const GAMESTATE = {
     RESULT_SCREEN: "STATS_GAMEOVER",
 }
 const STATE_TRANSITION_MAP = new Map();
-STATE_TRANSITION_MAP.set(GAMESTATE.MAIN_MENU + GAMESTATE.SETTINGS, mainMenuToSettings)
-STATE_TRANSITION_MAP.set(GAMESTATE.MAIN_MENU + GAMESTATE.CHARACTER_SELECTION, mainMenuToCharacterSelection)
-STATE_TRANSITION_MAP.set(GAMESTATE.SETTINGS + GAMESTATE.MAIN_MENU, settingsToMainMenu)
-STATE_TRANSITION_MAP.set(GAMESTATE.CHARACTER_SELECTION + GAMESTATE.MAIN_MENU, characterSelectionToMainMenu)
-STATE_TRANSITION_MAP.set(GAMESTATE.CHARACTER_SELECTION + GAMESTATE.GAMESTART_CUTSCENE, characterSelectionToGameStartCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMESTART_CUTSCENE + GAMESTATE.GAMEPLAY_REGULAR, gameStartCutsceneToGameplayRegular)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.TIME_OVER_CUTSCENE, gameplayRegularToTimeOverCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.BOSS_DEATH_CUTSCENE, gameplayRegularToBossDeathCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.PAUSE_SCREEN, gameplayRegularToPauseScreen)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath)
-STATE_TRANSITION_MAP.set(GAMESTATE.TIME_OVER_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, timeOverCutsceneToGameplayEnraged)
-STATE_TRANSITION_MAP.set(GAMESTATE.BOSS_DEATH_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, bossDeathCutsceneToGameplayEnraged)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.PAUSE_SCREEN, gameplayEnragedToPauseScreen)
-STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_REGULAR, pauseScreenToGameplayRegular)
-STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_ENRAGED, pauseScreenToGameplayEnraged)
-STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.MAIN_MENU, pauseScreenToMainMenu)
-STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.SWITCHING_SIDES_CUTSCENE, challengerDeathToSwitchingSidesCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.ROUNDOVER_CUTSCENE, challengerDeathToRoundOverCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.GAMEOVER_CUTSCENE, challengerDeathToGameOverCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.SWITCHING_SIDES_CUTSCENE + GAMESTATE.GAMESTART_CUTSCENE, switchingSidesCutsceneToGameStartCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.ROUNDOVER_CUTSCENE + GAMESTATE.GAMESTART_CUTSCENE, roundOverCutsceneToGameStartCutscene)
-STATE_TRANSITION_MAP.set(GAMESTATE.GAMEOVER_CUTSCENE + GAMESTATE.RESULT_SCREEN, gameOverCutsceneToResultScreen)
-STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.CHARACTER_SELECTION, resultScreenToCharacterSelection)
+STATE_TRANSITION_MAP.set(GAMESTATE.MAIN_MENU + GAMESTATE.SETTINGS, mainMenuToSettings);
+STATE_TRANSITION_MAP.set(GAMESTATE.MAIN_MENU + GAMESTATE.CHARACTER_SELECTION, mainMenuToCharacterSelection);
+STATE_TRANSITION_MAP.set(GAMESTATE.SETTINGS + GAMESTATE.MAIN_MENU, settingsToMainMenu);
+STATE_TRANSITION_MAP.set(GAMESTATE.CHARACTER_SELECTION + GAMESTATE.MAIN_MENU, characterSelectionToMainMenu);
+STATE_TRANSITION_MAP.set(GAMESTATE.CHARACTER_SELECTION + GAMESTATE.GAMESTART_CUTSCENE, characterSelectionToGameStartCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMESTART_CUTSCENE + GAMESTATE.GAMEPLAY_REGULAR, gameStartCutsceneToGameplayRegular);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.TIME_OVER_CUTSCENE, gameplayRegularToTimeOverCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.BOSS_DEATH_CUTSCENE, gameplayRegularToBossDeathCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_REGULAR + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
+STATE_TRANSITION_MAP.set(GAMESTATE.TIME_OVER_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, timeOverCutsceneToGameplayEnraged);
+STATE_TRANSITION_MAP.set(GAMESTATE.BOSS_DEATH_CUTSCENE + GAMESTATE.GAMEPLAY_ENRAGED, bossDeathCutsceneToGameplayEnraged);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.CHALLENGER_DEATH, gameplayToChallengerDeath);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEPLAY_ENRAGED + GAMESTATE.PAUSE_SCREEN, gameplayToPauseScreen);
+STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_REGULAR, pauseScreenToGameplay);
+STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.GAMEPLAY_ENRAGED, pauseScreenToGameplay);
+STATE_TRANSITION_MAP.set(GAMESTATE.PAUSE_SCREEN + GAMESTATE.MAIN_MENU, pauseScreenToMainMenu);
+STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.SWITCHING_SIDES_CUTSCENE, challengerDeathToSwitchingSidesCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.ROUNDOVER_CUTSCENE, challengerDeathToRoundOverCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.CHALLENGER_DEATH + GAMESTATE.GAMEOVER_CUTSCENE, challengerDeathToGameOverCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.SWITCHING_SIDES_CUTSCENE + GAMESTATE.GAMESTART_CUTSCENE, switchingSidesCutsceneToGameStartCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.ROUNDOVER_CUTSCENE + GAMESTATE.GAMESTART_CUTSCENE, roundOverCutsceneToGameStartCutscene);
+STATE_TRANSITION_MAP.set(GAMESTATE.GAMEOVER_CUTSCENE + GAMESTATE.RESULT_SCREEN, gameOverCutsceneToResultScreen);
+STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.CHARACTER_SELECTION, resultScreenToCharacterSelection);
 
 
 currentGameState = GAMESTATE.MAIN_MENU;
 export function goToState(GAMESTATE) {
-    // Helps with finding where the spaghetti begans :)
+    // Helps with finding where the spaghetti began :)
     try { throw Error(); }
     catch (e) {
         console.debug("Function callstack:\n", e.stack);
@@ -55,38 +55,38 @@ export function goToState(GAMESTATE) {
     let transitionMethod = STATE_TRANSITION_MAP.get(currentGameState + GAMESTATE);
     if (transitionMethod == null) {
         console.error(`Illegal GameStateTransition. CurrentGameState: ${currentGameState}, desired next GameState: ${GAMESTATE}. 
-        \nNo transition-method found for ${currentGameState} -> ${GAMESTATE}.`)
+        \nNo transition-method found for ${currentGameState} -> ${GAMESTATE}.`);
     } else {
-        console.debug(`${currentGameState} -> ${GAMESTATE}`)
+        console.debug(`${currentGameState} -> ${GAMESTATE}`);
         currentGameState = GAMESTATE;
         transitionMethod();
     }
 }
 function mainMenuToSettings() {
-    showPage("config");
+    frontend_showPage("config");
 }
 function mainMenuToCharacterSelection() {
-    showPage("characterSelection");
+    frontend_resetRdyUps();
+    frontend_showPage("characterSelection");
 }
 function settingsToMainMenu() {
-    showPage("titleScreen");
+    frontend_showPage("titleScreen");
 }
 function characterSelectionToMainMenu() {
-    showPage("titleScreen");
-    resetRdyUps();
+    frontend_showPage("titleScreen");
 }
 function characterSelectionToGameStartCutscene() {
-    showPage("game");
-    loadGame(getSelectedCharacters());
-    setupGameUI();
+    frontend_showPage("game");
+    main_loadGame(getSelectedCharacters());
+    frontend_setupGameUI();
 
     //TODO isch nur temporär
     //showGameStartCutscene()
     goToState(GAMESTATE.GAMEPLAY_REGULAR);
 }
 function gameStartCutsceneToGameplayRegular() {
-    resumeGameLogic();
-    setGameStateRegular();
+    main_resumeGameLogic();
+    main_setGameStateRegular();
 }
 function gameplayRegularToTimeOverCutscene() {
     //TODO
@@ -94,12 +94,11 @@ function gameplayRegularToTimeOverCutscene() {
 function gameplayRegularToBossDeathCutscene() {
     //TODO
 }
-function gameplayRegularToPauseScreen() {
-    pauseGameLogic();
-    showPauseScreen();
+function gameplayToPauseScreen() {
+    main_pauseGameLogic();
+    frontend_showPauseScreen();
 }
 function gameplayToChallengerDeath() {
-    match.updateStats();
     if (match.hasMatchFinished()) {
         goToState(GAMESTATE.RESULT_SCREEN)
     } else {
@@ -117,26 +116,22 @@ function timeOverCutsceneToGameplayEnraged() {
 function bossDeathCutsceneToGameplayEnraged() {
     //TODO
 }
-function gameplayEnragedToPauseScreen() {
-    //TODO
-}
-function pauseScreenToGameplayRegular() {
-    closePauseScreen();
-    resumeGameLogic();
-}
-function pauseScreenToGameplayEnraged() {
-    //TODO
+function pauseScreenToGameplay() {
+    frontend_closePauseScreen();
+    main_resumeGameLogic();
 }
 function pauseScreenToMainMenu() {
-    showPage("titleScreen");
+    frontend_closePauseScreen();
+    main_closeGameLoop();
+    frontend_showPage("titleScreen");
 }
 function challengerDeathToSwitchingSidesCutscene() {
-    pauseGameLogic();
-    switchSidesAnimations();
-    match.swapSides();
+    main_pauseGameLogic();
+    frontend_switchSidesAnimations();
+    main_switchSides();
 }
 function challengerDeathToRoundOverCutscene() {
-    showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
+    frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
 }
 function challengerDeathToGameOverCutscene() {
     //TODO
@@ -154,32 +149,3 @@ function gameOverCutsceneToResultScreen() {
 function resultScreenToCharacterSelection() {
     //TODO
 }
-
-
-
-
-/*
-    states:
-    
-    login/title
-    mainmenu
-        character selection
-            gamesettings
-        stage selection
-            gamestart cutscene
-            game
-                pausescreen
-            timeover/bossdeath
-            challenger death
-            switching sides cutscene
-            gamestart cutscene
-            timeover/bossdeath
-            challenger death
-            statscreen
-
-            loop / finish
-
-
-        config
-
-*/

@@ -1,4 +1,4 @@
-import { handleGoBackButton } from "../main.js";
+import { main_handleGoBackButton } from "../main.js";
 
 export const INPUTS_CHALLENGER = {
     left: false,
@@ -8,6 +8,7 @@ export const INPUTS_CHALLENGER = {
     shift: false,
     special: false,
 }
+
 export const INPUTS_BOSS = {
     left: false,
     right: false,
@@ -74,7 +75,7 @@ document.addEventListener("keydown", (event) => {
 
     //Single Inputs
     if (event.code === GO_BACK_BUTTON) {
-        handleGoBackButton();
+        main_handleGoBackButton();
     }
 });
 

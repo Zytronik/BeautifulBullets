@@ -1,7 +1,7 @@
-import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, switchBossWithChallenger, isGameStateEnraged } from "../main.js";
+import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, main_switchSides, isGameStateEnraged } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
-import { goToState, GAMESTATE, currentGameState } from "../gameStateManager.js";
+import { goToState, GAMESTATE } from "../gameStateManager.js";
 
 window.onload = function () {
     //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
@@ -44,37 +44,35 @@ window.onload = function () {
 }
 
 let rdyUpd = [false, false];
-let currentBoss;
-let currentChallenger;
-let player1;
-let player2;
+let player1Character;
+let player2Character;
 
-export function resetRdyUps(){
+export function frontend_resetRdyUps() {
     rdyUpd = [false, false];
     document.querySelector("#rdyButton1").classList.remove("ready");
     document.querySelector("#rdyButton2").classList.remove("ready");
 }
 
-export function closePauseScreen(){
+export function frontend_closePauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
 }
 
-export function showPauseScreen(){
+export function frontend_showPauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.add("paused");
 }
 
-export function getSelectedCharacters(){
-    return [currentChallenger, currentBoss];
+export function getSelectedCharacters() {
+    return [player1Character, player2Character];
 }
 
-export function setupGameUI() {
+export function frontend_setupGameUI() {
     setupChallengerHealthBar();
     setupChallengerSpecialChargeBar();
     setupBossHealthBar();
     setupBossAbilities();
 }
 
-export function showPage(pageClass) {
+export function frontend_showPage(pageClass) {
     var pages = document.querySelectorAll("main > article");
     Array.prototype.forEach.call(pages, function (page) {
         page.classList.add("hidePage");
@@ -91,24 +89,24 @@ export function updateGameUI() {
     updateBossAbilitiesUI();
 }
 
-export function switchSidesAnimations(){
+export function frontend_switchSidesAnimations() {
     fadeOutUI();
-    setTimeout(()=>{
+    setTimeout(() => {
         document.querySelector("article.game .switchingSides").classList.add("active");
-        setTimeout(()=>{
-            switchBossWithChallenger(currentChallenger, currentBoss);
-            let temp = currentChallenger;
-            currentChallenger = currentBoss;
-            currentBoss = temp;
+        setTimeout(() => {
+            //TODO frontend sött keni date bearbeite, nur darstelle... es passiert gloubs scho alles im backend
+            // let temp = player1Character;
+            // player1Character = player2Character;
+            // player2Character = temp;
             //boss.reset();
             //challenger.reset();
         }, 1000);
-        setTimeout(()=>{
+        setTimeout(() => {
             document.querySelector("article.game .switchingSides").classList.remove("active");
             switchUI();
-            setTimeout(()=>{
+            setTimeout(() => {
                 fadeInUI();
-                setTimeout(()=>{
+                setTimeout(() => {
                     goToState(GAMESTATE.GAMESTART_CUTSCENE);
                 }, 900);
             }, 500);
@@ -116,19 +114,19 @@ export function switchSidesAnimations(){
     }, 900);
 }
 
-export function showRoundEndScreen(scoreP1, scoreP2, firstTo){
+export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
     document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = firstTo;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 .score").innerHTML = scoreP1;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 .score").innerHTML = scoreP2;
-    document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1].name;
-    document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2].name;
+    document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1Character].name;
+    document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2Character].name;
     document.querySelector("article.game .roundEndScreen").classList.add("active");
-    setTimeout(()=>{
+    setTimeout(() => {
         document.querySelector("article.game .roundEndScreen").classList.remove("active");
     }, 3000);
 }
 
-function switchUI(){
+function switchUI() {
     let oldChallenger = document.querySelector("article.game .challenger");
     let oldBoss = document.querySelector("article.game .boss");
     oldChallenger.classList.remove("challenger");
@@ -138,7 +136,7 @@ function switchUI(){
     setupChallengerHealthBar();
 }
 
-function fadeOutUI(){
+function fadeOutUI() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         player.querySelector("article.game .challenger-healthbar").classList.add("fadeOut");
@@ -148,7 +146,7 @@ function fadeOutUI(){
     });
 }
 
-function fadeInUI(){
+function fadeInUI() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         player.querySelector("article.game .challenger-healthbar").classList.remove("fadeOut");
@@ -203,10 +201,10 @@ function updateBossChallengerHealthbarPosition() {
     document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
 }
 
-function updateBossAbilitiesUI(){
+function updateBossAbilitiesUI() {
     let bossAbilities = document.querySelectorAll("article.game .boss .boss-abilities > div");
     Array.prototype.forEach.call(bossAbilities, function (bossAbility, index) {
-        let height = 100 - (100 / boss["ability"+(index + 1)+"CoolDownRequired"] * boss["ability"+(index + 1)+"CoolDown"]);
+        let height = 100 - (100 / boss["ability" + (index + 1) + "CoolDownRequired"] * boss["ability" + (index + 1) + "CoolDown"]);
         bossAbility.querySelector(".ability-wrapper .overlay > div").style.height = height + "%"
     });
 }
@@ -225,10 +223,8 @@ function rdyUpPlayer2(rdyButton) {
 
 function checkRdyButton() {
     if (rdyUpd[0] && rdyUpd[1]) {
-        currentChallenger = document.querySelector("article.characterSelection #player1 .characters").children[1].dataset.character;
-        currentBoss = document.querySelector("article.characterSelection #player2 .characters").children[1].dataset.character;
-        player1 = currentChallenger;
-        player2 = currentBoss;
+        player1Character = document.querySelector("article.characterSelection #player1 .characters").children[1].dataset.character;
+        player2Character = document.querySelector("article.characterSelection #player2 .characters").children[1].dataset.character;
         goToState(GAMESTATE.GAMESTART_CUTSCENE);
     }
 }
@@ -427,27 +423,27 @@ function setupChallengerSpecialChargeBar() {
     }
 }
 
-function setupBossAbilities(){
-    for (var  index in CHARACTER_DATA[currentBoss].boss.abilities) {
-        document.querySelector("article.game .boss .boss-abilities").innerHTML += 
-        '<div class="ability-wrapper" data-ability="'+index+'">'+
-        '<img src="'+CHARACTER_DATA[currentBoss].boss.abilities[index].iconUrl+'" alt="'+CHARACTER_DATA[currentBoss].boss.abilities[index].abilityName+'">'+
-        '<div class="overlay">'+
-        '<span></span>'+
-        '<div></div>'+
-        '</div>'+
-        '</div>';
+function setupBossAbilities() {
+    for (var index in CHARACTER_DATA[player2Character].boss.abilities) {
+        document.querySelector("article.game .boss .boss-abilities").innerHTML +=
+            '<div class="ability-wrapper" data-ability="' + index + '">' +
+            '<img src="' + CHARACTER_DATA[player2Character].boss.abilities[index].iconUrl + '" alt="' + CHARACTER_DATA[player2Character].boss.abilities[index].abilityName + '">' +
+            '<div class="overlay">' +
+            '<span></span>' +
+            '<div></div>' +
+            '</div>' +
+            '</div>';
     }
 
-    for (var  index in CHARACTER_DATA[currentChallenger].boss.abilities) {
-        document.querySelector("article.game .challenger .boss-abilities").innerHTML += 
-        '<div class="ability-wrapper" data-ability="'+index+'">'+
-        '<img src="'+CHARACTER_DATA[currentChallenger].boss.abilities[index].iconUrl+'" alt="'+CHARACTER_DATA[currentChallenger].boss.abilities[index].abilityName+'">'+
-        '<div class="overlay">'+
-        '<span></span>'+
-        '<div></div>'+
-        '</div>'+
-        '</div>';
+    for (var index in CHARACTER_DATA[player1Character].boss.abilities) {
+        document.querySelector("article.game .challenger .boss-abilities").innerHTML +=
+            '<div class="ability-wrapper" data-ability="' + index + '">' +
+            '<img src="' + CHARACTER_DATA[player1Character].boss.abilities[index].iconUrl + '" alt="' + CHARACTER_DATA[player1Character].boss.abilities[index].abilityName + '">' +
+            '<div class="overlay">' +
+            '<span></span>' +
+            '<div></div>' +
+            '</div>' +
+            '</div>';
     }
 }
 
