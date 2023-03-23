@@ -120,31 +120,6 @@ document.addEventListener("keydown", (event) => {
         INPUTS_CHEATS.kb = true;
         cheats();
     }
-
-    // ***** Super Secret Sauce Cheaty Cheat Code Section *****
-    if (event.code === CHEAT_BUTTONS.h) {
-        INPUTS_CHEATS.h = true;
-    } else if (event.code === CHEAT_BUTTONS.a) {
-        INPUTS_CHEATS.a = true;
-    } else if (event.code === CHEAT_BUTTONS.c) {
-        INPUTS_CHEATS.c = true;
-    } else if (event.code === CHEAT_BUTTONS.k) {
-        INPUTS_CHEATS.k = true;
-    }
-    
-    if (INPUTS_CHEATS.h && !INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k) {
-        INPUTS_CHEATS.hb = true;
-    }
-    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb) {
-        INPUTS_CHEATS.ab = true;
-    }
-    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && !INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab) {
-        INPUTS_CHEATS.cb = true;
-    }
-    if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab && INPUTS_CHEATS.cb) {
-        INPUTS_CHEATS.kb = true;
-        cheats();
-    }
 });
 
 document.addEventListener("keyup", (event) => {
