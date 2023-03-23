@@ -1,7 +1,8 @@
-import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, characterPlayer1, characterPlayer2 } from "../main.js";
+import { challenger, boss, currentFPS, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
+import { player1SelectedCharacter, player2SelectedCharacter } from "./characterSelectionPage.js";
 
 export function frontend_closePauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
@@ -12,7 +13,6 @@ export function frontend_showPauseScreen() {
 }
 
 export function frontend_setupGameUI() {
-    setupChallengerHealthBar();
     setupChallengerSpecialChargeBar();
     setupBossHealthBar();
     setupBossAbilities();
@@ -24,7 +24,7 @@ export function updateGameUI() {
     updateDebugUI();
     updateChallengerHealthbar();
     updateBossHealthbar();
-    updateBossAbilitiesUI();
+    updateBossAbilities();
 }
 
 export function frontend_switchSidesAnimations() {
@@ -33,14 +33,14 @@ export function frontend_switchSidesAnimations() {
         document.querySelector("article.game .switchingSides").classList.add("active");
         setTimeout(() => {
             document.querySelector("article.game .switchingSides").classList.remove("active");
-            switchUI();
             setTimeout(() => {
+                switchUI();
                 fadeInUI();
                 setTimeout(() => {
                     goToState(GAMESTATE.GAMESTART_CUTSCENE);
                 }, 900);
             }, 500);
-        }, 6000);
+        }, 5000);
     }, 900);
 }
 
@@ -48,12 +48,22 @@ export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
     document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = firstTo;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 .score").innerHTML = scoreP1;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 .score").innerHTML = scoreP2;
-    document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1Character].name;
-    document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2Character].name;
-    document.querySelector("article.game .roundEndScreen").classList.add("active");
+    document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1SelectedCharacter].name;
+    document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2SelectedCharacter].name;
+    fadeOutUI();
     setTimeout(() => {
-        document.querySelector("article.game .roundEndScreen").classList.remove("active");
-    }, 3000);
+        document.querySelector("article.game .roundEndScreen").classList.add("active");
+        setTimeout(() => {
+            document.querySelector("article.game .roundEndScreen").classList.remove("active");
+            setTimeout(() => {
+                switchUI();
+                fadeInUI();
+                setTimeout(() => {
+                    goToState(GAMESTATE.GAMESTART_CUTSCENE);
+                }, 900);
+            }, 500);
+        }, 5000);
+    }, 900);
 }
 
 function switchUI() {
@@ -63,7 +73,9 @@ function switchUI() {
     oldBoss.classList.remove("boss");
     oldChallenger.classList.add("boss");
     oldBoss.classList.add("challenger");
-    setupChallengerHealthBar();
+    updateChallengerHealthbar();
+    frontend_setupGameUI();
+    updateBossChallengerHealthbarPosition();
 }
 
 function fadeOutUI() {
@@ -87,11 +99,15 @@ function fadeInUI() {
 }
 
 function updateChallengerHealthbar() {
-    let playersHealthBars = document.querySelectorAll("article.game .player .challenger-healthbar");
-    Array.prototype.forEach.call(playersHealthBars, function (hBar) {
-        Array.prototype.forEach.call(hBar.children, function (h) {
-            h.classList.remove("life");
-        });
+    let players = document.querySelectorAll("article.game .player");
+    Array.prototype.forEach.call(players, function (player) {
+        let hBar = player.querySelector(".challenger-healthbar");
+        hBar.innerHTML = "";
+        var hearts = "";
+        for (let i = 0; i < challenger.maxHealth; i++) {
+            hearts += '<div class="heart"></div>';
+        }
+        hBar.innerHTML = hearts;
         for (let i = 0; i < challenger.currentHealth; i++) {
             hBar.children[i].classList.add("life");
         }
@@ -111,10 +127,34 @@ function updateBossHealthbar() {
     });
 }
 
+function setupBossHealthBar() {
+    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
+    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
+        hBar.innerHTML = '<div class="boss-desc">' +
+            '<div>' +
+            '<img src="' + boss.healthBarSpriteUrl + '">' +
+            '<p>' + boss.healthBarName + '</p>' +
+            '</div>' +
+            '<span>0%</span>' +
+            '</div>' +
+            '<div class="life-bar">' +
+            '<div></div>' +
+            '</div>';
+    });
+}
+
 function updateChallengerSpecialCharge() {
     let ChargeBarWidth = 100 / challenger.specialMaxCharge * challenger.specialCharge
     if (ChargeBarWidth <= 100) {
         document.querySelector("article.game .challenger .challenger-abilitie .grace-bar > div").style.height = ChargeBarWidth + "%";
+    }
+}
+
+function setupChallengerSpecialChargeBar() {
+    document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML = "<div></div>";
+    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
+    for (let i = 0; i < barCount; i++) {
+        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
     }
 }
 
@@ -131,7 +171,7 @@ function updateBossChallengerHealthbarPosition() {
     document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
 }
 
-function updateBossAbilitiesUI() {
+function updateBossAbilities() {
     let bossAbilities = document.querySelectorAll("article.game .boss .boss-abilities > div");
     Array.prototype.forEach.call(bossAbilities, function (bossAbility, index) {
         let height = 100 - (100 / boss["ability" + (index + 1) + "CoolDownRequired"] * boss["ability" + (index + 1) + "CoolDown"]);
@@ -139,66 +179,18 @@ function updateBossAbilitiesUI() {
     });
 }
 
-function setupChallengerHealthBar() {
-    let healthCount = CHARACTER_DATA[characterPlayer1]["challenger"]["stats"]["health"];
-    let playersHealthBar = document.querySelectorAll("article.game .player .challenger-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        hBar.innerHTML = "";
-    });
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        var hearts = "";
-        for (let i = 0; i < healthCount; i++) {
-            hearts += '<div class="heart"></div>';
-        }
-        hBar.innerHTML = hearts;
-    });
-}
-
-function setupChallengerSpecialChargeBar() {
-    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
-    for (let i = 0; i < barCount; i++) {
-        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
-    }
-}
-
 function setupBossAbilities() {
-    for (var index in CHARACTER_DATA[characterPlayer2].boss.abilities) {
+    document.querySelector("article.game .boss .boss-abilities").innerHTML = "";
+    for (var index in boss.abilities) {
         document.querySelector("article.game .boss .boss-abilities").innerHTML +=
             '<div class="ability-wrapper" data-ability="' + index + '">' +
-            '<img src="' + CHARACTER_DATA[characterPlayer2].boss.abilities[index].iconUrl + '" alt="' + CHARACTER_DATA[characterPlayer2].boss.abilities[index].abilityName + '">' +
+            '<img src="' + boss.abilities[index].iconUrl + '" alt="' + boss.abilities[index].abilityName + '">' +
             '<div class="overlay">' +
             '<span></span>' +
             '<div></div>' +
             '</div>' +
             '</div>';
     }
-
-    for (var index in CHARACTER_DATA[characterPlayer1].boss.abilities) {
-        document.querySelector("article.game .challenger .boss-abilities").innerHTML +=
-            '<div class="ability-wrapper" data-ability="' + index + '">' +
-            '<img src="' + CHARACTER_DATA[characterPlayer1].boss.abilities[index].iconUrl + '" alt="' + CHARACTER_DATA[characterPlayer1].boss.abilities[index].abilityName + '">' +
-            '<div class="overlay">' +
-            '<span></span>' +
-            '<div></div>' +
-            '</div>' +
-            '</div>';
-    }
-}
-
-function setupBossHealthBar() {
-    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        hBar.innerHTML = '<div class="boss-desc">' +
-            '<div>' +
-            '<img src="' + CHARACTER_DATA[characterPlayer1]["spriteUrl"] + '">' +
-            '<p>' + CHARACTER_DATA[characterPlayer1]["name"] + '</p>' +
-            '</div>' +
-            '<span>0%</span>' +
-            '</div>' +
-            '<div class="life-bar">' +
-            '<div></div>' +
-            '</div>';
-    });
 }
 
 function convert_color(c) {

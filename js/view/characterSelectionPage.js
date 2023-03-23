@@ -2,8 +2,8 @@ import { CHARACTER_DATA } from "../data/characters.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 
 let rdyUpd = [false, false];
-let player1SelectedCharacter;
-let player2SelectedCharacter;
+export let player1SelectedCharacter;
+export let player2SelectedCharacter;
 
 export function frontend_resetRdyUps() {
     rdyUpd = [false, false];

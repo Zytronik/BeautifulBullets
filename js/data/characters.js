@@ -52,6 +52,8 @@ export const CHARACTER_DATA = {
             // V I S U A L S
             "spriteUrl": "./img/nabil.jpg",
             "spriteScaling": 30,
+            "healthBarSpriteUrl": "./img/nabil.jpg",
+            "healthBarName" : "Nabil",
 
             // S T A T S 
             "stats": {
@@ -192,6 +194,8 @@ export const CHARACTER_DATA = {
             // V I S U A L S
             "spriteUrl": "./img/challenger.png",
             "spriteScaling": 100,
+            "healthBarSpriteUrl": "./img/challenger.png",
+            "healthBarName" : "Alice Security",
 
             // S T A T S 
             "stats": {
@@ -314,12 +318,18 @@ export const CHARACTER_DATA = {
             // S P E C I A L
             "special": {
                 "use": function () {
-                    challenger.bullets = 9;
+                    if (challenger.specialActiveFor <= challenger.specialDuration-1) {
+                        challenger.bullets = 4;
+                    } else {
+                        challenger.bullets = 1;
+                        challenger.specialActive = false;
+                    }
                 },
                 "chargeRequired": 50,
                 "graceChargeSpeed": 30, // Charge per second in grace
                 "passiveChargeSpeed": 2, // Charge per second
                 "duration": 3,
+                "coolDown": 1,
 
                 "abilityName": "Machine Gun Bow",
                 "description": "Shoots Bullets faster for a limited Time.",
@@ -332,6 +342,8 @@ export const CHARACTER_DATA = {
             // V I S U A L S
             "spriteUrl": "./img/yoimiya/boss.png",
             "spriteScaling": 110,
+            "healthBarSpriteUrl": "./img/yoimiya/portrait.png",
+            "healthBarName" : "Yoimiya Naganohara",
 
             // S T A T S 
             "stats": {
