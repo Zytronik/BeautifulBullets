@@ -314,12 +314,18 @@ export const CHARACTER_DATA = {
             // S P E C I A L
             "special": {
                 "use": function () {
-                    challenger.bullets = 9;
+                    if (challenger.specialActiveFor <= challenger.specialDuration-1) {
+                        challenger.bullets = 9;
+                    } else {
+                        challenger.bullets = 1;
+                        challenger.specialActive = false;
+                    }
                 },
                 "chargeRequired": 50,
                 "graceChargeSpeed": 30, // Charge per second in grace
                 "passiveChargeSpeed": 2, // Charge per second
                 "duration": 3,
+                "coolDown": 1,
 
                 "abilityName": "Machine Gun Bow",
                 "description": "Shoots Bullets faster for a limited Time.",

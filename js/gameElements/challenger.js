@@ -124,24 +124,25 @@ export class Challenger {
                 y = 0;
             if (this.attributes[4] == 1) {
                 let angle = Math.atan2(boss.y - this.y, boss.x - this.x);
-                x = Math.cos(angle) * (maxSpeed * (homing + (homing / 4))) + this.attributes[1];
-                y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + this.attributes[2];
-                // x = Math.cos(angle)*(maxSpeed*(homing+(homing/2)))+(boss.xSpeedNormalized*homing/50)+this.attributes[1],
-                // y = Math.sin(angle)*(maxSpeed*(homing))/3+(boss.ySpeedNormalized*homing/50)+this.attributes[2];
+                x = Math.cos(angle) * (maxSpeed * (homing + (homing / 4))) + this.attributes[1] + (boss.xSpeedNormalized*homing/30);
+                y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + this.attributes[2] + (boss.ySpeedNormalized*homing/30);
                 this.attributes[1] = x;
                 this.attributes[2] = y;
             } else {
                 let c = Math.PI / ((10 - this.attributes[4]) * 2) ** (0.011 * this.attributes[4] ** 2 - 0.178 * this.attributes[4] + 1.211),
                     angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (this.attributes[4] - 1) * this.attributes[3]);
-                x = Math.sin(c / (this.attributes[4] - 1) * this.attributes[3] + Math.PI - c / 2) * 10 + this.attributes[1];
-                y = Math.cos(c / (this.attributes[4] - 1) * this.attributes[3] + Math.PI - c / 2) - 20 + this.attributes[2];
+                x = Math.sin(c / (this.attributes[4] - 1) * this.attributes[3] + Math.PI - c / 2) * 10 + this.attributes[1] + (boss.xSpeedNormalized*homing/30);
+                y = Math.cos(c / (this.attributes[4] - 1) * this.attributes[3] + Math.PI - c / 2) - 20 + this.attributes[2] + (boss.ySpeedNormalized*homing/30);
                 this.attributes[1] += Math.cos(angle + c / (this.attributes[4] - 1) * this.attributes[3]) * (maxSpeed * (homing + homing / 3));
                 this.attributes[2] += Math.sin(angle + c / (this.attributes[4] - 1) * this.attributes[3]) * maxSpeed * homing / 4;
-                // console.log(this.attributes[4]);
             }
             return [x, y - 20]
         }
     }
+    /* TODO
+    Special Ability with constant charge use and initial activation cost
+    onDeactivate()
+    */
     #specialAbility() {
         if (this.specialCoolDown <= this.specialCoolDownRequired) {
             this.specialCoolDown++;
