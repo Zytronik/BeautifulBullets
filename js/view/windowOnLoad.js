@@ -1,6 +1,8 @@
 import { isGameStateEnraged } from "../main.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
-import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2 } from "./characterSelectionPage.js";
+import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2, getHighestStats } from "./characterSelectionPage.js";
+
+export let highestStats;
 
 export let mouseCoordinates = [];
 
@@ -40,6 +42,8 @@ window.onload = function () {
     document.querySelector("#quitGame").addEventListener("click", function (e) {
         goToState(GAMESTATE.MAIN_MENU);
     });
+    
+    highestStats = getHighestStats();
 
     document.onmousemove = (event) => {
         mouseCoordinates = [event.clientX, event.clientY];

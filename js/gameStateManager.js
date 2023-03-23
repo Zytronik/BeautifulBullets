@@ -92,9 +92,11 @@ function gameStartCutsceneToGameplayRegular() {
 }
 function gameplayRegularToTimeOverCutscene() {
     //TODO
+    goToState(GAMEPLAY_ENRAGED);
 }
 function gameplayRegularToBossDeathCutscene() {
     //TODO
+    goToState(GAMEPLAY_ENRAGED);
 }
 function gameplayToPauseScreen() {
     main_pauseGameLogic();
