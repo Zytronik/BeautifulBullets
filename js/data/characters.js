@@ -319,7 +319,7 @@ export const CHARACTER_DATA = {
             "special": {
                 "use": function () {
                     if (challenger.specialActiveFor <= challenger.specialDuration-1) {
-                        challenger.bullets = 9;
+                        challenger.bullets = 4;
                     } else {
                         challenger.bullets = 1;
                         challenger.specialActive = false;
