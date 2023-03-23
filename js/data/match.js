@@ -160,6 +160,6 @@ export const MATCH_DECIDING_FACTORS = {
 export function convertFramecountIntoMinutesSeconds(timeInFrames) {
     let totalSeconds = timeInFrames / FPS;
     let minutes = Math.floor(totalSeconds / 60);
-    let seconds = totalSeconds % 60;
+    let seconds = Math.floor(totalSeconds % 60);
     return [minutes, seconds];
 }

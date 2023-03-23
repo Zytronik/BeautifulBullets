@@ -59,7 +59,6 @@ function gameLoop() {
     previousFrameAt = currentlyAt;
 
     let t1 = performance.now()
-    convertMouseCoordinatesToCanvasCoordinates();
     player1Canvas.updateCanvas();
     player2Canvas.updateCanvas();
     canvasRenderTime = Math.round(performance.now() - t1);

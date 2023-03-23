@@ -1,6 +1,6 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
 import { challenger, boss, bossBullets, challengerBullets } from "../main.js";
-import { BOARD_WIDTH } from "../settings/gameSettings.js";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../settings/gameSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 
 export let CANVAS_UNIT;
@@ -118,8 +118,9 @@ export class GameCanvas {
 
 export function convertMouseCoordinatesToCanvasCoordinates() {
     const canvas = document.querySelector("article.game .boss canvas");
-
-    
-    canvas.getBoundingClientRect().top
-    canvas.getBoundingClientRect().left
+    const canvasTop = canvas.getBoundingClientRect().top;
+    const canvasLeft = canvas.getBoundingClientRect().left;
+    let mouseX = (mouseCoordinates[0] - canvasLeft) / CANVAS_UNIT;
+    let mouseY = (mouseCoordinates[1] - canvasTop) / CANVAS_UNIT;
+    return [mouseX, mouseY];
 }

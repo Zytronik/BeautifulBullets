@@ -1,6 +1,7 @@
 import { boss, bossBullets, challenger } from "../main.js";
 import { Bullet } from "../gameElements/bullet.js";
 import { FPS } from "../settings/gameSettings.js";
+import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
 
 export const CHARACTER_DATA = {
     "johnCena": {
@@ -363,75 +364,6 @@ export const CHARACTER_DATA = {
                                 random2 = Math.random();
                             for (let i = 0; i < bulletAmount; i++) {
                                 let attributes = [i, bulletAmount, random1, random2, 0, Math.random()*15+1, bulletAmount]
-                                let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
-                                bossBullets.push(bullet);
-                            }
-                            for (let i = 0; i < Math.round(bulletAmount/1.5); i++) {
-                                let attributes = [i, Math.round(bulletAmount/1.5), random1, random2, 0, Math.random()*15+1, bulletAmount]
-                                let bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
-                                bossBullets.push(bullet);
-                            }
-
-                            this.fancyStuff = !this.fancyStuff;
-                        }
-                        else if (!this.fancyStuff) {
-                            this.mybullets.forEach(bullet => {
-                                bullet.trajectoryFunction = trajectory2;
-                            })
-                            this.fancyStuff = !this.fancyStuff;
-                            this.mybullets = []
-                        }
-
-                        function trajectory1() {
-                            let x = this.attributes[2]*5-2.5,
-                                y = 1;
-                            return [x, y];
-                        }
-
-                        function trajectory2() {
-                            let x = 0,
-                                y = 0;
-                            if (this.attributes[1] == this.attributes[6]) {
-                                x = Math.sin((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5],
-                                y = Math.cos((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]+this.attributes[4];
-                            } else {
-                                x = Math.sin((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]*0.5,
-                                y = Math.cos((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]*0.5+this.attributes[4];
-                            }
-                            if (y >= 3) {
-                                y = 3;
-                            }
-                            if(this.attributes[4] <= 5) {
-                                this.attributes[4] += 0.01;
-                            }
-                            this.attributes[5] = this.attributes[5]**0.96;
-                            return [x, y];
-                        }
-                    },
-                    "bulletVisuals": {
-                        "radius": 4,
-                        "color": "white"
-                    },
-                    "coolDown": 1, //in seconds
-                    "fancyStuff": true,
-                    "mybullets": [],
-
-                    "abilityName": "Fireworks",
-                    "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                    "iconUrl": "img/ability1.png",
-                },
-
-                "ability1": {
-                    "use": function () {
-                        if (this.fancyStuff) {
-                            let bulletAmount = 30,
-                                lifetime = 20,
-                                random1 = Math.random(),
-                                random2 = Math.random();
-                            for (let i = 0; i < bulletAmount; i++) {
-                                let attributes = [i, bulletAmount, random1, random2, 0, Math.random()*15+1, bulletAmount]
                                 let customBulletVisuals = {radius: 10, color: "yellow"}
                                 let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
                                 this.mybullets.push(bullet)
@@ -495,6 +427,51 @@ export const CHARACTER_DATA = {
                     "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
                     "iconUrl": "img/ability1.png",
                 },
+
+                "ability1": {
+                    "use": function () {
+                            let bulletAmount = 8,
+                                lifetime = 20;
+                            for (let i = 0; i < bulletAmount; i++) {
+                                let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,]
+                                let bullet = new Bullet(boss.x+Math.sin(Math.PI*2/bulletAmount*i)*100, boss.y+Math.cos(Math.PI*2/bulletAmount*i)*100, this.bulletVisuals, trajectory1, lifetime, attributes);
+                                this.mybullets.push(bullet)
+                                bossBullets.push(bullet);
+                            }
+
+                        function trajectory1() {
+                            let x = 0,
+                                y = 1,
+                                shiftMovement = this.attributes[2] / this.attributes[3];
+                            if (this.framesAlive <= 60) {
+                                x = Math.sin(Math.PI * 2 / this.attributes[1] * this.attributes[0] + Math.PI) + boss.xSpeedNormalized;
+                                y = Math.cos(Math.PI * 2 / this.attributes[1] * this.attributes[0] + Math.PI) + boss.ySpeedNormalized;
+                                let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
+                                    lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
+                                    length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
+                                this.attributes[4] = lengthX / length;
+                                this.attributes[5] = lengthY / length;
+                            } else {
+                                x = Math.sin(Math.PI * 2 / this.attributes[1] * this.attributes[0] + shiftMovement + Math.PI / 2) + this.attributes[4] * 3;
+                                y = Math.cos(Math.PI * 2 / this.attributes[1] * this.attributes[0] + shiftMovement + Math.PI / 2) + this.attributes[5] * 3;
+                                this.attributes[2] += 0.6;
+                            }
+                            return [x, y];
+                        }
+                    },
+                    "bulletVisuals": {
+                        "radius": 5,
+                        "color": "red"
+                    },
+                    "coolDown": 0.5, //in seconds
+                    "fancyStuff": true,
+                    "mybullets": [],
+
+                    "abilityName": "Fireworks",
+                    "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
+                    "iconUrl": "img/ability1.png",
+                },
+
             },
             "passive": {
                 "use": function () {
