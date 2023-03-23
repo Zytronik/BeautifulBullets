@@ -122,5 +122,4 @@ export function convertMouseCoordinatesToCanvasCoordinates() {
     
     canvas.getBoundingClientRect().top
     canvas.getBoundingClientRect().left
-    console.log(mouseCoordinates, canvas.getBoundingClientRect().top);
 }
