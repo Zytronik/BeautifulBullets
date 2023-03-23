@@ -182,7 +182,21 @@ export function cheats() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = -1;
         challenger.bulletDamage = 0;
-        console.log("You dirty Cheater");
+        console.log("Challenger Health set to -1 and bulletDamage set to 0");
+    }
+}
+
+export function lowerChallengerHealth() {
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
+        console.log("Challenger Health set to 1")
+        challenger.currentHealth = 1;
+    }
+}
+
+export function lowerBossHealth() {
+    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
+        console.log("Boss Health set to 1")
+        boss.currentHealth = 30;
     }
 }
 
