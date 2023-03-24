@@ -1,5 +1,5 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
 
@@ -131,9 +131,8 @@ function characterSelectionToGameStartCutscene() {
             - go to GAMEPLAY_REGULAR after cutscene
     */
     main_loadGame(frontend_getSelectedCharacters());
-    frontend_showPage(PAGES.GAMEPLAY);
+    playGameStartCutscene();
     frontend_setupGameUI();
-    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
 }
 
 function gameStartCutsceneToGameplayRegular() {
@@ -149,6 +148,7 @@ function gameStartCutsceneToGameplayRegular() {
             - hide cutscene
             - show ingame UI
     */
+    fadeInUI();
     main_startGame();
 }
 

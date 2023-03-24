@@ -27,30 +27,27 @@ function selectingKey(setting){
 } 
 
 export function setupConfigPage(){
-    let players = document.querySelectorAll("article.config .player");
-    Array.prototype.forEach.call(players, function (player) {
-        let settings = "";
-        settings += '<div class="settings challengerSettings">';
-        settings += '<h3>Challenger</h3>';
-        for (var key in CHALLENGER_BUTTONS) {
-            settings += 
-            '<div class="setting"><div>'+CHALLENGER_SETTINGS[key]+'</div><div data-key="'+key+'">'+CHALLENGER_BUTTONS[key]+'</div></div>';
-        }
-        settings += '</div>';
-        settings += '<div class="settings bossSettings">';
-        settings += '<h3>Boss</h3>';
-        for (var key in BOSS_BUTTONS) {
-            settings += 
-            '<div class="setting"><div>'+BOSS_SETTINGS[key]+'</div><div data-key="'+key+'">'+BOSS_BUTTONS[key]+'</div></div>';
-        }
-        settings += '</div>';
-        player.querySelector(".playerSettings-wrapper").innerHTML += settings;
-    });
+    let player = document.querySelector("article.config .player");
+    let settings = "";
+    settings += '<div class="settings challengerSettings">';
+    settings += '<h3>Challenger</h3>';
+    for (var key in CHALLENGER_BUTTONS) {
+        settings +=
+            '<div class="setting"><div>' + CHALLENGER_SETTINGS[key] + '</div><div data-key="' + key + '">' + CHALLENGER_BUTTONS[key] + '</div></div>';
+    }
+    settings += '</div>';
+    settings += '<div class="settings bossSettings">';
+    settings += '<h3>Boss</h3>';
+    for (var key in BOSS_BUTTONS) {
+        settings +=
+            '<div class="setting"><div>' + BOSS_SETTINGS[key] + '</div><div data-key="' + key + '">' + BOSS_BUTTONS[key] + '</div></div>';
+    }
+    settings += '</div>';
+    player.querySelector(".playerSettings-wrapper").innerHTML += settings;
 
     bindEventListenersToKeys();
 
     window.addEventListener("keypress", (e) => {
-        console.log("test2");
         if (document.querySelector("article.config .choosingKey").classList.contains("active")) {
             if(selectedKey.closest(".bossSettings")){
                 updateSetting(selectedKey.dataset.key, e.code, true);
@@ -74,22 +71,20 @@ function bindEventListenersToKeys(){
 }
 
 export function updateConfigPage(){
-    let players = document.querySelectorAll("article.config .player");
-    Array.prototype.forEach.call(players, function (player) {
-        player.querySelector(".bossSettings").innerHTML = "<h3>Boss</h3>";
-        let settings = "";
-        for (var key in BOSS_BUTTONS) {
-            settings += 
-            '<div class="setting"><div>'+BOSS_SETTINGS[key]+'</div><div data-key="'+key+'">'+BOSS_BUTTONS[key]+'</div></div>';
-        }
-        player.querySelector(".bossSettings").innerHTML += settings;
-        player.querySelector(".challengerSettings").innerHTML = "<h3>Challenger</h3>";
-        settings = "";
-        for (var key in CHALLENGER_BUTTONS) {
-            settings += 
-            '<div class="setting"><div>'+CHALLENGER_SETTINGS[key]+'</div><div data-key="'+key+'">'+CHALLENGER_BUTTONS[key]+'</div></div>';
-        }
-        player.querySelector(".challengerSettings").innerHTML += settings;
-    });
+    let player = document.querySelector("article.config .player");
+    player.querySelector(".bossSettings").innerHTML = "<h3>Boss</h3>";
+    let settings = "";
+    for (var key in BOSS_BUTTONS) {
+        settings +=
+            '<div class="setting"><div>' + BOSS_SETTINGS[key] + '</div><div data-key="' + key + '">' + BOSS_BUTTONS[key] + '</div></div>';
+    }
+    player.querySelector(".bossSettings").innerHTML += settings;
+    player.querySelector(".challengerSettings").innerHTML = "<h3>Challenger</h3>";
+    settings = "";
+    for (var key in CHALLENGER_BUTTONS) {
+        settings +=
+            '<div class="setting"><div>' + CHALLENGER_SETTINGS[key] + '</div><div data-key="' + key + '">' + CHALLENGER_BUTTONS[key] + '</div></div>';
+    }
+    player.querySelector(".challengerSettings").innerHTML += settings;
     bindEventListenersToKeys();
 }
