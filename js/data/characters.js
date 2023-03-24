@@ -330,11 +330,11 @@ export const CHARACTER_DATA = {
                 "graceChargeSpeed": 30, // Charge per second in grace
                 "passiveChargeSpeed": 2, // Charge per second
                 "duration": 3,
-                "coolDown": 1,
+                "coolDown": 1, // cooldown after duration in seconds
 
                 "abilityName": "Machine Gun Bow",
-                "description": "Shoots Bullets faster for a limited Time.",
-                "iconUrl": "img/yoimiya/special.jpg",
+                "description": "Shoots more Bullets at once for a limited Time.",
+                "iconUrl": "img/yoimiya/Machine_Gun_Bow.png",
             },
         },
 
@@ -425,7 +425,7 @@ export const CHARACTER_DATA = {
 
                     "abilityName": "Fireworks",
                     "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                    "iconUrl": "img/ability1.png",
+                    "iconUrl": "img/yoimiya/Firework.png",
                 },
 
                 "ability1": {
@@ -468,7 +468,7 @@ export const CHARACTER_DATA = {
                     "mybullets": [],
 
                     "abilityName": "Blazing Chakram",
-                    "description": "An aimed shot of bullets with the form of a Catherine Wheel",
+                    "description": "An aimed shot of bullets with the form of a spinning Chakram",
                     "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
                 },
 
