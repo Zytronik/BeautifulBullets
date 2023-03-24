@@ -80,6 +80,14 @@ function switchUI() {
     updateBossChallengerHealthbarPosition();
 }
 
+export function showCutSceneBars(){
+    document.querySelector("article.game .cutSceneBars").classList.add("active");
+}
+
+export function hideCutSceneBars(){
+    document.querySelector("article.game .cutSceneBars").classList.remove("active");
+}
+
 function updateTimer(){
     let time = convertFramecountIntoMinutesSeconds(match.elapsedTimeInFrames);
     document.querySelector("#gameTimer span").innerHTML = time[0] +":"+pad(time[1], 2);
@@ -101,7 +109,7 @@ function fadeOutUI() {
     });
 }
 
-function fadeInUI() {
+export function fadeInUI() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         player.querySelector("article.game .challenger-healthbar").classList.remove("fadeOut");
@@ -259,3 +267,42 @@ function getHealthbarColors(c1, c2, st) {
     }
     return steps;
 };
+
+export function playCountDown(){
+    let players = document.querySelectorAll("article.game .player");
+    Array.prototype.forEach.call(players, function (player) {
+        let playCountDown = player.querySelector(".gameCountDown");
+        playCountDown.innerHTML = "3";
+        playCountDown.classList.add("active");
+        setTimeout(() => {
+            playCountDown.classList.remove("active");
+            setTimeout(() => {
+                playCountDown.innerHTML = "2";
+                playCountDown.classList.add("active");
+                setTimeout(() => {
+                    playCountDown.classList.remove("active");
+                    setTimeout(() => {
+                        playCountDown.innerHTML = "1";
+                        playCountDown.classList.add("active");
+                        setTimeout(() => {
+                            playCountDown.classList.remove("active");
+                            setTimeout(() => {
+                                playCountDown.innerHTML = "FIGHT";
+                                playCountDown.classList.add("active");
+                                setTimeout(() => {
+                                    playCountDown.classList.remove("active");
+                                }, 500);
+                            }, 500);
+                        }, 500);
+                    }, 500);
+                }, 500);
+            }, 500);
+        }, 500);
+    });
+    setTimeout(() => {
+        hideCutSceneBars();
+    }, 6 * 500);
+    setTimeout(() => {
+        goToState(GAMESTATE.GAMEPLAY_REGULAR);
+    }, 7 * 500);
+}

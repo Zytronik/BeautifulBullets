@@ -1,4 +1,15 @@
-import { cheats, lowerChallengerHealth, lowerBossHealth, setTime, handleGoBackButton } from "../main.js";
+import { cheats, lowerChallengerHealth, lowerBossHealth, handleGoBackButton } from "../main.js";
+import { updateConfigPage } from "../view/configPage.js";
+
+export function updateSetting(key, code, isBoss){
+    console.log(key, code, isBoss);
+    if(isBoss){
+        BOSS_BUTTONS[key] = code;
+    }else{
+        CHALLENGER_BUTTONS[key] = code;
+    }
+    updateConfigPage();
+}
 
 export const INPUTS_CHALLENGER = {
     left: false,
