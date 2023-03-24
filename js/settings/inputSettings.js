@@ -1,4 +1,4 @@
-import { cheats, lowerChallengerHealth, lowerBossHealth, handleGoBackButton } from "../main.js";
+import { cheats, lowerChallengerHealth, lowerBossHealth, setTime, handleGoBackButton } from "../main.js";
 
 export const INPUTS_CHALLENGER = {
     left: false,
@@ -24,10 +24,13 @@ export const INPUTS_CHEATS = {
     a: false,
     c: false,
     k: false,
+    t: false,
+    altLeft: false,
     hb: false,
     ab: false,
     cb: false,
     kb: false,
+
 }
 
 export let CHALLENGER_BUTTONS = {
@@ -56,7 +59,8 @@ export let CHEAT_BUTTONS = {
     a: "KeyA",
     c: "KeyC",
     k: "KeyK",
-    altLeft: "AltLeft"
+    t: "KeyT",
+    altLeft: "AltLeft",
 }
 
 document.addEventListener("keydown", (event) => {
@@ -106,6 +110,8 @@ document.addEventListener("keydown", (event) => {
         INPUTS_CHEATS.c = true;
     } else if (event.code === CHEAT_BUTTONS.k) {
         INPUTS_CHEATS.k = true;
+    } else if (event.code === CHEAT_BUTTONS.t) {
+        INPUTS_CHEATS.t = true;
     } else if (event.code === CHEAT_BUTTONS.altLeft) {
         INPUTS_CHEATS.altLeft = true;
     }
@@ -128,6 +134,9 @@ document.addEventListener("keydown", (event) => {
     }
     if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.k) {
         lowerBossHealth();
+    }
+    if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.t) {
+        setTime();
     }
 });
 
@@ -177,7 +186,9 @@ document.addEventListener("keyup", (event) => {
     } else if (event.code === CHEAT_BUTTONS.k) {
         INPUTS_CHEATS.k = false;
         INPUTS_CHEATS.kb = false;
-    } if (event.code === CHEAT_BUTTONS.altLeft) {
+    } else if (event.code === CHEAT_BUTTONS.t) {
+        INPUTS_CHEATS.t = false;
+    } else if (event.code === CHEAT_BUTTONS.altLeft) {
         INPUTS_CHEATS.altLeft = false;
     }
 });

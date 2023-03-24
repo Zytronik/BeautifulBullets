@@ -1,5 +1,5 @@
 import { CHARACTER_DATA } from "./data/characters.js";
-import { GameCanvas, convertMouseCoordinatesToCanvasCoordinates } from "./view/canvas.js";
+import { GameCanvas } from "./view/canvas.js";
 import { updateGameUI } from "./view/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
@@ -192,15 +192,22 @@ export function cheats() {
 export function lowerChallengerHealth() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = 1;
-        console.log("Challenger Health set to "+challenger.currentHealth)
+        console.log("Challenger Health set to "+challenger.currentHealth);
     }
 }
 
 export function lowerBossHealth() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         boss.currentHealth = 30;
-        console.log("Boss Health set to "+boss.currentHealth)
+        console.log("Boss Health set to "+boss.currentHealth);
     }
+}
+
+export function setTime() {
+    // if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
+    //     match.elapsedTimeInFrames = 115 * FPS;
+    //     console.log("Timer set to "+match.elapsedTimeInFrames / FPS+" Seconds");
+    // }
 }
 
 //TODO Move to BulletCollection

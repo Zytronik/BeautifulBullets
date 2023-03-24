@@ -467,9 +467,9 @@ export const CHARACTER_DATA = {
                     "fancyStuff": true,
                     "mybullets": [],
 
-                    "abilityName": "Fireworks",
-                    "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                    "iconUrl": "img/ability1.png",
+                    "abilityName": "Blazing Chakram",
+                    "description": "An aimed shot of bullets with the form of a Catherine Wheel",
+                    "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
                 },
 
             },
@@ -518,9 +518,9 @@ export const CHARACTER_DATA = {
                 },
                 "frequency": 2, //in seconds
 
-                "abilityName": "Passive",
-                "description": "This is a description for a Passive Ability.",
-                "iconUrl": "img/yoimiya/special.jpg",
+                "abilityName": "Catherine Wheel (Passive)",
+                "description": "Around your Boss-Character spawns a halo of bullets that occasionally sprinkle outwards and fall down",
+                "iconUrl": "img/yoimiya/Catherine_Wheel_Passive.png",
             },
         }
     },
