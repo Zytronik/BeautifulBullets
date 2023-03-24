@@ -1,5 +1,6 @@
 import { challenger, boss, currentFPS, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
+import { BOARD_WIDTH, BOARD_HEIGHT } from "../settings/gameSettings.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { player1SelectedCharacter, player2SelectedCharacter } from "./characterSelectionPage.js";
@@ -29,25 +30,71 @@ export function updateGameUI() {
     updateTimer();
 }
 
+function zoomToChallenger(){
+    let players = document.querySelectorAll("article.game .player");
+    Array.prototype.forEach.call(players, function (player) {
+        let scale = 2;
+        let centerX = (BOARD_WIDTH / 2 - challenger.x) * scale;
+        let centerY = (BOARD_HEIGHT / 2 -challenger.y) * scale;
+        player.querySelector("article.game .characterCanvas").style.transform = "translate("+centerX+"px, "+centerY+"px) scale("+scale+")";
+        player.querySelector("article.game .bulletCanvas").style.transform = "translate("+centerX+"px, "+centerY+"px) scale("+scale+")";
+    });
+}
+
+function resetZoomChallenger(){
+    let players = document.querySelectorAll("article.game .player");
+    Array.prototype.forEach.call(players, function (player) {
+        player.querySelector("article.game .characterCanvas").style.transform = "";
+        player.querySelector("article.game .bulletCanvas").style.transform = "";
+    });
+}
+
+function deadAnimation(){
+    let players = document.querySelectorAll("article.game .player");
+    Array.prototype.forEach.call(players, function (player) {
+        player.querySelector("article.game .characterCanvas").classList.add("deadAnimation");
+        player.querySelector("article.game .bulletCanvas").classList.add("deadAnimation");
+    });
+}
+
+function hideCanvasContent(){
+    document.querySelector("article.game").classList.add("hideContent");
+}
+
+function showCanvasContent(){
+    document.querySelector("article.game").classList.remove("hideContent");
+}
+
 export function frontend_switchSidesAnimations() {
     fadeOutUI();
+    showCutSceneBars();
     setTimeout(() => {
-        document.querySelector("article.game .switchingSides").classList.add("active");
+        deadAnimation();
         setTimeout(() => {
-            document.querySelector("article.game .switchingSides").classList.remove("active");
+            zoomToChallenger();
+            switchUI();
             setTimeout(() => {
-                switchUI();
-                fadeInUI();
+                hideCanvasContent();
                 setTimeout(() => {
-                    goToState(GAMESTATE.GAMESTART_CUTSCENE);
-                }, 900);
-            }, 500);
-        }, 5000);
-    }, 900);
+                    fadeInUI();
+                    resetZoomChallenger();
+                    hideCutSceneBars();
+                    document.querySelector("article.game .switchingSides").classList.add("active");
+                    setTimeout(() => {
+                        document.querySelector("article.game .switchingSides").classList.remove("active");
+                        setTimeout(() => {
+                            showCanvasContent();
+                            goToState(GAMESTATE.GAMESTART_CUTSCENE);
+                        }, 200);
+                    }, 1100);
+                }, 600);
+            }, 1000);
+        }, 500);
+    }, 700);
 }
 
 export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
-    document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = firstTo;
+    document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = "FT"+firstTo;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 .score").innerHTML = scoreP1;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 .score").innerHTML = scoreP2;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1SelectedCharacter].name;
@@ -61,7 +108,7 @@ export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
                 switchUI();
                 fadeInUI();
                 setTimeout(() => {
-                    goToState(GAMESTATE.GAMESTART_CUTSCENE);
+                    //goToState(GAMESTATE.GAMESTART_CUTSCENE);
                 }, 900);
             }, 500);
         }, 5000);
@@ -272,37 +319,14 @@ export function playCountDown(){
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         let playCountDown = player.querySelector(".gameCountDown");
-        playCountDown.innerHTML = "3";
+        playCountDown.innerHTML = "FIGHT";
         playCountDown.classList.add("active");
         setTimeout(() => {
             playCountDown.classList.remove("active");
-            setTimeout(() => {
-                playCountDown.innerHTML = "2";
-                playCountDown.classList.add("active");
-                setTimeout(() => {
-                    playCountDown.classList.remove("active");
-                    setTimeout(() => {
-                        playCountDown.innerHTML = "1";
-                        playCountDown.classList.add("active");
-                        setTimeout(() => {
-                            playCountDown.classList.remove("active");
-                            setTimeout(() => {
-                                playCountDown.innerHTML = "FIGHT";
-                                playCountDown.classList.add("active");
-                                setTimeout(() => {
-                                    playCountDown.classList.remove("active");
-                                }, 500);
-                            }, 500);
-                        }, 500);
-                    }, 500);
-                }, 500);
-            }, 500);
-        }, 500);
+        }, 400);
     });
     setTimeout(() => {
         hideCutSceneBars();
-    }, 6 * 500);
-    setTimeout(() => {
         goToState(GAMESTATE.GAMEPLAY_REGULAR);
-    }, 7 * 500);
+    }, 500);
 }

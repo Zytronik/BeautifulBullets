@@ -30,7 +30,7 @@ export class Challenger {
         this.moveSpeed = challengerData.stats.moveSpeed;
         this.shiftSpeed = challengerData.shiftSpeed;
 
-        this.useSpecialAbility = challengerData.special.use;
+        this.specialAbility = challengerData.special;
         this.specialMaxCharge = 100;
         this.specialCharge = 0;
         this.specialChargeRequired = challengerData.special.chargeRequired;
@@ -157,8 +157,12 @@ export class Challenger {
             this.specialActiveFor = 0;
         }
         if (this.specialActive && this.specialActiveFor <= this.specialDuration) {
-            this.useSpecialAbility();
+            this.specialAbility.use();
             this.specialActiveFor++;
+            if(this.specialActiveFor >= this.specialDuration){
+                this.specialAbility.deactivate();
+                this.specialActive = false;
+            }
         }
     }
     #iframesTimeout() {
