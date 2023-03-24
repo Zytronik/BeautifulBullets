@@ -1,7 +1,7 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
 import { fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
-import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
+import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame, playGameStartCutscene } from "./main.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -130,6 +130,7 @@ function characterSelectionToGameStartCutscene() {
             - play intro cutscene
             - go to GAMEPLAY_REGULAR after cutscene
     */
+    frontend_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters());
     playGameStartCutscene();
     frontend_setupGameUI();
