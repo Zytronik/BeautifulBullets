@@ -5,7 +5,7 @@ import { INPUTS_BOSS } from "../settings/inputSettings.js";
 export class Boss {
     constructor(bossData) {
         this.x = BOARD_WIDTH / 2;
-        this.y = BOARD_HEIGHT / 6;
+        this.y = -BOARD_HEIGHT / 6;
 
         this.healthBarSpriteUrl = bossData.healthBarSpriteUrl;
         this.healthBarName = bossData.healthBarName;

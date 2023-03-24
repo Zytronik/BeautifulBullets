@@ -6,7 +6,7 @@ import { challengerBullets, boss, isGameStateEnraged } from "../main.js";
 export class Challenger {
     constructor(challengerData) {
         this.x = BOARD_WIDTH / 2;
-        this.y = BOARD_HEIGHT * 5 / 6;
+        this.y = BOARD_HEIGHT * 7 / 6;
 
         this.sprite = new Image();
         this.sprite.src = challengerData.spriteUrl;
