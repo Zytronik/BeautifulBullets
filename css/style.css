@@ -216,6 +216,40 @@ article.game .player .canvas {
 	background-image: url("../img/bg.png");
 	background-repeat: repeat;
 	background-size: 10%;
+	overflow: hidden;
+}
+
+article.game::before {
+	background-color: black;
+	content: "";
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100;
+	z-index: 5;
+	height: 100%;
+	transition: opacity 800ms;
+}
+
+article.game.hideContent::before {
+	background-color: black;
+	content: "";
+	position: absolute;
+	opacity: 1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100;
+	z-index: 5;
+	height: 100%;
+}
+
+article.game .player .canvas > canvas {
+	transition: 1.5s;
 }
 
 article.game .player .canvas::after {
@@ -1122,4 +1156,18 @@ article.config .choosingKey.active {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.deadAnimation {
+	animation: deadAnimation 150ms 3 linear;
+}
+
+@keyframes deadAnimation{
+	0% {
+		opacity:1;
+		filter: brightness(0%);
+	}
+	50% {
+		opacity: 0;
+	}
 }
