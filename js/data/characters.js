@@ -357,7 +357,7 @@ export const CHARACTER_DATA = {
             "abilities": {
                 "ability2": {
                     "use": function () {
-                        if (this.fancyStuff) {
+                        if (this.alternator) {
                             let bulletAmount = 30,
                                 lifetime = 20,
                                 random1 = Math.random(),
@@ -377,15 +377,15 @@ export const CHARACTER_DATA = {
                                 bossBullets.push(bullet);
                             }
                             
-                            this.fancyStuff = !this.fancyStuff;
+                            this.alternator = !this.alternator;
                         }
-                        else if (!this.fancyStuff) {
+                        else if (!this.alternator) {
                             this.mybullets.forEach(bullet => {
                                 bullet.trajectoryFunction = trajectory2;
                                 bullet.radius = 4;
                                 bullet.color = "rgb("+(Math.random()*100+155)+", 0, 0)";
                             })
-                            this.fancyStuff = !this.fancyStuff;
+                            this.alternator = !this.alternator;
                             this.mybullets = []
                         }
 
@@ -420,7 +420,7 @@ export const CHARACTER_DATA = {
                         "color": "white"
                     },
                     "coolDown": 1, //in seconds
-                    "fancyStuff": true,
+                    "alternator": true,
                     "mybullets": [],
 
                     "abilityName": "Fireworks",
@@ -464,7 +464,6 @@ export const CHARACTER_DATA = {
                         "color": "red"
                     },
                     "coolDown": 0.5, //in seconds
-                    "fancyStuff": true,
                     "mybullets": [],
 
                     "abilityName": "Blazing Chakram",
