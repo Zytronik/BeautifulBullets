@@ -326,11 +326,11 @@ export const CHARACTER_DATA = {
                 "graceChargeSpeed": 30, // Charge per second in grace
                 "passiveChargeSpeed": 2, // Charge per second
                 "duration": 3,
-                "coolDown": 1,
+                "coolDown": 1, // cooldown after duration in seconds
 
                 "abilityName": "Machine Gun Bow",
-                "description": "Shoots Bullets faster for a limited Time.",
-                "iconUrl": "img/yoimiya/special.jpg",
+                "description": "Shoots more Bullets at once for a limited Time.",
+                "iconUrl": "img/yoimiya/Machine_Gun_Bow.png",
             },
         },
 
@@ -351,6 +351,79 @@ export const CHARACTER_DATA = {
 
             // A B I L I T I E S
             "abilities": {
+                "ability2": {
+                    "use": function () {
+                        if (this.fancyStuff) {
+                            let bulletAmount = 30,
+                                lifetime = 20,
+                                random1 = Math.random(),
+                                random2 = Math.random();
+                            for (let i = 0; i < bulletAmount; i++) {
+                                let attributes = [i, bulletAmount, random1, random2, 0, Math.random()*15+1, bulletAmount]
+                                let customBulletVisuals = {radius: 10, color: "yellow"}
+                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
+                                this.mybullets.push(bullet)
+                                bossBullets.push(bullet);
+                            }
+                            for (let i = 0; i < Math.round(bulletAmount/1.5); i++) {
+                                let attributes = [i, Math.round(bulletAmount/1.5), random1, random2, 0, Math.random()*15+1, bulletAmount]
+                                let customBulletVisuals = {radius: 10, color: "yellow"}
+                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
+                                this.mybullets.push(bullet)
+                                bossBullets.push(bullet);
+                            }
+                            
+                            this.fancyStuff = !this.fancyStuff;
+                        }
+                        else if (!this.fancyStuff) {
+                            this.mybullets.forEach(bullet => {
+                                bullet.trajectoryFunction = trajectory2;
+                                bullet.radius = 4;
+                                bullet.color = "rgb("+(Math.random()*100+155)+", 0, 0)";
+                            })
+                            this.fancyStuff = !this.fancyStuff;
+                            this.mybullets = []
+                        }
+
+                        function trajectory1() {
+                            let x = this.attributes[2]*5-2.5,
+                                y = 1;
+                            return [x, y];
+                        }
+
+                        function trajectory2() {
+                            let x = 0,
+                                y = 0;
+                            if (this.attributes[1] == this.attributes[6]) {
+                                x = Math.sin((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5],
+                                y = Math.cos((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]+this.attributes[4];
+                            } else {
+                                x = Math.sin((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]*0.5,
+                                y = Math.cos((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]*0.5+this.attributes[4];
+                            }
+                            if (y >= 2) {
+                                y = 2;
+                            }
+                            if(this.attributes[4] <= 5) {
+                                this.attributes[4] += 0.01;
+                            }
+                            this.attributes[5] = this.attributes[5]**0.96;
+                            return [x, y];
+                        }
+                    },
+                    "bulletVisuals": {
+                        "radius": 4,
+                        "color": "white"
+                    },
+                    "coolDown": 1, //in seconds
+                    "fancyStuff": true,
+                    "mybullets": [],
+
+                    "abilityName": "Fireworks",
+                    "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
+                    "iconUrl": "img/ability1.png",
+                },
+
                 "ability1": {
                     "use": function () {
                         let bulletAmount = 8,
@@ -394,7 +467,7 @@ export const CHARACTER_DATA = {
                     "coolDown": 0.5, //in seconds
                     "duration" : 0, //in seconds
                     "abilityName": "Blazing Chakram",
-                    "description": "An aimed shot of bullets with the form of a Catherine Wheel",
+                    "description": "An aimed shot of bullets with the form of a spinning Chakram",
                     "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
                     
                     //optional attributes for ability
