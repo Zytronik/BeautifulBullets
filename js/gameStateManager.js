@@ -1,7 +1,7 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
 import { frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
-import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_resumeGameLogic, main_setGameStateRegular, main_switchSides, main_setGameStateEnraged, clearAllBullets } from "./main.js";
+import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -128,13 +128,12 @@ function characterSelectionToGameStartCutscene() {
             - close character selection screen
             - show gameplay screen
             - play intro cutscene
-        StateManager:
             - go to GAMEPLAY_REGULAR after cutscene
     */
-    frontend_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters());
+    frontend_showPage(PAGES.GAMEPLAY);
     frontend_setupGameUI();
-    goToState(GAMESTATE.GAMEPLAY_REGULAR);
+    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
 }
 
 function gameStartCutsceneToGameplayRegular() {
@@ -150,8 +149,7 @@ function gameStartCutsceneToGameplayRegular() {
             - hide cutscene
             - show ingame UI
     */
-    main_resumeGameLogic();
-    main_setGameStateRegular();
+    main_startGame();
 }
 
 function gameplayRegularToTimeOverCutscene() {
@@ -162,11 +160,11 @@ function gameplayRegularToTimeOverCutscene() {
         Frontend:
             - hide game ui
             - play time over cutscene
-        StateManager:
             - go to GAMEPLAY_ENRAGED after cutscene
     */
-    clearAllBullets();
-    goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+    main_pauseGameLogic();
+    main_clearAllBullets();
+    goToState(GAMESTATE.GAMEPLAY_ENRAGED); //TODO do it in cutscene
 }
 
 function gameplayRegularToBossDeathCutscene() {
@@ -177,11 +175,11 @@ function gameplayRegularToBossDeathCutscene() {
         Frontend:
             - hide game ui
             - play boss death cutscene
-        StateManager:
             - go to GAMEPLAY_ENRAGED after cutscene
     */
-    clearAllBullets();
-    goToState(GAMESTATE.GAMEPLAY_ENRAGED);
+    main_pauseGameLogic();
+    main_clearAllBullets();
+    goToState(GAMESTATE.GAMEPLAY_ENRAGED); //TODO do it in cutscene
 }
 
 function cutsceneToGameplayEnraged() {
@@ -208,6 +206,7 @@ function cutsceneToGameplayEnraged() {
             - hide cutscene
             - show (enrage?) ingame UI
     */
+    main_unpauseGameLogic();
     main_setGameStateEnraged();
 }
 
@@ -230,7 +229,7 @@ function pauseScreenToGameplay() {
             - hide pause screen
     */
     frontend_closePauseScreen();
-    main_resumeGameLogic();
+    main_unpauseGameLogic();
 }
 
 function pauseScreenToMainMenu() {
@@ -256,9 +255,10 @@ function gameplayToChallengerDeath() {
         Frontend:
             - hide game ui
             - play challenger death cutscene
-        StateManager:
             - decide based on match status what state to go to
     */
+    main_pauseGameLogic();
+    match.updateStats();
     if (match.hasMatchFinished()) {
         goToState(GAMESTATE.GAMEOVER_CUTSCENE)
     } else {
@@ -281,13 +281,12 @@ function challengerDeathToSwitchingSidesCutscene() {
             - hide previous cutscene
             - hide game ui
             - play switching sides cutscene
-        StateManager:
             - go to GAMESTART_CUTSCENE after cutscene
     */
     main_pauseGameLogic();
-    main_switchSides();
+    main_clearAllBullets();
+    match.swapSides();
     frontend_switchSidesAnimations();
-    goToState(GAMESTATE.GAMESTART_CUTSCENE);
 }
 
 function challengerDeathToRoundOverCutscene() {
@@ -300,14 +299,12 @@ function challengerDeathToRoundOverCutscene() {
             - hide previous cutscene
             - hide game ui
             - play round over cutscene
-        StateManager:
             - go to GAMESTART_CUTSCENE after cutscene
     */
     main_pauseGameLogic();
-    main_switchSides();
+    main_clearAllBullets();
+    match.swapSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
-    match.startNextRound();
-    goToState(GAMESTATE.GAMESTART_CUTSCENE);
 }
 
 function challengerDeathToGameOverCutscene() {
@@ -319,9 +316,10 @@ function challengerDeathToGameOverCutscene() {
             - hide previous cutscene
             - hide game ui
             - play game over cutscene
-        StateManager:
             - go to RESULT_SCREEN after cutscene
     */
+    main_pauseGameLogic();
+    goToState(GAMESTATE.RESULT_SCREEN); //TODO do it in cutscene
 }
 
 function switchingSidesCutsceneToGameStartCutscene() {
@@ -332,10 +330,9 @@ function switchingSidesCutsceneToGameStartCutscene() {
             - hide previous cutscene
             - hide game ui
             - play game over cutscene
-        StateManager:
             - go to GAMEPLAY_REGULAR after cutscene
     */
-    goToState(GAMESTATE.GAMEPLAY_REGULAR);
+    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
 }
 
 function roundOverCutsceneToGameStartCutscene() {
@@ -343,10 +340,10 @@ function roundOverCutsceneToGameStartCutscene() {
         Backend:
             - match: start next round
         Frontend:
-        StateManager:
             - go to GAMEPLAY_REGULAR after cutscene
     */
-    goToState(GAMESTATE.GAMEPLAY_REGULAR);
+    match.startNextRound();
+    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
 }
 
 function gameOverCutsceneToResultScreen() {
@@ -375,9 +372,10 @@ function resultScreenToGameStartCutscene() {
             - close result screen
             - show gameplay screen
             - play intro cutscene
-        StateManager:
             - go to GAMEPLAY_REGULAR after cutscene
     */
+    main_loadGame(frontend_getSelectedCharacters());
+    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
 }
 
 function resultScreenToCharacterSelection() {
@@ -389,6 +387,7 @@ function resultScreenToCharacterSelection() {
             - show character select screen
             - reset ready buttons
     */
+    main_closeGameLoop();
 }
 
 function resultScreenToMainMenu() {
@@ -399,4 +398,5 @@ function resultScreenToMainMenu() {
             - close ingame screen
             - show main menu screen
     */
+    main_closeGameLoop();
 }

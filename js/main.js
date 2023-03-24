@@ -26,13 +26,9 @@ export let totalFrameCalculationTime = 0;
 let loadOnFirstCall = true;
 export function main_loadGame([character1, character2]) {
     match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
-
     challenger = new Challenger(match.player1Character.challenger);
-    challengerBullets = [];
-
     boss = new Boss(match.player2Character.boss);
-    bossBullets = [];
-
+    main_clearAllBullets()
     isGameStateEnraged = false;
     gamePaused = true;
 
@@ -41,6 +37,15 @@ export function main_loadGame([character1, character2]) {
         player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
         player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
     }
+}
+
+export function main_startGame() {
+    challenger = new Challenger(match.getChallenger());
+    boss = new Boss(match.getBoss());
+    main_clearAllBullets()
+    isGameStateEnraged = false;
+    gamePaused = false;
+    gameLoop();
 }
 
 let previousFrameAt = 0;
@@ -64,7 +69,9 @@ function gameLoop() {
     canvasRenderTime = Math.round(performance.now() - t1);
 
     t1 = performance.now();
-    gameLogic();
+    if (!gamePaused) {
+        gameLogic();
+    }
     gameLogicTime = Math.round(performance.now() - t1);
     totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
 
@@ -99,18 +106,14 @@ export function main_pauseGameLogic() {
     gamePaused = true;
 }
 
-export function main_resumeGameLogic() {
+export function main_unpauseGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
 }
 
-export function clearAllBullets(){
+export function main_clearAllBullets() {
     challengerBullets = []
     bossBullets = []
-}
-
-export function main_setGameStateRegular() {
-    isGameStateEnraged = false;
 }
 
 export function main_setGameStateEnraged() {
@@ -121,15 +124,6 @@ export function main_challengerDeath() {
     main_pauseGameLogic();
     match.updateStats();
     goToState(GAMESTATE.CHALLENGER_DEATH);
-}
-
-export function main_switchSides() {
-    match.swapSides();
-    challenger = new Challenger(match.getChallenger());
-    boss = new Boss(match.getBoss());
-    challengerBullets = [];
-    bossBullets = [];
-    isGameStateEnraged = false;
 }
 
 export function main_handleGoBackButton() {
@@ -162,11 +156,7 @@ export function main_closeGameLoop() {
 }
 
 export function handleGoBackButton() {
-    if (currentGameState === GAMESTATE.SETTINGS) {
-        goToState(GAMESTATE.MAIN_MENU);
-    }
-
-    if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {
+    if (currentGameState === GAMESTATE.SETTINGS || currentGameState === GAMESTATE.CHARACTER_SELECTION) {
         goToState(GAMESTATE.MAIN_MENU);
     }
 
@@ -185,21 +175,21 @@ export function cheats() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = -1;
         challenger.bulletDamage = 0;
-        console.log("Challenger Health set to "+challenger.currentHealth+" and bulletDamage set to "+challenger.bulletDamage);
+        console.log("Challenger Health set to " + challenger.currentHealth + " and bulletDamage set to " + challenger.bulletDamage);
     }
 }
 
 export function lowerChallengerHealth() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = 1;
-        console.log("Challenger Health set to "+challenger.currentHealth)
+        console.log("Challenger Health set to " + challenger.currentHealth)
     }
 }
 
 export function lowerBossHealth() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         boss.currentHealth = 30;
-        console.log("Boss Health set to "+boss.currentHealth)
+        console.log("Boss Health set to " + boss.currentHealth)
     }
 }
 

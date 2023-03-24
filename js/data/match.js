@@ -39,6 +39,9 @@ export class Match {
         }
     }
     swapSides() {
+        console.log("match: swap sides")
+        console.log("match: challenger before swap: ", this.challenger)
+
         this.firstHalf = !this.firstHalf;
         if (this.firstHalf) {
             this.challenger = PLAYER.ONE;
@@ -48,6 +51,7 @@ export class Match {
             this.boss = PLAYER.ONE;
         }
         this.elapsedTimeInFrames = 0;
+        console.log("match: challenger after swap: ", this.challenger)
     }
     getChallenger() {
         return this.challenger === PLAYER.ONE ? this.player1Character.challenger : this.player2Character.challenger
