@@ -1,4 +1,4 @@
-import { cheats, lowerChallengerHealth, lowerBossHealth, handleGoBackButton } from "../main.js";
+import { cheats, lowerChallengerHealth, lowerBossHealth, main_setGameStateEnraged, handleGoBackButton } from "../main.js";
 import { updateConfigPage } from "../view/configPage.js";
 
 export function updateSetting(key, code, isBoss){
@@ -36,6 +36,7 @@ export const INPUTS_CHEATS = {
     c: false,
     k: false,
     t: false,
+    e: false,
     altLeft: false,
     hb: false,
     ab: false,
@@ -71,6 +72,7 @@ export let CHEAT_BUTTONS = {
     c: "KeyC",
     k: "KeyK",
     t: "KeyT",
+    e: "KeyE",
     altLeft: "AltLeft",
 }
 
@@ -123,6 +125,8 @@ document.addEventListener("keydown", (event) => {
         INPUTS_CHEATS.k = true;
     } else if (event.code === CHEAT_BUTTONS.t) {
         INPUTS_CHEATS.t = true;
+    } else if (event.code === CHEAT_BUTTONS.e) {
+        INPUTS_CHEATS.e = true;
     } else if (event.code === CHEAT_BUTTONS.altLeft) {
         INPUTS_CHEATS.altLeft = true;
     }
@@ -147,7 +151,11 @@ document.addEventListener("keydown", (event) => {
         lowerBossHealth();
     }
     if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.t) {
-        setTime();
+        // setTime();
+    }
+    if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.e) {
+        main_setGameStateEnraged();
+        console.log("Game State set to Enraged");
     }
 });
 
@@ -199,6 +207,8 @@ document.addEventListener("keyup", (event) => {
         INPUTS_CHEATS.kb = false;
     } else if (event.code === CHEAT_BUTTONS.t) {
         INPUTS_CHEATS.t = false;
+    } else if (event.code === CHEAT_BUTTONS.e) {
+        INPUTS_CHEATS.e = false;
     } else if (event.code === CHEAT_BUTTONS.altLeft) {
         INPUTS_CHEATS.altLeft = false;
     }

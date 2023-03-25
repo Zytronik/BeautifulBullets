@@ -13,6 +13,7 @@ export class Boss {
         this.canBeControlled = true;
         this.xSpeedNormalized = 0;
         this.ySpeedNormalized = 0;
+        this.yBarrier = BOARD_HEIGHT * 2 / 7;
 
         this.sprite = new Image();
         this.sprite.src = bossData.spriteUrl;
@@ -101,7 +102,7 @@ export class Boss {
                 this.x = (newX >= 0 && newX <= BOARD_WIDTH) ? newX : this.x;
                 this.y = (newY >= 0 && newY <= BOARD_HEIGHT * 2 / 7) ? newY : this.y;
                 this.xSpeedNormalized = (newX >= 0 && newX <= BOARD_WIDTH) ? this.xSpeedNormalized : 0;
-                this.ySpeedNormalized = (newY >= 0 && newY <= BOARD_HEIGHT * 2 / 7) ? this.ySpeedNormalized : 0;
+                this.ySpeedNormalized = (newY >= 0 && newY <= this.yBarrier) ? this.ySpeedNormalized : 0;
             } else {
                 this.xSpeedNormalized = 0;
                 this.ySpeedNormalized = 0;

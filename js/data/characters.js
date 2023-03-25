@@ -1,6 +1,6 @@
 import { boss, bossBullets } from "../main.js";
 import { Bullet } from "../gameElements/bullet.js";
-import { FPS } from "../settings/gameSettings.js";
+import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
 
 export const CHARACTER_DATA = {
@@ -351,107 +351,124 @@ export const CHARACTER_DATA = {
 
             // A B I L I T I E S
             "abilities": {
-                "ability2": {
+                "ability1": {
                     "use": function () {
-                        if (this.alternator) {
+                        if (!this.secondCast) {
                             let bulletAmount = 30,
                                 lifetime = 20,
-                                random1 = Math.random(),
-                                random2 = Math.random();
+                                random1 = Math.random();
                             for (let i = 0; i < bulletAmount; i++) {
-                                let attributes = [i, bulletAmount, random1, random2, 0, Math.random()*15+1, bulletAmount]
-                                let customBulletVisuals = {radius: 10, color: "yellow"}
-                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
+                                let attributes = [i, bulletAmount, random1, 0, Math.random() * 15 + 1, bulletAmount],
+                                    customBulletVisuals = { radius: 10, color: "yellow" },
+                                    bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectoryBeforeSecondCast, lifetime, attributes);
+                                this.mybullets.push(bullet);
                                 bossBullets.push(bullet);
                             }
-                            for (let i = 0; i < Math.round(bulletAmount/1.5); i++) {
-                                let attributes = [i, Math.round(bulletAmount/1.5), random1, random2, 0, Math.random()*15+1, bulletAmount]
-                                let customBulletVisuals = {radius: 10, color: "yellow"}
-                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
+                            for (let i = 0; i < Math.round(bulletAmount / 1.5); i++) {
+                                let attributes = [i, Math.round(bulletAmount / 1.5), random1, 0, Math.random() * 15 + 1, bulletAmount],
+                                    customBulletVisuals = { radius: 10, color: "yellow" },
+                                    bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectoryBeforeSecondCast, lifetime, attributes);
+                                this.mybullets.push(bullet);
                                 bossBullets.push(bullet);
                             }
-                            
-                            this.alternator = !this.alternator;
+
+                            this.secondCast = !this.secondCast;
                         }
-                        else if (!this.alternator) {
+                        else if (this.secondCast) {
                             this.mybullets.forEach(bullet => {
-                                bullet.trajectoryFunction = trajectory2;
+                                bullet.trajectoryFunction = trajectoryAfterSecondCast;
                                 bullet.radius = 4;
-                                bullet.color = "rgb("+(Math.random()*100+155)+", 0, 0)";
+                                bullet.color = "rgb(" + (Math.random() * 100 + 155) + ", 0, 0)";
                             })
-                            this.alternator = !this.alternator;
+                            this.secondCast = !this.secondCast;
                             this.mybullets = []
                         }
 
-                        function trajectory1() {
-                            let x = this.attributes[2]*5-2.5,
+                        function trajectoryBeforeSecondCast() {
+                            let randomNumber1 = this.attributes[2],
+                                x = randomNumber1 * 5 - 2.5,
                                 y = 1;
                             return [x, y];
                         }
 
-                        function trajectory2() {
+                        function trajectoryAfterSecondCast() {
                             let x = 0,
-                                y = 0;
-                            if (this.attributes[1] == this.attributes[6]) {
-                                x = Math.sin((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5],
-                                y = Math.cos((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]+this.attributes[4];
+                                y = 0,
+                                bulletNumber = this.attributes[0],
+                                bulletAmount1 = this.attributes[1],
+                                accelerator = this.attributes[3],
+                                randomNumber2 = this.attributes[4],
+                                bulletAmount2 = this.attributes[5];
+
+                            if (bulletAmount1 == bulletAmount2) {
+                                x = Math.sin((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2,
+                                y = Math.cos((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2 + accelerator;
                             } else {
-                                x = Math.sin((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]*0.5,
-                                y = Math.cos((2*Math.PI) / this.attributes[1] * this.attributes[0])*this.attributes[5]*0.5+this.attributes[4];
+                                x = Math.sin((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2 * 0.5,
+                                y = Math.cos((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2 * 0.5 + accelerator;
                             }
                             if (y >= 2) {
                                 y = 2;
                             }
-                            if(this.attributes[4] <= 5) {
-                                this.attributes[4] += 0.01;
+                            if (accelerator <= 5) {
+                                this.attributes[3] += 0.01;
                             }
-                            this.attributes[5] = this.attributes[5]**0.96;
+                            this.attributes[4] = randomNumber2 ** 0.96;
                             return [x, y];
                         }
+                    },
+                    "deactivate": function () {
+                        
                     },
                     "bulletVisuals": {
                         "radius": 4,
                         "color": "white"
                     },
                     "coolDown": 1, //in seconds
-                    "alternator": true,
-                    "mybullets": [],
-
+                    "duration": 0, //in seconds
                     "abilityName": "Fireworks",
                     "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
                     "iconUrl": "img/ability1.png",
+                    
+                    //optional attributes for ability
+                    "secondCast" : false,
+                    "mybullets": [],
                 },
-
-                "ability1": {
+                "ability2": {
                     "use": function () {
                         let bulletAmount = 8,
                             lifetime = 20;
                         for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,]
-                            let x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
-                            let y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
-                            let bullet = new Bullet(x, y, this.bulletVisuals, trajectory1, lifetime, attributes);
+                            let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
+                                x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
+                                y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
+                            let bullet = new Bullet(x, y, this.bulletVisuals, trajectory, lifetime, attributes);
                             this.mybullets.push(bullet)
                             bossBullets.push(bullet);
                         }
 
-                        function trajectory1() {
+                        function trajectory() {
                             let x = 0,
                                 y = 1,
-                                shiftMovement = this.attributes[2] / this.attributes[3];
+                                bulletNumber = this.attributes[0],
+                                bulletAmount = this.attributes[1],
+                                shiftCounter = this.attributes[2],
+                                lifetime = this.attributes[3],
+                                bossX = this.attributes[4],
+                                bossY = this.attributes[5],
+                                shiftMovement = shiftCounter / lifetime;
+
                             if (this.framesAlive <= 60) {
-                                x = Math.sin(Math.PI * 2 / this.attributes[1] * this.attributes[0] + Math.PI) + boss.xSpeedNormalized;
-                                y = Math.cos(Math.PI * 2 / this.attributes[1] * this.attributes[0] + Math.PI) + boss.ySpeedNormalized;
+                                x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
+                                y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
                                 let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
                                     lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
                                     length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
                                 this.attributes[4] = lengthX / length;
                                 this.attributes[5] = lengthY / length;
                             } else {
-                                x = Math.sin(Math.PI * 2 / this.attributes[1] * this.attributes[0] + shiftMovement + Math.PI / 2) + this.attributes[4] * 3;
-                                y = Math.cos(Math.PI * 2 / this.attributes[1] * this.attributes[0] + shiftMovement + Math.PI / 2) + this.attributes[5] * 3;
+                                x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
+                                y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
                                 this.attributes[2] += 0.6;
                             }
                             return [x, y];
@@ -473,194 +490,112 @@ export const CHARACTER_DATA = {
                     //optional attributes for ability
                     "mybullets": [],
                 },
-                "ability2": {
-                    "use": function () {
-                        if (!this.secondCast) {
-                            let bulletAmount = 30,
-                                lifetime = 20,
-                                random1 = Math.random(),
-                                random2 = Math.random();
-                            for (let i = 0; i < bulletAmount; i++) {
-                                let attributes = [i, bulletAmount, random1, random2, 0, Math.random() * 15 + 1, bulletAmount]
-                                let customBulletVisuals = { radius: 10, color: "yellow" }
-                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
-                                bossBullets.push(bullet);
-                            }
-                            for (let i = 0; i < Math.round(bulletAmount / 1.5); i++) {
-                                let attributes = [i, Math.round(bulletAmount / 1.5), random1, random2, 0, Math.random() * 15 + 1, bulletAmount]
-                                let customBulletVisuals = { radius: 10, color: "yellow" }
-                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
-                                bossBullets.push(bullet);
-                            }
-
-                            this.secondCast = !this.secondCast;
-                        }
-                        else if (this.secondCast) {
-                            this.mybullets.forEach(bullet => {
-                                bullet.trajectoryFunction = trajectory2;
-                                bullet.radius = 4;
-                                bullet.color = "rgb(" + (Math.random() * 100 + 155) + ", 0, 0)";
-                            })
-                            this.secondCast = !this.secondCast;
-                            this.mybullets = []
-                        }
-
-                        function trajectory1() {
-                            let x = this.attributes[2] * 5 - 2.5,
-                                y = 1;
-                            return [x, y];
-                        }
-
-                        function trajectory2() {
-                            let x = 0,
-                                y = 0;
-                            if (this.attributes[1] == this.attributes[6]) {
-                                x = Math.sin((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5],
-                                    y = Math.cos((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5] + this.attributes[4];
-                            } else {
-                                x = Math.sin((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5] * 0.5,
-                                    y = Math.cos((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5] * 0.5 + this.attributes[4];
-                            }
-                            if (y >= 2) {
-                                y = 2;
-                            }
-                            if (this.attributes[4] <= 5) {
-                                this.attributes[4] += 0.01;
-                            }
-                            this.attributes[5] = this.attributes[5] ** 0.96;
-                            return [x, y];
-                        }
-                    },
-                    "deactivate": function () {
-                        
-                    },
-                    "bulletVisuals": {
-                        "radius": 4,
-                        "color": "white"
-                    },
-                    "coolDown": 1, //in seconds
-                    "duration": 0, //in seconds
-                    "abilityName": "Fireworks",
-                    "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                    "iconUrl": "img/ability1.png",
-                    
-                    //optional attributes for ability
-                    "secondCast" : false,
-                    "mybullets": [],
-                },
                 "ability3": {
                     "use": function () {
+                        let coords = convertMouseCoordinatesToCanvasCoordinates();
                         if (!this.secondCast) {
-                            let bulletAmount = 30,
-                                lifetime = 20,
-                                random1 = Math.random(),
-                                random2 = Math.random();
-                            for (let i = 0; i < bulletAmount; i++) {
-                                let attributes = [i, bulletAmount, random1, random2, 0, Math.random() * 15 + 1, bulletAmount]
-                                let customBulletVisuals = { radius: 10, color: "yellow" }
-                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
-                                bossBullets.push(bullet);
+                            let x = coords[0],
+                                y = coords[1];
+                            if (x < 0) {
+                                coords[0] = 0;
+                            } else if (x > BOARD_WIDTH) {
+                                coords[0] = BOARD_WIDTH;
                             }
-                            for (let i = 0; i < Math.round(bulletAmount / 1.5); i++) {
-                                let attributes = [i, Math.round(bulletAmount / 1.5), random1, random2, 0, Math.random() * 15 + 1, bulletAmount]
-                                let customBulletVisuals = { radius: 10, color: "yellow" }
-                                let bullet = new Bullet(boss.x, boss.y, customBulletVisuals, trajectory1, lifetime, attributes);
-                                this.mybullets.push(bullet)
-                                bossBullets.push(bullet);
+                            if (y < 0) {
+                                coords[1] = 0;
+                            } else if (y > boss.yBarrier) {
+                                coords[1] = boss.yBarrier;
                             }
-
-                            this.secondCast = !this.secondCast;
-                        }
-                        else if (this.secondCast) {
-                            this.mybullets.forEach(bullet => {
-                                bullet.trajectoryFunction = trajectory2;
-                                bullet.radius = 4;
-                                bullet.color = "rgb(" + (Math.random() * 100 + 155) + ", 0, 0)";
-                            })
-                            this.secondCast = !this.secondCast;
-                            this.mybullets = []
-                        }
-
-                        function trajectory1() {
-                            let x = this.attributes[2] * 5 - 2.5,
-                                y = 1;
-                            return [x, y];
-                        }
-
-                        function trajectory2() {
-                            let x = 0,
-                                y = 0;
-                            if (this.attributes[1] == this.attributes[6]) {
-                                x = Math.sin((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5],
-                                    y = Math.cos((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5] + this.attributes[4];
-                            } else {
-                                x = Math.sin((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5] * 0.5,
-                                    y = Math.cos((2 * Math.PI) / this.attributes[1] * this.attributes[0]) * this.attributes[5] * 0.5 + this.attributes[4];
+                            this.secondCast = true;
+                            // boss.ability3CoolDown = 0.5 * FPS;
+                            console.log("1 "+coords, this.secondCast, boss.ability3CoolDown)
+                        } else if (this.secondCast) {
+                            let x = coords[0],
+                                y = coords[1];
+                                if (x < 0) {
+                                coords[0] = 0;
+                            } else if (x > BOARD_WIDTH) {
+                                coords[0] = BOARD_WIDTH;
                             }
-                            if (y >= 2) {
-                                y = 2;
+                            if (y < 0) {
+                                coords[1] = 0;
+                            } else if (y > BOARD_HEIGHT) {
+                                coords[1] = BOARD_HEIGHT;
                             }
-                            if (this.attributes[4] <= 5) {
-                                this.attributes[4] += 0.01;
-                            }
-                            this.attributes[5] = this.attributes[5] ** 0.96;
-                            return [x, y];
+                            this.secondCast = false;
+                            // boss.ability3CoolDown = 5 * FPS;
+                            console.log("2 "+coords, this.secondCast, boss.ability3CoolDown)
                         }
                     },
                     "deactivate": function () {
+                        // if (!this.secondCast) {
+                        //     boss.ability3CoolDown = 0.5 * FPS;
+                        //     this.coolDown = 0.5;
+                        // } else {
+                        //     boss.ability3CoolDown = 5 * FPS;
+                        //     this.coolDown = 5;
+                        // }
                         
                     },
                     "bulletVisuals": {
-                        "radius": 4,
-                        "color": "white"
+                        "radius": 5,
+                        "color": "red"
                     },
-                    "coolDown": 1, //in seconds
-                    "duration": 0, //in seconds
-                    "abilityName": "Fireworks",
-                    "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                    "iconUrl": "img/ability1.png",
+                    "coolDown": 5, //in seconds
+                    "duration" : 0, //in seconds
+                    "abilityName": "Blazing Chakram",
+                    "description": "An aimed shot of bullets with the form of a spinning Chakram",
+                    "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
                     
                     //optional attributes for ability
-                    "secondCast" : false,
                     "mybullets": [],
+                    "secondCast": false,
                 },
             },
             "passive": {
                 "use": function () {
-                    let bulletAmount = 50,
+                    let bulletAmount = 40,
                         lifetime = 20,
-                        randoBool1 = false;
+                        bool = false;
 
                     for (let i = 0; i < bulletAmount; i++) {
-                        let attributes = [i, bulletAmount, 0, lifetime, randoBool1, boss.x, boss.y, boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100, boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100, 0]
-                        let bullet = new Bullet(boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100, boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100, this.bulletVisuals, trajectory, lifetime, attributes);
+                        let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
+                            spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
+                            attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0],
+                            bullet = new Bullet(spawnBulletX, spawnBulletY, this.bulletVisuals, trajectory, lifetime, attributes);
                         bossBullets.push(bullet);
                     }
 
                     function trajectory() {
                         let currentBulletID = this.attributes[0],
                             totalBullets = this.attributes[1],
-                            shiftMovement = this.attributes[2] / this.attributes[3],
+                            shiftCounter = this.attributes[2],
+                            lifetime = this.attributes[3],
+                            bool = this.attributes[4],
+                            bossX = this.attributes[5],
+                            bossY = this.attributes[6],
+                            bulletPosX = this.attributes[7],
+                            bulletPosY = this.attributes[8],
+                            accelerator = this.attributes[9],
+                            shiftMovement = shiftCounter / lifetime,
                             x = 0,
                             y = 0;
-                        if (Math.random() <= 0.997 && this.attributes[4] == false) {
+
+                        if (Math.random() <= 0.997 && bool == false) {
                             x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                             y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
                             this.attributes[7] = this.x;
                             this.attributes[8] = this.y;
                             this.attributes[2] += 0.4;
                         } else {
-                            x = Math.cos(Math.atan2(this.attributes[6] - this.attributes[8], this.attributes[5] - this.attributes[7]) + Math.PI);
+                            x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
                             if (y >= 1.5) {
                                 y = 1.5;
                             } else {
-                                y = Math.sin(Math.atan2(this.attributes[6] - this.attributes[8], this.attributes[5] - this.attributes[7]) + Math.PI) * 2 + this.attributes[9];
+                                y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
                             }
                             this.attributes[4] = true;
-                            if (this.attributes[9] <= 6) {
+                            if (accelerator <= 6) {
                                 this.attributes[9] += 0.03
                             }
                         }
@@ -679,41 +614,52 @@ export const CHARACTER_DATA = {
             },
             "enrage": {
                 "use": function () {
-                    let bulletAmount = 30,
+                    let bulletAmount = 75,
                         lifetime = 20,
-                        randoBool1 = false;
+                        bool = false;
 
-                    for (let i = 0; i < bulletAmount; i++) {
-                        let attributes = [i, bulletAmount, 0, lifetime, randoBool1, boss.x, boss.y, boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100, boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100, 0]
-                        let bullet = new Bullet(boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100, boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100, this.bulletVisuals, trajectory, lifetime, attributes);
-                        bossBullets.push(bullet);
-                    }
+                for (let i = 0; i < bulletAmount; i++) {
+                    let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
+                        spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
+                        attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0],
+                        bullet = new Bullet(spawnBulletX, spawnBulletY, this.bulletVisuals, trajectory, lifetime, attributes);
+                    bossBullets.push(bullet);
+                }
 
-                    function trajectory() {
-                        let currentBulletID = this.attributes[0],
-                            totalBullets = this.attributes[1],
-                            shiftMovement = this.attributes[2] / this.attributes[3],
-                            x = 0,
-                            y = 0;
-                        if (Math.random() <= 0.997 && this.attributes[4] == false) {
-                            x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
-                            y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
-                            this.attributes[7] = this.x;
-                            this.attributes[8] = this.y;
-                            this.attributes[2] += 0.4;
+                function trajectory() {
+                    let currentBulletID = this.attributes[0],
+                        totalBullets = this.attributes[1],
+                        shiftCounter = this.attributes[2],
+                        lifetime = this.attributes[3],
+                        bool = this.attributes[4],
+                        bossX = this.attributes[5],
+                        bossY = this.attributes[6],
+                        bulletPosX = this.attributes[7],
+                        bulletPosY = this.attributes[8],
+                        accelerator = this.attributes[9],
+                        shiftMovement = shiftCounter / lifetime,
+                        x = 0,
+                        y = 0;
+
+                    if (Math.random() <= 0.995 && bool == false) {
+                        x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
+                        y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
+                        this.attributes[7] = this.x;
+                        this.attributes[8] = this.y;
+                        this.attributes[2] += 0.4;
+                    } else {
+                        x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
+                        if (y >= 1.5) {
+                            y = 1.5;
                         } else {
-                            x = Math.cos(Math.atan2(this.attributes[6] - this.attributes[8], this.attributes[5] - this.attributes[7]) + Math.PI);
-                            if (y >= 1.5) {
-                                y = 1.5;
-                            } else {
-                                y = Math.sin(Math.atan2(this.attributes[6] - this.attributes[8], this.attributes[5] - this.attributes[7]) + Math.PI) * 2 + this.attributes[9];
-                            }
-                            this.attributes[4] = true;
-                            if (this.attributes[9] <= 6) {
-                                this.attributes[9] += 0.03
-                            }
+                            y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
                         }
-                        return [x, y];
+                        this.attributes[4] = true;
+                        if (accelerator <= 6) {
+                            this.attributes[9] += 0.03
+                        }
+                    }
+                    return [x, y];
                     }
                 },
                 "bulletVisuals": {
