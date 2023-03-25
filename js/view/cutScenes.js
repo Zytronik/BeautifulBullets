@@ -39,7 +39,6 @@ function cutSceneLoop() {
     if (amountWaitedTooLong > 1000 / FPS) {
         amountWaitedTooLong = 0
     }
-    console.log("we looping");
     playGameStartCutscene();
     player1Canvas.updateCanvas();
     player2Canvas.updateCanvas();

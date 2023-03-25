@@ -276,7 +276,7 @@ article.game .switchingSides {
 	visibility: hidden;
 	opacity: 0;
 	pointer-events: none;
-	transition: 600ms;
+	transition: 1000ms;
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -379,14 +379,22 @@ article.game .switchingSides.active {
 
 article.game .roundEndScreen.active .roundStatsPlayer1,
 article.game .roundEndScreen.active .roundStatsPlayer2 {
-	animation: roundEndScreenWidth 1s ease-in-out 1s forwards;
+	animation: roundEndScreenWidth 600ms ease-in-out forwards;
 }
 
 article.game .roundEndScreen.active .generalStats > *,
 article.game .roundEndScreen.active .roundStatsPlayer1 > *,
 article.game .roundEndScreen.active .roundStatsPlayer2 > * {
-	animation: roundEndScreenOpacity 0.5s ease-in-out 1.5s forwards;
+	animation: roundEndScreenOpacity 0.5s ease-in-out 0.2s forwards;
 }
+
+/* .removeRoundEndScreenWidth{
+	animation: roundEndScreenWidth 1s ease-in-out 1s backwards !important;
+}
+
+.removeRoundEndScreenOpacity{
+	animation: roundEndScreenOpacity 3s ease-in-out backwards !important;
+} */
 
 article.game .roundEndScreen .roundEndScreen-wrapper {
 	width: 100%;
@@ -411,6 +419,11 @@ article.game .roundEndScreen .generalStats h3 {
 	margin-bottom: 10px;
 }
 
+article.game .roundEndScreen .generalStats span {
+	opacity: 0;
+	font-size: 35px;
+}
+
 article.game .roundEndScreen .roundStatsPlayer1,
 article.game .roundEndScreen .roundStatsPlayer2 {
 	width: 0%;
@@ -425,20 +438,21 @@ article.game .roundEndScreen .roundStatsPlayer1 h4,
 article.game .roundEndScreen .roundStatsPlayer2 h4 {
 	font-size: 45px;
 	opacity: 0;
+	margin-bottom: unset;
 }
 
 article.game .roundEndScreen .roundStatsPlayer1 span,
 article.game .roundEndScreen .roundStatsPlayer2 span{
-	font-size: 300px;
+	font-size: 400px;
 	opacity: 0;
 }
 
 article.game .roundEndScreen .roundStatsPlayer1{
-	background-color: rgba(13,13,13,0.9);
+	background-color: rgba(13,13,13,1);
 }
 
 article.game .roundEndScreen .roundStatsPlayer2{
-	background-color: rgba(28,28,28,0.9);
+	background-color: rgba(28,28,28,1);
 }
 
 article.game .pauseScreen {

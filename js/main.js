@@ -39,6 +39,12 @@ export function main_loadGame([character1, character2]) {
     }
 }
 
+export function main_swapSides(){
+    match.swapSides();
+    challenger = new Challenger(match.getChallenger());
+    boss = new Boss(match.getBoss());
+}
+
 export function main_startGame() {
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());

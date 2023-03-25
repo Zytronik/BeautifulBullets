@@ -1,7 +1,7 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
-import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
+import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
 import {playGameStartCutscene} from "./view/cutScenes.js";
 
 export let currentGameState;
@@ -166,6 +166,7 @@ function gameplayRegularToTimeOverCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
+    console.log("tada3");
     goToState(GAMESTATE.GAMEPLAY_ENRAGED); //TODO do it in cutscene
 }
 
@@ -181,6 +182,7 @@ function gameplayRegularToBossDeathCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
+    console.log("tada4");
     goToState(GAMESTATE.GAMEPLAY_ENRAGED); //TODO do it in cutscene
 }
 
@@ -262,13 +264,22 @@ function gameplayToChallengerDeath() {
     main_pauseGameLogic();
     match.updateStats();
     if (match.hasMatchFinished()) {
-        goToState(GAMESTATE.GAMEOVER_CUTSCENE)
+        challengerDeathCutscene();
+        setTimeout(() => {
+            goToState(GAMESTATE.GAMEOVER_CUTSCENE)
+        }, 2300);
     } else {
         if (match.isRoundInFirstHalf()) {
-            goToState(GAMESTATE.SWITCHING_SIDES_CUTSCENE);
+            challengerDeathCutsceneToBlack();
+            setTimeout(() => {
+                goToState(GAMESTATE.SWITCHING_SIDES_CUTSCENE);
+            }, 2900);
         } else {
             match.decideRoundWinner();
-            goToState(GAMESTATE.ROUNDOVER_CUTSCENE);
+            challengerDeathCutscene();
+            setTimeout(() => {
+                goToState(GAMESTATE.ROUNDOVER_CUTSCENE);
+            }, 2300);
         }
     }
 }
@@ -286,8 +297,7 @@ function challengerDeathToSwitchingSidesCutscene() {
             - go to GAMESTART_CUTSCENE after cutscene
     */
     main_pauseGameLogic();
-    main_clearAllBullets();
-    match.swapSides();
+    main_swapSides();
     frontend_switchSidesAnimations();
 }
 
@@ -305,7 +315,8 @@ function challengerDeathToRoundOverCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
-    match.swapSides();
+    console.log("tada2");
+    main_swapSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
 }
 
@@ -345,7 +356,7 @@ function roundOverCutsceneToGameStartCutscene() {
             - go to GAMEPLAY_REGULAR after cutscene
     */
     match.startNextRound();
-    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
+    playGameStartCutscene();
 }
 
 function gameOverCutsceneToResultScreen() {
