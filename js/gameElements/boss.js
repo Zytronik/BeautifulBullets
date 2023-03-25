@@ -107,9 +107,6 @@ export class Boss {
                 this.xSpeedNormalized = 0;
                 this.ySpeedNormalized = 0;
             }
-        } else {
-            this.x += this.xSpeedNormalized;
-            this.y += this.ySpeedNormalized;
         }
     }
     #castAbility1() {

@@ -493,49 +493,102 @@ export const CHARACTER_DATA = {
                 "ability3": {
                     "use": function () {
                         let coords = convertMouseCoordinatesToCanvasCoordinates();
-                        if (!this.secondCast) {
-                            let x = coords[0],
-                                y = coords[1];
-                            if (x < 0) {
-                                coords[0] = 0;
-                            } else if (x > BOARD_WIDTH) {
-                                coords[0] = BOARD_WIDTH;
-                            }
-                            if (y < 0) {
-                                coords[1] = 0;
-                            } else if (y > boss.yBarrier) {
-                                coords[1] = boss.yBarrier;
-                            }
-                            this.secondCast = true;
-                            // boss.ability3CoolDown = 0.5 * FPS;
-                            console.log("1 "+coords, this.secondCast, boss.ability3CoolDown)
-                        } else if (this.secondCast) {
-                            let x = coords[0],
+                        if (!this.hasDuration) {
+                            if (!this.secondCast) {
+                                let x = coords[0],
+                                    y = coords[1];
+                                if (x < 0) {
+                                    coords[0] = 0;
+                                } else if (x > BOARD_WIDTH) {
+                                    coords[0] = BOARD_WIDTH;
+                                }
+                                if (y < 0) {
+                                    coords[1] = 0;
+                                } else if (y > boss.yBarrier) {
+                                    coords[1] = boss.yBarrier;
+                                }
+                                this.secondCast = true;
+                            } else {
+                                let x = coords[0],
                                 y = coords[1];
                                 if (x < 0) {
-                                coords[0] = 0;
-                            } else if (x > BOARD_WIDTH) {
-                                coords[0] = BOARD_WIDTH;
+                                    coords[0] = 0;
+                                } else if (x > BOARD_WIDTH) {
+                                    coords[0] = BOARD_WIDTH;
+                                }
+                                if (y < 0) {
+                                    coords[1] = 0;
+                                } else if (y > BOARD_HEIGHT) {
+                                    coords[1] = BOARD_HEIGHT;
+                                }
+                                this.secondCast = false;
+                                this.hasDuration = true;
+                                this.originalBossCoords.push(boss.x, boss.y);
                             }
-                            if (y < 0) {
-                                coords[1] = 0;
-                            } else if (y > BOARD_HEIGHT) {
-                                coords[1] = BOARD_HEIGHT;
+                            this.path.push(coords);
+                            console.log(this.originalBossCoords)
+                        } else {
+                            let firstSegment = 1 * FPS, // in seconds
+                                thirdSegment = 1.5 * FPS, // in seconds
+                                secondSegment = boss.ability3Duration - firstSegment - thirdSegment; // rest of duration
+                                boss.canBeControlled = false;
+
+                            if (boss.ability3ActiveFor <= firstSegment) {
+
+                                let firstMouseX = this.path[0][0],
+                                    firstMouseY = this.path[0][1],
+                                    bossOriginalX = this.originalBossCoords[0],
+                                    bossOriginalY = this.originalBossCoords[1],
+                                    x = (firstMouseX - bossOriginalX) / firstSegment,
+                                    y = (firstMouseY - bossOriginalY) / firstSegment;
+                                    boss.x += x;
+                                    boss.y += y;
+                                    boss.xSpeedNormalized = x;
+                                    boss.ySpeedNormalized = y;
+
+                            } else if (boss.ability3ActiveFor >= firstSegment && boss.ability3ActiveFor <= secondSegment + firstSegment) {
+                                
+                                let firstMouseX = this.path[0][0],
+                                    firstMouseY = this.path[0][1],
+                                    secondMouseX = this.path[1][0],
+                                    secondMouseY = this.path[1][1],
+                                    x = (secondMouseX - firstMouseX) / secondSegment,
+                                    y = (secondMouseY - firstMouseY) / secondSegment;
+                                    boss.x += x;
+                                    boss.y += y;
+                                    boss.xSpeedNormalized = x;
+                                    boss.ySpeedNormalized = y;
+                                
+                            } else if (boss.ability3ActiveFor >= secondSegment + firstSegment && boss.ability3ActiveFor <= boss.ability3Duration) {
+
+                                let secondMouseX = this.path[1][0],
+                                    secondMouseY = this.path[1][1],
+                                    bossOriginalX = this.originalBossCoords[0],
+                                    bossOriginalY = this.originalBossCoords[1],
+                                    x = (bossOriginalX - secondMouseX) / thirdSegment,
+                                    y = (bossOriginalY - secondMouseY) / thirdSegment;
+                                    boss.x += x;
+                                    boss.y += y;
+                                    boss.xSpeedNormalized = x;
+                                    boss.ySpeedNormalized = y;
+                                    
                             }
-                            this.secondCast = false;
-                            // boss.ability3CoolDown = 5 * FPS;
-                            console.log("2 "+coords, this.secondCast, boss.ability3CoolDown)
                         }
                     },
                     "deactivate": function () {
-                        // if (!this.secondCast) {
-                        //     boss.ability3CoolDown = 0.5 * FPS;
-                        //     this.coolDown = 0.5;
-                        // } else {
-                        //     boss.ability3CoolDown = 5 * FPS;
-                        //     this.coolDown = 5;
-                        // }
-                        
+                        if (this.secondCast) {
+                            let cd = 0.5, // in seconds
+                                duration = 4 // in seconds
+                            boss.ability3CoolDownRequired = cd * FPS;
+                            boss.ability3Duration = duration * FPS + 1;
+                        } else {
+                            this.path = [];
+                            this.originalBossCoords = [];
+                            this.hasDuration = false;
+                            boss.ability3CoolDownRequired = this.coolDown * FPS;
+                            boss.ability3Duration = 0;
+                            boss.canBeControlled = true;
+                        }                        
                     },
                     "bulletVisuals": {
                         "radius": 5,
@@ -548,8 +601,10 @@ export const CHARACTER_DATA = {
                     "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
                     
                     //optional attributes for ability
-                    "mybullets": [],
                     "secondCast": false,
+                    "hasDuration": false,
+                    "path": [],
+                    "originalBossCoords": [],
                 },
             },
             "passive": {
