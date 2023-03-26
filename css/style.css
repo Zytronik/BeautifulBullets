@@ -264,7 +264,7 @@ article.game .player .canvas::after {
 	height: 100%;
 }
 
-article.game .switchingSides {
+article.game .infoScreen {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -325,14 +325,27 @@ article.game .cutSceneBars::after {
 	transition: 800ms;
 }
 
-article.game .switchingSides.active h3{
+article.game .infoScreen.switchingSidesActive h3.switchingSides{
 	font-size: 65px;
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
 }
 
-article.game .switchingSides h3 {
-	font-size: 5px;
+article.game .infoScreen.matchOverActive h3.matchOver{
+	font-size: 65px;
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+article.game .infoScreen h3 {
+	font-size: 10px;
 	transition: 800ms;
 	text-align: center;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
 }
 
 article.game .roundEndScreen {
@@ -350,7 +363,8 @@ article.game .roundEndScreen {
 }
 
 article.game .roundEndScreen.active,
-article.game .switchingSides.active {
+article.game .infoScreen.switchingSidesActive,
+article.game .infoScreen.matchOverActive {
 	z-index: 100;
 	visibility: visible;
 	opacity: 1;

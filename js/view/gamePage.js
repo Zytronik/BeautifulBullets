@@ -124,14 +124,29 @@ export function challengerDeathCutscene(){
 export function frontend_switchSidesAnimations() {
     switchUI();
     fadeInUI();
-    document.querySelector("article.game .switchingSides").classList.add("active");
+    document.querySelector("article.game .infoScreen").classList.add("switchingSidesActive");
     setTimeout(() => {
-        document.querySelector("article.game .switchingSides").classList.remove("active");
+        document.querySelector("article.game .infoScreen").classList.remove("switchingSidesActive");
         setTimeout(() => {
             showCanvasContent();
             goToState(GAMESTATE.GAMESTART_CUTSCENE);
         }, 600);
     }, 1200);
+}
+
+export function frontend_gameOverAnimation(){
+    document.querySelector("article.game .infoScreen").classList.add("matchOverActive");
+    setTimeout(() => {
+        document.querySelector("article.game .infoScreen").classList.remove("matchOverActive");
+        setTimeout(() => {
+            //showCanvasContent();
+            goToState(GAMESTATE.RESULT_SCREEN);
+        }, 600);
+    }, 1200);
+}
+
+export function frontend_gameOverScreen(){
+    
 }
 
 function closeRoundEndScreen(){

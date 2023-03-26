@@ -2,6 +2,7 @@ import { boss, bossBullets } from "../main.js";
 import { Bullet } from "../gameElements/bullet.js";
 import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
+import { sounds } from "../sound/sound.js";
 
 export const CHARACTER_DATA = {
     "nabibi": {
@@ -225,6 +226,7 @@ export const CHARACTER_DATA = {
             },
             "passive": {
                 "use": function () {
+                    sounds["bossShotSound"].play();
                     let bulletAmount = 20;
                     let lifetime = 10
                     for (let i = 0; i < bulletAmount; i++) {
@@ -247,7 +249,7 @@ export const CHARACTER_DATA = {
                     "radius": 7,
                     "color": "white"
                 },
-                "frequency": 2, //in seconds
+                "frequency": 0.2, //in seconds
 
                 "abilityName": "Passive",
                 "description": "This is a description for a Passive Ability.",
@@ -612,7 +614,7 @@ export const CHARACTER_DATA = {
                     let bulletAmount = 40,
                         lifetime = 20,
                         bool = false;
-
+                    sounds["bossShotSound"].play();
                     for (let i = 0; i < bulletAmount; i++) {
                         let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
                             spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,

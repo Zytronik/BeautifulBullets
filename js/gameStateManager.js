@@ -1,5 +1,5 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
 import {playGameStartCutscene} from "./view/cutScenes.js";
@@ -166,7 +166,6 @@ function gameplayRegularToTimeOverCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
-    console.log("tada3");
     goToState(GAMESTATE.GAMEPLAY_ENRAGED); //TODO do it in cutscene
 }
 
@@ -182,7 +181,6 @@ function gameplayRegularToBossDeathCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
-    console.log("tada4");
     goToState(GAMESTATE.GAMEPLAY_ENRAGED); //TODO do it in cutscene
 }
 
@@ -264,7 +262,7 @@ function gameplayToChallengerDeath() {
     main_pauseGameLogic();
     match.updateStats();
     if (match.hasMatchFinished()) {
-        challengerDeathCutscene();
+        challengerDeathCutsceneToBlack();
         setTimeout(() => {
             goToState(GAMESTATE.GAMEOVER_CUTSCENE)
         }, 2300);
@@ -315,7 +313,6 @@ function challengerDeathToRoundOverCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
-    console.log("tada2");
     main_swapSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
 }
@@ -332,7 +329,7 @@ function challengerDeathToGameOverCutscene() {
             - go to RESULT_SCREEN after cutscene
     */
     main_pauseGameLogic();
-    goToState(GAMESTATE.RESULT_SCREEN); //TODO do it in cutscene
+    frontend_gameOverAnimation();
 }
 
 function switchingSidesCutsceneToGameStartCutscene() {
@@ -367,6 +364,7 @@ function gameOverCutsceneToResultScreen() {
             - close ingame screen
             - show result screen
     */
+    frontend_gameOverScreen();
 }
 
 function resultScreenToGameStartCutscene() {
