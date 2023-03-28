@@ -1,6 +1,7 @@
 import { CHARACTER_DATA } from "../data/characters.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { highestStats } from "./windowOnLoad.js";
+import { sounds } from "../sound/sound.js";
 
 let rdyUpd = [false, false];
 export let player1SelectedCharacter;
@@ -80,12 +81,14 @@ export function loadCharacterSelectionScreen() {
 
         player.querySelector("a.control_prev").addEventListener("click", function (e) {
             e.preventDefault();
+            sounds["clickSound"].play();
             if (!rdyUpd[index]) {
                 moveLeft()
             }
         });
         player.querySelector("a.control_next").addEventListener("click", function (e) {
             e.preventDefault();
+            sounds["clickSound"].play();
             if (!rdyUpd[index]) {
                 moveRight()
             }

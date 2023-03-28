@@ -1,8 +1,8 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
-import { main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
-import {playGameStartCutscene} from "./view/cutScenes.js";
+import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
+import { playGameStartCutscene } from "./view/cutScenes.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -261,14 +261,23 @@ function gameplayToChallengerDeath() {
     */
     main_pauseGameLogic();
     match.updateStats();
-    if (match.hasMatchFinished()) {
-        goToState(GAMESTATE.GAMEOVER_CUTSCENE)
-    } else {
-        if (match.isRoundInFirstHalf()) {
+    if (match.isRoundInFirstHalf()) {
+        challengerDeathCutsceneToBlack();
+        setTimeout(() => {
             goToState(GAMESTATE.SWITCHING_SIDES_CUTSCENE);
+        }, 2900);
+    } else {
+        match.decideRoundWinner();
+        if (match.hasMatchFinished()) {
+            challengerDeathCutsceneToBlack();
+            setTimeout(() => {
+                goToState(GAMESTATE.GAMEOVER_CUTSCENE)
+            }, 2300);
         } else {
-            match.decideRoundWinner();
-            goToState(GAMESTATE.ROUNDOVER_CUTSCENE);
+            challengerDeathCutscene();
+            setTimeout(() => {
+                goToState(GAMESTATE.ROUNDOVER_CUTSCENE);
+            }, 2300);
         }
     }
 }
@@ -286,8 +295,7 @@ function challengerDeathToSwitchingSidesCutscene() {
             - go to GAMESTART_CUTSCENE after cutscene
     */
     main_pauseGameLogic();
-    main_clearAllBullets();
-    match.swapSides();
+    main_swapSides();
     frontend_switchSidesAnimations();
 }
 
@@ -305,7 +313,7 @@ function challengerDeathToRoundOverCutscene() {
     */
     main_pauseGameLogic();
     main_clearAllBullets();
-    match.swapSides();
+    main_swapSides();
     frontend_showRoundEndScreen(match.scoreP1, match.scoreP2, match.matchSettings.firstTo);
 }
 
@@ -321,7 +329,7 @@ function challengerDeathToGameOverCutscene() {
             - go to RESULT_SCREEN after cutscene
     */
     main_pauseGameLogic();
-    goToState(GAMESTATE.RESULT_SCREEN); //TODO do it in cutscene
+    frontend_gameOverAnimation();
 }
 
 function switchingSidesCutsceneToGameStartCutscene() {
@@ -345,7 +353,7 @@ function roundOverCutsceneToGameStartCutscene() {
             - go to GAMEPLAY_REGULAR after cutscene
     */
     match.startNextRound();
-    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
+    playGameStartCutscene();
 }
 
 function gameOverCutsceneToResultScreen() {
@@ -356,6 +364,7 @@ function gameOverCutsceneToResultScreen() {
             - close ingame screen
             - show result screen
     */
+    frontend_gameOverScreen();
 }
 
 function resultScreenToGameStartCutscene() {

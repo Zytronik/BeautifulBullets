@@ -1,4 +1,4 @@
-import { challenger, boss, currentFPS, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime } from "../main.js";
+import { challenger, boss, currentFPS, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, player1Canvas, player2Canvas, main_clearAllBullets } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { BOARD_WIDTH, BOARD_HEIGHT } from "../settings/gameSettings.js";
 import { CANVAS_UNIT } from "./canvas.js";
@@ -55,6 +55,12 @@ function deadAnimation(){
         player.querySelector("article.game .characterCanvas").classList.add("deadAnimation");
         player.querySelector("article.game .bulletCanvas").classList.add("deadAnimation");
     });
+    setTimeout(() => {
+        Array.prototype.forEach.call(players, function (player) {
+            player.querySelector("article.game .characterCanvas").classList.remove("deadAnimation");
+            player.querySelector("article.game .bulletCanvas").classList.remove("deadAnimation");
+        });
+    }, 2000);
 }
 
 function hideCanvasContent(){
@@ -65,32 +71,116 @@ function showCanvasContent(){
     document.querySelector("article.game").classList.remove("hideContent");
 }
 
-export function frontend_switchSidesAnimations() {
+function moveBossAndChallengOutsideOfCanvas(){
+    challenger.x = BOARD_WIDTH / 2;
+    challenger.y = BOARD_HEIGHT * 7 / 6;
+    boss.y = -BOARD_HEIGHT / 6;
+    boss.x = BOARD_WIDTH / 2;
+    player1Canvas.updateCanvas();
+    player2Canvas.updateCanvas();
+}
+
+function fadeInChallengerBossHealthbar(){
+    document.querySelector("article.game .boss .challenger-healthbar").classList.remove("fadeOut");
+}
+
+export function challengerDeathCutsceneToBlack(){
     fadeOutUI();
     showCutSceneBars();
     setTimeout(() => {
         deadAnimation();
         setTimeout(() => {
             zoomToChallenger();
-            switchUI();
             setTimeout(() => {
                 hideCanvasContent();
                 setTimeout(() => {
-                    fadeInUI();
+                    main_clearAllBullets();
+                    moveBossAndChallengOutsideOfCanvas();
                     resetZoomChallenger();
-                    hideCutSceneBars();
-                    document.querySelector("article.game .switchingSides").classList.add("active");
-                    setTimeout(() => {
-                        document.querySelector("article.game .switchingSides").classList.remove("active");
-                        setTimeout(() => {
-                            showCanvasContent();
-                            goToState(GAMESTATE.GAMESTART_CUTSCENE);
-                        }, 200);
-                    }, 1100);
                 }, 600);
             }, 1000);
         }, 500);
     }, 700);
+}
+
+export function challengerDeathCutscene(){
+    fadeOutUI();
+    showCutSceneBars();
+    setTimeout(() => {
+        deadAnimation();
+        setTimeout(() => {
+            zoomToChallenger();
+            setTimeout(() => {
+                setTimeout(() => {
+                    main_clearAllBullets();
+                    moveBossAndChallengOutsideOfCanvas();
+                    resetZoomChallenger();
+                }, 600);
+            }, 1000);
+        }, 500);
+    }, 700);
+}
+
+export function frontend_switchSidesAnimations() {
+    switchUI();
+    fadeInUI();
+    document.querySelector("article.game .infoScreen").classList.add("switchingSidesActive");
+    setTimeout(() => {
+        document.querySelector("article.game .infoScreen").classList.remove("switchingSidesActive");
+        setTimeout(() => {
+            showCanvasContent();
+            goToState(GAMESTATE.GAMESTART_CUTSCENE);
+        }, 600);
+    }, 1200);
+}
+
+export function frontend_gameOverAnimation(){
+    document.querySelector("article.game .infoScreen").classList.add("matchOverActive");
+    setTimeout(() => {
+        document.querySelector("article.game .infoScreen").classList.remove("matchOverActive");
+        setTimeout(() => {
+            //showCanvasContent();
+            goToState(GAMESTATE.RESULT_SCREEN);
+        }, 600);
+    }, 1200);
+}
+
+export function frontend_gameOverScreen(){
+    
+}
+
+function closeRoundEndScreen(){
+    let elems = document.querySelectorAll("article.game .roundEndScreen .roundStatsPlayer1, article.game .roundEndScreen .roundStatsPlayer2");
+    Array.prototype.forEach.call(elems, function (ele) {
+        ele.animate(
+            { width: ["50%", "0%"] },
+            { duration: 500, iterations: 1, easing: "ease-out" }
+        ).onfinish = (e) => {
+            e.target.effect.target.style.width = "0%";
+            e.target.effect.target.style.animation = "none";
+        };
+        setTimeout(() => {
+            ele.style.removeProperty("width");
+            ele.style.removeProperty("animation")
+        }, 600);
+    });
+}
+
+function fadeOutRoundScreen(){
+    let elems = document.querySelectorAll("article.game .roundEndScreen.active .generalStats > *,article.game .roundEndScreen.active .roundStatsPlayer1 > *,article.game .roundEndScreen.active .roundStatsPlayer2 > *");
+    Array.prototype.forEach.call(elems, function (ele) {
+        ele.animate(
+            { opacity: ["1", "0"] },
+            { duration: 500, iterations: 1, easing: "ease-out" }
+        ).onfinish = (e) => {
+            e.target.effect.target.style.opacity = "0";
+            e.target.effect.target.style.animation = "none";
+        };
+        setTimeout(() => {
+            ele.style.removeProperty("opacity");
+            ele.style.removeProperty("animation")
+        }, 1200);
+    });
 }
 
 export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
@@ -100,19 +190,21 @@ export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1SelectedCharacter].name;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 h4").innerHTML = CHARACTER_DATA[player2SelectedCharacter].name;
     fadeOutUI();
+    document.querySelector("article.game .roundEndScreen").classList.add("active");
     setTimeout(() => {
-        document.querySelector("article.game .roundEndScreen").classList.add("active");
+        switchUI();
+        fadeInUI();
+    }, 1000);
+    setTimeout(() => {
+        fadeOutRoundScreen();
         setTimeout(() => {
-            document.querySelector("article.game .roundEndScreen").classList.remove("active");
+            closeRoundEndScreen();
             setTimeout(() => {
-                switchUI();
-                fadeInUI();
-                setTimeout(() => {
-                    //goToState(GAMESTATE.GAMESTART_CUTSCENE);
-                }, 900);
+                document.querySelector("article.game .roundEndScreen").classList.remove("active");
+                goToState(GAMESTATE.GAMESTART_CUTSCENE);
             }, 500);
-        }, 5000);
-    }, 900);
+        }, 500);
+    }, 3000);
 }
 
 function switchUI() {
@@ -149,21 +241,21 @@ function pad(n, width, z) {
 function fadeOutUI() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
-        player.querySelector("article.game .challenger-healthbar").classList.add("fadeOut");
-        player.querySelector("article.game .boss-healthbar").classList.add("fadeOut");
-        player.querySelector("article.game .challenger-abilitie").classList.add("fadeOut");
-        player.querySelector("article.game .boss-abilities").classList.add("fadeOut");
+        player.querySelector(".challenger-healthbar").classList.add("fadeOut");
+        player.querySelector(".boss-healthbar").classList.add("fadeOut");
+        player.querySelector(".challenger-abilitie").classList.add("fadeOut");
+        player.querySelector(".boss-abilities").classList.add("fadeOut");
     });
 }
 
 export function fadeInUI() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
-        player.querySelector("article.game .challenger-healthbar").classList.remove("fadeOut");
-        player.querySelector("article.game .boss-healthbar").classList.remove("fadeOut");
-        player.querySelector("article.game .challenger-abilitie").classList.remove("fadeOut");
-        player.querySelector("article.game .boss-abilities").classList.remove("fadeOut");
+        player.querySelector(".boss-healthbar").classList.remove("fadeOut");
+        player.querySelector(".challenger-abilitie").classList.remove("fadeOut");
+        player.querySelector(".boss-abilities").classList.remove("fadeOut");
     });
+    document.querySelector("article.game .challenger .challenger-healthbar").classList.remove("fadeOut");
 }
 
 function updateChallengerHealthbar() {
@@ -327,6 +419,7 @@ export function playCountDown(){
     });
     setTimeout(() => {
         hideCutSceneBars();
+        fadeInChallengerBossHealthbar();
         goToState(GAMESTATE.GAMEPLAY_REGULAR);
     }, 500);
 }
