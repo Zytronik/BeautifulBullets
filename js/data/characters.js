@@ -1,4 +1,4 @@
-import { boss, bossBullets } from "../main.js";
+import { challenger, boss, bossBullets } from "../main.js";
 import { Bullet } from "../gameElements/bullet.js";
 import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
@@ -319,10 +319,10 @@ export const CHARACTER_DATA = {
             // S P E C I A L
             "special": {
                 "use": function () {
-                    this.bullets = 4;
+                    challenger.bullets = 4;
                 },
                 "deactivate": function () {
-                    this.bullets = 1;
+                    challenger.bullets = 1;
                 },
                 "chargeRequired": 25,
                 "graceChargeSpeed": 30, // Charge per second in grace
