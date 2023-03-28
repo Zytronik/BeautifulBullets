@@ -571,7 +571,6 @@ export const CHARACTER_DATA = {
                                     boss.y += y;
                                     boss.xSpeedNormalized = x;
                                     boss.ySpeedNormalized = y;
-                                    
                             }
                         }
                     },
@@ -596,7 +595,7 @@ export const CHARACTER_DATA = {
                     },
                     "coolDown": 5, //in seconds
                     "duration" : 0, //in seconds
-                    "abilityName": "Blazing Chakram",
+                    "abilityName": "Path of Destruction",
                     "description": "An aimed shot of bullets with the form of a spinning Chakram",
                     "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
                     
