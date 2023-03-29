@@ -123,10 +123,12 @@ export class Match {
     hasMatchFinished() {
         if (this.scoreP1 === this.matchSettings.firstTo) {
             this.matchWinner = PLAYER.ONE;
+            this.previousRounds.push(this.currentRound);
             return true;
         }
         if (this.scoreP2 === this.matchSettings.firstTo) {
             this.matchWinner = PLAYER.TWO;
+            this.previousRounds.push(this.currentRound);
             return true;
         }
         return false;
@@ -165,5 +167,11 @@ export function convertFramecountIntoMinutesSeconds(timeInFrames) {
     let totalSeconds = timeInFrames / FPS;
     let minutes = Math.floor(totalSeconds / 60);
     let seconds = Math.floor(totalSeconds % 60);
-    return [minutes, seconds];
+    return [minutes, pad(seconds, 2)];
+}
+
+function pad(n, width, z) {
+    z = z || '0';
+    n = n + '';
+    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }

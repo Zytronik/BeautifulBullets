@@ -3,6 +3,7 @@ import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2, getHighestStats } from "./characterSelectionPage.js";
 import { setupConfigPage } from "./configPage.js";
 import { sounds, loadSounds } from "../sound/sound.js";
+import { updateBossCursor } from "./gamePage.js";
 
 export let highestStats;
 
@@ -66,5 +67,6 @@ function prepareCharacterSelectionData() {
 function addMouseCoordinateEventListener() {
     document.onmousemove = (event) => {
         mouseCoordinates = [event.clientX, event.clientY];
+        updateBossCursor();
     }
 }

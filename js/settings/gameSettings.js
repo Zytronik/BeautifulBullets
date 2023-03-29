@@ -8,6 +8,6 @@ export const CHALLENGER_I_FRAMES = 10;
 
 export const DEFAULT_MATCH_SETTINGS = {
     timeLimitInFrames: 120 * FPS,
-    firstTo: 2,
+    firstTo: 1,
     matchDecider: MATCH_DECIDING_FACTORS.DAMAGE_DEALT,
 }
