@@ -117,10 +117,10 @@ export class GameCanvas {
 }
 
 export function convertMouseCoordinatesToCanvasCoordinates() {
-    const canvas = document.querySelector("article.game .boss canvas");
-    const canvasTop = canvas.getBoundingClientRect().top;
-    const canvasLeft = canvas.getBoundingClientRect().left;
-    let mouseX = (mouseCoordinates[0] - canvasLeft) / CANVAS_UNIT;
-    let mouseY = (mouseCoordinates[1] - canvasTop) / CANVAS_UNIT;
+    const canvas = document.querySelector("article.game .boss canvas"),
+          canvasTop = canvas.getBoundingClientRect().top,
+          canvasLeft = canvas.getBoundingClientRect().left;
+    let mouseX = (mouseCoordinates[0] - canvasLeft) / CANVAS_UNIT,
+        mouseY = (mouseCoordinates[1] - canvasTop) / CANVAS_UNIT;
     return [mouseX, mouseY];
 }

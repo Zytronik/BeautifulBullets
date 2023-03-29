@@ -36,7 +36,10 @@ export const CHARACTER_DATA = {
             // S P E C I A L
             "special": {
                 "use": function () {
-                    bossBullets.length = 0;
+                    // bossBullets.length = 0;
+                    bossBullets.forEach(function (bullet) {
+                        console.log(bullet);
+                    })
                 },
                 "deactivate": function () {
 
@@ -443,8 +446,8 @@ export const CHARACTER_DATA = {
                         for (let i = 0; i < bulletAmount; i++) {
                             let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
                                 x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
-                                y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
-                            let bullet = new Bullet(x, y, this.bulletVisuals, trajectory, lifetime, attributes);
+                                y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
+                                bullet = new Bullet(x, y, this.bulletVisuals, trajectory, lifetime, attributes);
                             this.mybullets.push(bullet)
                             bossBullets.push(bullet);
                         }
@@ -510,6 +513,7 @@ export const CHARACTER_DATA = {
                                     coords[1] = boss.yBarrier;
                                 }
                                 this.secondCast = true;
+                                
                             } else {
                                 let x = coords[0],
                                 y = coords[1];
@@ -528,20 +532,21 @@ export const CHARACTER_DATA = {
                                 this.originalBossCoords.push(boss.x, boss.y);
                             }
                             this.path.push(coords);
-                            console.log(this.originalBossCoords)
                         } else {
                             let firstSegment = 1 * FPS, // in seconds
                                 thirdSegment = 1.5 * FPS, // in seconds
-                                secondSegment = boss.ability3Duration - firstSegment - thirdSegment; // rest of duration
+                                secondSegment = boss.ability3Duration - firstSegment - thirdSegment, // rest of duration
+                                firstMouseX = this.path[0][0],
+                                firstMouseY = this.path[0][1],
+                                secondMouseX = this.path[1][0],
+                                secondMouseY = this.path[1][1],
+                                bossOriginalX = this.originalBossCoords[0],
+                                bossOriginalY = this.originalBossCoords[1];
                                 boss.canBeControlled = false;
 
                             if (boss.ability3ActiveFor <= firstSegment) {
 
-                                let firstMouseX = this.path[0][0],
-                                    firstMouseY = this.path[0][1],
-                                    bossOriginalX = this.originalBossCoords[0],
-                                    bossOriginalY = this.originalBossCoords[1],
-                                    x = (firstMouseX - bossOriginalX) / firstSegment,
+                                let x = (firstMouseX - bossOriginalX) / firstSegment,
                                     y = (firstMouseY - bossOriginalY) / firstSegment;
                                     boss.x += x;
                                     boss.y += y;
@@ -550,24 +555,27 @@ export const CHARACTER_DATA = {
 
                             } else if (boss.ability3ActiveFor >= firstSegment && boss.ability3ActiveFor <= secondSegment + firstSegment) {
                                 
-                                let firstMouseX = this.path[0][0],
-                                    firstMouseY = this.path[0][1],
-                                    secondMouseX = this.path[1][0],
-                                    secondMouseY = this.path[1][1],
-                                    x = (secondMouseX - firstMouseX) / secondSegment,
+                                let x = (secondMouseX - firstMouseX) / secondSegment,
                                     y = (secondMouseY - firstMouseY) / secondSegment;
                                     boss.x += x;
                                     boss.y += y;
                                     boss.xSpeedNormalized = x;
                                     boss.ySpeedNormalized = y;
-                                
+
+                                    if (Math.random() <= 0.2) {
+                                        let angle = Math.atan2((secondMouseY - firstMouseY), (secondMouseX - firstMouseX));
+                                        for (let i = 0; i <= 1; i++) {
+                                            let lifetime = 15,
+                                                length = Math.sqrt((secondMouseX - firstMouseX)**2 + (secondMouseY - firstMouseY)**2),
+                                                random = Math.random() * 1 + 0.5,
+                                                attributes = [i, firstMouseX, firstMouseY, secondMouseX, secondMouseY, length, angle, random, 0],
+                                                bullet = new Bullet(boss.x, boss.y, this.bulletVisuals, trajectory, lifetime, attributes);
+                                            bossBullets.push(bullet);
+                                        }
+                                    }
                             } else if (boss.ability3ActiveFor >= secondSegment + firstSegment && boss.ability3ActiveFor <= boss.ability3Duration) {
 
-                                let secondMouseX = this.path[1][0],
-                                    secondMouseY = this.path[1][1],
-                                    bossOriginalX = this.originalBossCoords[0],
-                                    bossOriginalY = this.originalBossCoords[1],
-                                    x = (bossOriginalX - secondMouseX) / thirdSegment,
+                                let x = (bossOriginalX - secondMouseX) / thirdSegment,
                                     y = (bossOriginalY - secondMouseY) / thirdSegment;
                                     boss.x += x;
                                     boss.y += y;
@@ -575,11 +583,57 @@ export const CHARACTER_DATA = {
                                     boss.ySpeedNormalized = y;
                             }
                         }
+
+                        function trajectory() {
+                            let bulletNumber = this.attributes[0],
+                                firstMouseX = this.attributes[1],
+                                firstMouseY = this.attributes[2],
+                                secondMouseX = this.attributes[3],
+                                secondMouseY = this.attributes[4],
+                                length = this.attributes[5],
+                                angle = this.attributes[6],
+                                random = this.attributes[7],
+                                accelerator = this.attributes[8],
+                                multiplier = 2,
+                                divider = 4,
+                                x = 0,
+                                y = 0;
+                                if (angle >= Math.PI / 2 || (angle >= -Math.PI / 2 && angle <= 0)) {
+                                    // /v /^
+                                    if (bulletNumber%2 == 1) {
+                                        y = -(secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
+                                        x = (secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                    } else {
+                                        y = (secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
+                                        x = -(secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                    }
+                                } else {
+                                    // \v \^
+                                    if (bulletNumber%2 == 1) {
+                                        y = (secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
+                                        x = -(secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                    } else {
+                                        y = -(secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
+                                        x = (secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                    }
+                                }
+
+                                if (accelerator <= 5) {
+                                    this.attributes[8] += 0.008;
+                                }
+
+                                let maxSpeed = 3;
+                                if (y >= maxSpeed) {
+                                    y = maxSpeed;
+                                }
+                                console.log(x)
+                            return [x, y];
+                        }
                     },
                     "deactivate": function () {
                         if (this.secondCast) {
                             let cd = 0.5, // in seconds
-                                duration = 4 // in seconds
+                                duration = 8 // in seconds
                             boss.ability3CoolDownRequired = cd * FPS;
                             boss.ability3Duration = duration * FPS + 1;
                         } else {
