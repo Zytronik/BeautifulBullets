@@ -13,7 +13,7 @@ export let boss;
 export let bossBullets;
 export let match;
 export let isGameStateEnraged = false;
-let gamePaused = true;
+export let gamePaused = true;
 
 export let player1Canvas;
 export let player2Canvas;

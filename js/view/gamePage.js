@@ -1,10 +1,12 @@
-import { challenger, boss, currentFPS, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, player1Canvas, player2Canvas, main_clearAllBullets } from "../main.js";
+import { challenger, boss, currentFPS, gamePaused, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, player1Canvas, player2Canvas, main_clearAllBullets } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { BOARD_WIDTH, BOARD_HEIGHT } from "../settings/gameSettings.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { player1SelectedCharacter, player2SelectedCharacter } from "./characterSelectionPage.js";
 import { convertFramecountIntoMinutesSeconds } from "../data/match.js";
+import {convertMouseCoordinatesToCanvasCoordinates} from "./canvas.js";
+import { mouseCoordinates } from "./windowOnLoad.js";
 
 export function frontend_closePauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
@@ -18,6 +20,21 @@ export function frontend_setupGameUI() {
     setupChallengerSpecialChargeBar();
     setupBossHealthBar();
     setupBossAbilities();
+}
+
+export function updateBossCursor(){
+    let coords = convertMouseCoordinatesToCanvasCoordinates();
+    let cursor = document.querySelector("#bossCursor");
+    let body = document.querySelector("body");
+    if(coords[0] >= 0 && coords[0] <= BOARD_WIDTH && coords[1] >= 0 && coords[1] <= BOARD_HEIGHT && !gamePaused){
+        cursor.classList.add("active");
+        body.classList.add("hideCursor");
+    }else{
+        cursor.classList.remove("active");
+        body.classList.remove("hideCursor");
+    }
+    cursor.style.left = mouseCoordinates[0]+"px";
+    cursor.style.top = mouseCoordinates[1]+"px";
 }
 
 export function updateGameUI() {
@@ -145,8 +162,93 @@ export function frontend_gameOverAnimation(){
     }, 1200);
 }
 
-export function frontend_gameOverScreen(){
+function loadGameOverScreen(){
+    document.querySelector("article.game .resultScreen .matchOverInfo span").innerHTML = "FT"+ match.matchSettings.firstTo;
+    document.querySelector("article.game .resultScreen .matchStatsPlayer1 .score").innerHTML = match.scoreP1;
+    document.querySelector("article.game .resultScreen .matchStatsPlayer2 .score").innerHTML = match.scoreP2;
+    let rounds = match.previousRounds;
+    let players = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
+    let ts, dd ,tg;
+    Array.prototype.forEach.call(players, function (player) {
+        let content = "";
+        for (var i in rounds) {
+            content += '<div class="roundWrapper">';
+            if(player.classList.contains("matchStatsPlayer1")){
+                ts = convertFramecountIntoMinutesSeconds(rounds[i]["player1Stats"]["timeSurvivedInFrames"]);
+                tg = convertFramecountIntoMinutesSeconds(rounds[i]["player1Stats"]["timeInGraceInFrames"]);
+                dd = Math.round(100 * rounds[i]["player1Stats"]["damageDealt"]) + "%";
+            }else{
+                ts = convertFramecountIntoMinutesSeconds(rounds[i]["player2Stats"]["timeSurvivedInFrames"]);
+                tg = convertFramecountIntoMinutesSeconds(rounds[i]["player2Stats"]["timeInGraceInFrames"]);
+                dd = Math.round(100 * rounds[i]["player2Stats"]["damageDealt"]) + "%";
+            }
+            content += '<p class="damageDealt">Damage Dealt: <span>'+dd+'</span></p>'+
+            '<p class="time">Time Survived: <span>'+ts[0]+':'+ts[1]+'</span></p>'+
+            '<p class="timeGrace">Time in Grace: <span>'+tg[0]+':'+tg[1]+'</span></p>';
+            content += "</div>";
+        }
+        player.querySelector(".matchStatsRounds").innerHTML = content;
+    });
+
+    let classPlayer1 = "";
+    let classPlayer2 = "";
+    if(match.matchWinner === 2){
+        classPlayer2 = "winner";
+        classPlayer1 = "loser";
+    }else{
+        classPlayer1 = "winner";
+        classPlayer2 = "loser";
+    }
+
+    document.querySelector("article.game .resultScreen .matchStatsPlayer1").innerHTML += 
+    '<div class="characterWrapper '+classPlayer1+'">'+
+    '<img src="'+CHARACTER_DATA[player1SelectedCharacter].spriteUrl+'">'+
+    '<div class="dialogText">'+
+    '<p class="name">'+CHARACTER_DATA[player1SelectedCharacter].name+'</p>'+
+    '<p class="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam!!!</p>'+
+    '</div>'+
+    '</div>';
     
+    document.querySelector("article.game .resultScreen .matchStatsPlayer2").innerHTML += 
+    '<div class="characterWrapper '+classPlayer2+'">'+
+    '<img src="'+CHARACTER_DATA[player2SelectedCharacter].spriteUrl+'">'+
+    '<div class="dialogText">'+
+    '<p class="name">'+CHARACTER_DATA[player2SelectedCharacter].name+'</p>'+
+    '<p class="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr!!</p>'+
+    '</div>'+
+    '</div>';
+
+}
+
+export function frontend_gameOverScreen(){
+    loadGameOverScreen();
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen").classList.add("active");
+        document.querySelector("article.game .resultScreen .matchOverInfo").classList.add("fadeIn");
+    }, 200);
+    setTimeout(() => {
+        let matchStatsPlayers =  document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
+        Array.prototype.forEach.call(matchStatsPlayers, function (matchStatsPlayer) {
+            matchStatsPlayer.querySelector(".score").classList.add("fadeIn");
+            matchStatsPlayer.querySelector(".roundsInfo").classList.add("fadeIn");
+            matchStatsPlayer.querySelector(".matchStatsRounds").classList.add("fadeIn");
+        });
+    }, 200 * 2);
+    setTimeout(() => {
+        let rounds = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer1 .matchStatsRounds >  div");
+        Array.prototype.forEach.call(rounds, function (round, index) {
+            setTimeout(() => {
+                round.classList.add("fadeIn");
+                document.querySelectorAll("article.game .resultScreen .matchStatsPlayer2 .matchStatsRounds >  div")[index].classList.add("fadeIn");
+            }, 100 * index);  
+        });
+    }, 200 * 3);
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner img").classList.add("fadeIn");
+    }, 200 * 5);
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner .dialogText").classList.add("fadeIn");
+    }, 200 * 6);
 }
 
 function closeRoundEndScreen(){
@@ -229,13 +331,7 @@ export function hideCutSceneBars(){
 
 function updateTimer(){
     let time = convertFramecountIntoMinutesSeconds(match.elapsedTimeInFrames);
-    document.querySelector("#gameTimer span").innerHTML = time[0] +":"+pad(time[1], 2);
-}
-
-function pad(n, width, z) {
-    z = z || '0';
-    n = n + '';
-    return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+    document.querySelector("#gameTimer span").innerHTML = time[0] +":"+time[1];
 }
 
 function fadeOutUI() {
