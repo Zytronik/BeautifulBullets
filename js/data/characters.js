@@ -433,7 +433,7 @@ export const CHARACTER_DATA = {
                     "duration": 0, //in seconds
                     "abilityName": "Fireworks",
                     "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                    "iconUrl": "img/ability1.png",
+                    "iconUrl": "img/yoimiya/Firework.png",
                     
                     //optional attributes for ability
                     "secondCast" : false,
@@ -562,7 +562,7 @@ export const CHARACTER_DATA = {
                                     boss.xSpeedNormalized = x;
                                     boss.ySpeedNormalized = y;
 
-                                    if (Math.random() <= 0.2) {
+                                    if (Math.random() <= 0.15) {
                                         let angle = Math.atan2((secondMouseY - firstMouseY), (secondMouseX - firstMouseX));
                                         for (let i = 0; i <= 1; i++) {
                                             let lifetime = 15,
@@ -619,14 +619,13 @@ export const CHARACTER_DATA = {
                                 }
 
                                 if (accelerator <= 5) {
-                                    this.attributes[8] += 0.008;
+                                    this.attributes[8] += 0.006;
                                 }
 
                                 let maxSpeed = 3;
                                 if (y >= maxSpeed) {
                                     y = maxSpeed;
                                 }
-                                console.log(x)
                             return [x, y];
                         }
                     },
@@ -652,8 +651,8 @@ export const CHARACTER_DATA = {
                     "coolDown": 5, //in seconds
                     "duration" : 0, //in seconds
                     "abilityName": "Path of Destruction",
-                    "description": "An aimed shot of bullets with the form of a spinning Chakram",
-                    "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
+                    "description": "Mark two points in your playfield and watch your enemies stumble",
+                    "iconUrl": "img/yoimiya/Path_of_Destruction.png",
                     
                     //optional attributes for ability
                     "secondCast": false,
