@@ -1,17 +1,34 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 
+export let allBullets = [];
 export class Bullet {
-    constructor(x, y, visuals, trajectoryFunction, lifetimeInSeconds, attributes) {
+    constructor(x, y, visuals, origin, tag, trajectoryFunction, lifetimeInSeconds, attributes) {
         this.x = x;
         this.y = y;
-        this.color = visuals.color;
-        this.radius = visuals.radius;
+        this.visuals = EXAMPLE_VISUALS;
+        this.origin = origin;
+        this.tag = tag;
         this.trajectoryFunction = trajectoryFunction;
         this.lifetime = lifetimeInSeconds * FPS;
         this.framesAlive = 0;
         this.attributes = attributes;
+        this.trailHistory = []
+    }
+    getGradientLocationOfCurrentPulse(GRADIENT_LOCATION, GRADIENT_BREAKPOINT) {
+        //1 / fps = stepAmount to get one pulse per second
+        let res = GRADIENT_LOCATION + ((this.visuals.pulsesPerSecond / FPS) * this.framesAlive);
+        while (res > GRADIENT_BREAKPOINT) {
+            res = res - GRADIENT_BREAKPOINT;
+        }
+        return res;
+    }
+    getCurrentRotation() {
+        //2pi / fps = stepAmount to get one rotation per second
+        return ((2 * Math.PI * this.visuals.rotationsPerSecond) / FPS) * this.framesAlive;
     }
     nextPos() {
+        this.trailHistory.unshift({ x: this.x, y: this.y });
+        this.trailHistory.length = this.visuals.trailLength;
         let xyShift = this.trajectoryFunction();
         this.x += xyShift[0];
         this.y += xyShift[1];
@@ -21,47 +38,84 @@ export class Bullet {
         return (this.framesAlive >= this.lifetime) || this.#isBulletOutOfFrame();
     }
     #isBulletOutOfFrame() {
-        let border = this.radius * 2 + 100;
+        let border = this.visuals.radius * 3;
         let outsideX = this.x <= -border || this.x >= BOARD_WIDTH + border;
         let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT + border;
         return outsideX || outsideY;
     }
 }
 
+const EXAMPLE_VISUALS = {
+    radius: 10,                                      //size of the bullet. used in hitdetection
+    mainColor: "rgba(255, 0, 0, 1)",                    //main color visible inside of bullet
+    subColor: "rgba(200, 123, 0, 0.3)",                   //sub color  visible inside of bullet
+    showBorder: true,                               //whether or not the border should be drawn
+    animateBorder: true,                            //whether or not the border should be rotating
+    borderWith: 3,                                  //width of the rotating border. not part of hitdetection
+    rotationsPerSecond: 0.5,                        //rotation speed of the border 
+    showPulse: true,                                //whether or not the pulse should be drawn
+    pulsesPerSecond: 2,                           //pulse speed of the inner bullet gradient
+    trailColor: "rgb(255, 0, 0)",                   //trailcolor
+    trailLength: 4,                                 //amount of bullet frameLocations to keep track of and display as trail
+}
+
+export const BULLET_ORIGIN = {
+    CHALLENGER: "CHALLENGER",
+    BOSS: "BOSS",
+}
+
+export const BULLET_TAG = {
+    REGULAR_SHOT: "REGULAR_SHOT",
+}
+
+export function getBulletsByOrigin(ORIGIN) {
+    let filtered = allBullets.filter(bullet => {
+        return bullet.origin === ORIGIN;
+    });
+    return filtered;
+}
+
+export function getBulletsByTag(TAG) {
+    let filtered = allBullets.filter(bullet => {
+        return bullet.origin === TAG;
+    });
+    return filtered;
+}
+
 /*
 animations
 
 challenger
-	idle
-	left
-	right
-	down
-	up
-	special
+    idle
+    left
+    right
+    down
+    up
+    special
 
-	death
-	intro
-	sideswitch 
+    death
+    intro
+    sideswitch 
 
 boss	
-	idle
-	left
-	right
-	down
-	up
-	a1
-	a2
-	a3
+    idle
+    left
+    right
+    down
+    up
+    a1
+    a2
+    a3
 	
-	enrage timeup
-	enrage death
-	intro
-	sideswitch 
+    enrage timeup
+    enrage death
+    intro
+    sideswitch 
 
 background
-	layer1
-	layer2
-	layer3
+    layer1
+    layer2
+    layer3
 
 
 
@@ -76,8 +130,8 @@ trajectoryField
 bullet
     tag
 
-	traillength
-	trailhistory
+    traillength
+    trailhistory
 
 
 https://jsfiddle.net/

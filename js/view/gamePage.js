@@ -1,4 +1,4 @@
-import { challenger, boss, currentFPS, gamePaused, match, canvasRenderTime, gameLogicTime, totalFrameCalculationTime, player1Canvas, player2Canvas, main_clearAllBullets } from "../main.js";
+import { challenger, boss, currentFPS, gamePaused, match, canvasRenderTime, gameLogicTime, totalJSTime, nonJSTime, player1Canvas, player2Canvas, main_clearAllBullets } from "../main.js";
 import { CHARACTER_DATA } from "../data/characters.js";
 import { BOARD_WIDTH, BOARD_HEIGHT } from "../settings/gameSettings.js";
 import { CANVAS_UNIT } from "./canvas.js";
@@ -7,6 +7,7 @@ import { player1SelectedCharacter, player2SelectedCharacter } from "./characterS
 import { convertFramecountIntoMinutesSeconds } from "../data/match.js";
 import {convertMouseCoordinatesToCanvasCoordinates} from "./canvas.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
+import { allBullets } from "../gameElements/bullet.js";
 
 export function frontend_closePauseScreen() {
     document.querySelector("article.game .pauseScreen").classList.remove("paused");
@@ -418,7 +419,9 @@ function updateDebugUI() {
     document.querySelector('#currentFPS > span').innerHTML = currentFPS;
     document.querySelector('#canvasRenderTime > span').innerHTML = canvasRenderTime;
     document.querySelector('#gameLogicTime > span').innerHTML = gameLogicTime;
-    document.querySelector('#totalFrameCalculationTime > span').innerHTML = totalFrameCalculationTime;
+    document.querySelector('#totalJSTime > span').innerHTML = totalJSTime;
+    document.querySelector('#nonJSTime > span').innerHTML = nonJSTime;
+    document.querySelector('#totalBulletsOnScreen > span').innerHTML = allBullets.length;
 }
 
 

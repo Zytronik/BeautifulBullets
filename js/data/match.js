@@ -1,5 +1,5 @@
 import { DEFAULT_MATCH_SETTINGS, FPS } from "../settings/gameSettings.js";
-import { boss, challenger } from "../main.js";
+import { boss, challenger, isGameStateEnraged } from "../main.js";
 import { GAMESTATE, goToState } from "../gameStateManager.js";
 
 export class Match {
@@ -23,7 +23,7 @@ export class Match {
     }
     updateTime() {
         this.elapsedTimeInFrames++;
-        if (this.elapsedTimeInFrames > this.matchSettings.timeLimitInFrames) {
+        if (this.elapsedTimeInFrames > this.matchSettings.timeLimitInFrames && !isGameStateEnraged) {
             goToState(GAMESTATE.TIME_OVER_CUTSCENE);
         }
     }

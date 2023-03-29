@@ -1,16 +1,15 @@
 import { CHARACTER_DATA } from "./data/characters.js";
 import { GameCanvas } from "./view/canvas.js";
-import { updateGameUI} from "./view/gamePage.js";
+import { updateGameUI } from "./view/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./data/match.js";
-import { FPS, GRACE_RANGE } from "./settings/gameSettings.js";
+import { BULLET_SPAWN_PROTECTION_FRAMES, FPS, GRACE_RANGE_SQUARED } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
+import { allBullets, BULLET_ORIGIN, getBulletsByOrigin } from "./gameElements/bullet.js";
 
 export let challenger;
-export let challengerBullets;
 export let boss;
-export let bossBullets;
 export let match;
 export let isGameStateEnraged = false;
 export let gamePaused = true;
@@ -21,7 +20,8 @@ export let player2Canvas;
 export let currentFPS = 0;
 export let canvasRenderTime = 0;
 export let gameLogicTime = 0;
-export let totalFrameCalculationTime = 0;
+export let totalJSTime = 0;
+export let nonJSTime = 0;
 
 let loadOnFirstCall = true;
 export function main_loadGame([character1, character2]) {
@@ -39,7 +39,7 @@ export function main_loadGame([character1, character2]) {
     }
 }
 
-export function main_swapSides(){
+export function main_swapSides() {
     match.swapSides();
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());
@@ -57,7 +57,9 @@ export function main_startGame() {
 let previousFrameAt = 0;
 let currentlyAt = 0;
 let nextCalculationAt = 0;
+let finishedAt = 0;
 function gameLoop() {
+    nonJSTime = Math.round(performance.now() - finishedAt);
     //Wait for next frame on high refreshrates
     do {
         currentlyAt = performance.now();
@@ -70,7 +72,7 @@ function gameLoop() {
     previousFrameAt = currentlyAt;
 
     let t1 = performance.now()
-    player1Canvas.updateCanvas();
+    // player1Canvas.updateCanvas();
     player2Canvas.updateCanvas();
     canvasRenderTime = Math.round(performance.now() - t1);
 
@@ -79,9 +81,10 @@ function gameLoop() {
         gameLogic();
     }
     gameLogicTime = Math.round(performance.now() - t1);
-    totalFrameCalculationTime = canvasRenderTime + gameLogicTime;
+    totalJSTime = canvasRenderTime + gameLogicTime;
 
     nextCalculationAt = currentlyAt + 1000 / FPS - amountWaitedTooLong;
+    finishedAt = performance.now();
     if (!gamePaused) {
         requestAnimationFrame(gameLoop);
     }
@@ -90,16 +93,10 @@ function gameLoop() {
 function gameLogic() {
     challenger.gameTick();
     boss.gameTick();
-    bossBullets.forEach(function (bullet, index) {
+    allBullets.forEach(function (bullet, index) {
         bullet.nextPos();
         if (bullet.hasBulletFaded()) {
-            bossBullets.splice(index, 1);
-        }
-    });
-    challengerBullets.forEach(function (bullet, index) {
-        bullet.nextPos();
-        if (bullet.hasBulletFaded()) {
-            challengerBullets.splice(index, 1);
+            allBullets.splice(index, 1);
         }
     });
     hitDetectionChallenger();
@@ -118,8 +115,7 @@ export function main_unpauseGameLogic() {
 }
 
 export function main_clearAllBullets() {
-    challengerBullets = []
-    bossBullets = []
+    allBullets.length = 0;
 }
 
 export function main_setGameStateEnraged() {
@@ -154,9 +150,8 @@ export function main_handleGoBackButton() {
 
 export function main_closeGameLoop() {
     challenger = null;
-    challengerBullets = null;
     boss = null;
-    bossBullets = null;
+    allBullets.length = 0;
     isGameStateEnraged = false;
     gamePaused = true;
 }
@@ -210,44 +205,50 @@ export function setTime() {
 function hitDetectionChallenger() {
     // TODO:
     // freshly spawned bullet shouldnt hurt
-
+    const bossBullets = getBulletsByOrigin(BULLET_ORIGIN.BOSS);
     const challengerX = challenger.x;
     const challengerX2 = challenger.x * challenger.x;
     const challengerY = challenger.y;
     const challengerY2 = challenger.y * challenger.y;
 
+    let challengerDied = false;
     bossBullets.forEach(function (bullet, index) {
-        let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
-        let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
-        let hitRange = (challenger.radius + bullet.radius) * (challenger.radius + bullet.radius);
-        if (xDiffSquared + yDiffSquared < hitRange) {
-            bossBullets.splice(index, 1);
-            let challengerDied = challenger.takeDamageAndCheckDead();
-            if (challengerDied) {
-                main_challengerDeath();
+        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES) {
+            let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
+            let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
+            let hitRange = Math.pow((challenger.radius + bullet.visuals.radius), 2);
+            if (xDiffSquared + yDiffSquared < hitRange) {
+                bossBullets.splice(index, 1);
+                challengerDied = challenger.takeDamageAndCheckDead();
+                if (challengerDied) {
+                    main_challengerDeath();
+                }
             }
-        }
-        if (xDiffSquared + yDiffSquared < GRACE_RANGE + hitRange) {
-            challenger.gainGraceCharge();
+            if (xDiffSquared + yDiffSquared < GRACE_RANGE_SQUARED + hitRange) {
+                challenger.gainGraceCharge();
+            }
         }
     });
 }
 
 function hitDetectionBoss() {
+    const challengerBullets = getBulletsByOrigin(BULLET_ORIGIN.CHALLENGER);
     const bossX = boss.x;
     const bossX2 = boss.x * boss.x;
     const bossY = boss.y;
     const bossY2 = boss.y * boss.y;
-
+    let bossDied = false;
     challengerBullets.forEach(function (bullet, index) {
-        let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * bossX) + bossX2;
-        let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
-        let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
-        if (xDiffSquared + yDiffSquared < hitRange) {
-            challengerBullets.splice(index, 1);
-            let bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
-            if (bossDied) {
-                goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);
+        if (!bossDied) {
+            let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * bossX) + bossX2;
+            let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
+            let hitRange = (boss.radius + bullet.visuals.radius) * (boss.radius + bullet.visuals.radius);
+            if (xDiffSquared + yDiffSquared < hitRange) {
+                challengerBullets.splice(index, 1);
+                bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
+                if (bossDied) {
+                    goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);
+                }
             }
         }
     });

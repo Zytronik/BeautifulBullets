@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
-import { Bullet } from "./bullet.js";
-import { challengerBullets, boss, isGameStateEnraged } from "../main.js";
+import { allBullets, Bullet, BULLET_ORIGIN } from "./bullet.js";
+import { boss, isGameStateEnraged } from "../main.js";
 import { sounds } from "../sound/sound.js";
 
 export class Challenger {
@@ -116,8 +116,8 @@ export class Challenger {
             for (let i = 0; i < this.bullets; i++) {
                 sounds["challengerShotSound"].play();
                 let attributes = [this.homing, 0, 0, i, this.bullets],
-                    bullet = new Bullet(this.x, this.y, this.bulletVisuals, trajectory, 5, attributes);
-                challengerBullets.push(bullet);
+                    bullet = new Bullet(this.x, this.y, null, BULLET_ORIGIN.CHALLENGER, null, trajectory, 5, attributes);
+                allBullets.push(bullet);
                 this.fireRateTracker = 0;
             }
         } else {

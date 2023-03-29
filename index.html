@@ -11,6 +11,7 @@
 	<script type="module" src='js/gameElements/bullet.js'></script>
 	<script type="module" src='js/gameElements/challenger.js'></script>
 	<script type="module" src='js/settings/gameSettings.js'></script>
+	<script type="module" src='js/settings/graphicSettings.js'></script>
 	<script type="module" src='js/settings/inputSettings.js'></script>
 	<script type="module" src='js/sound/howler.min.js'></script><!-- https://github.com/goldfire/howler.js#documentation -->
 	<script type="module" src='js/view/canvas.js'></script>
@@ -89,9 +90,11 @@
 		<article class="game hidePage">
 			<div id="debug">
 				<div id="currentFPS"><span>0</span> :FPS</div>
-				<div id="canvasRenderTime"><span>0</span> :canvasRenderT.</div>
-				<div id="gameLogicTime"><span>0</span> :gameLogicT.</div>
-				<div id="totalFrameCalculationTime"><span>0</span> :totalFrameCalculationT.</div>
+				<div id="canvasRenderTime"><span>0</span> :canvasRender</div>
+				<div id="gameLogicTime"><span>0</span> :gameLogic</div>
+				<div id="totalJSTime"><span>0</span> :totalJS</div>
+				<div id="nonJSTime"><span>0</span> :nonJS</div>
+				<div id="totalBulletsOnScreen"><span>0</span> :Bullets</div>
 			</div>
 			<section class="pauseScreen">
 				<div class="pauseScreen-wrapper">
