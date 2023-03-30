@@ -1,5 +1,5 @@
 export const GRAPHIC_SETTINGS = {
-    BULLET_TRAILS: false,
+    BULLET_TRAILS: true,
     PULSATING_BULLETS: false,
     SHOW_BULLET_BORDER: false,
     ANIMATE_BULLET_BORDER: false,

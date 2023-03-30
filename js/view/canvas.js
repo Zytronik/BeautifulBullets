@@ -6,8 +6,8 @@ import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
 
 export let CANVAS_UNIT;
-const GRADIENT_LOCATIONS = [0, 1/3, 2/3, 3/3, 4/3, 5/3, 6/3, 7/3];
-const GRADIENT_BREAKPOINT = 8/3;
+const GRADIENT_LOCATIONS = [0, 1 / 3, 2 / 3, 3 / 3, 4 / 3, 5 / 3, 6 / 3, 7 / 3];
+const GRADIENT_BREAKPOINT = 8 / 3;
 export class GameCanvas {
     constructor(container) {
         this.characterCanvas = document.createElement("canvas");
@@ -91,7 +91,8 @@ export class GameCanvas {
     #drawBulletsAndTrails() {
         this.bulletCtx.clearRect(0, 0, this.bulletCanvas.width, this.bulletCanvas.height);
         allBullets.forEach(bullet => {
-            this.#drawBullet(bullet)
+            this.#drawBullet(bullet);
+            this.#drawBulletTrail(bullet);
         });
     }
     #drawBullet(bullet) {
@@ -102,7 +103,7 @@ export class GameCanvas {
             for (let i = 0; i < GRADIENT_LOCATIONS.length; i++) {
                 let gradientLocation = GRADIENT_LOCATIONS[i];
                 gradientLocation = bullet.getGradientLocationOfCurrentPulse(gradientLocation, GRADIENT_BREAKPOINT)
-    
+
                 //GRADIENT_LOCATIONS are ordered as follows: [subColor, subColor, mainColor, mainColor, subColor, subColor, mainColor, mainColor]
                 let useSubColor = (Math.floor(i / 2) % 2) === 0;
                 if (gradientLocation <= 1 && useSubColor) {
@@ -134,12 +135,12 @@ export class GameCanvas {
             fillStyle.addColorStop(0.5, bullet.visuals.subColor);
             fillStyle.addColorStop(1, bullet.visuals.mainColor);
         }
-    
+
         this.bulletCtx.beginPath();
         this.bulletCtx.fillStyle = fillStyle;
         this.bulletCtx.arc(bulletx, bullety, bullet.visuals.radius, 0, 2 * Math.PI);
         this.bulletCtx.fill();
-    
+
         if (GRAPHIC_SETTINGS.SHOW_BULLET_BORDER && bullet.visuals.showBorder) {
             let lineGradient;
             let xRot;
@@ -164,6 +165,25 @@ export class GameCanvas {
         }
         this.bulletCtx.closePath();
     }
+    #drawBulletTrail(bullet) {
+        if (GRAPHIC_SETTINGS.BULLET_TRAILS && bullet.visuals.showTrail) {
+            let trailCoords = [...bullet.trailHistory];
+            trailCoords.unshift({ x: bullet.x, y: bullet.y });
+            this.bulletCtx.strokeStyle = bullet.visuals.trailColor;
+            this.bulletCtx.lineWidth = bullet.visuals.radius * 2;
+            this.bulletCtx.beginPath();
+            for (let i = 0; i < trailCoords.length-1; i++) {
+                this.bulletCtx.moveTo(CANVAS_UNIT * trailCoords[i].x, CANVAS_UNIT * trailCoords[i].y);
+                this.bulletCtx.lineTo(CANVAS_UNIT * trailCoords[i+1].x, CANVAS_UNIT * trailCoords[i+1].y);
+            }
+            this.bulletCtx.closePath();
+            this.bulletCtx.stroke();
+        }
+    }
+    /*
+        2radius -> minwidth
+        (2radius - minwidth) / steps, 
+    */
 }
 
 export function convertMouseCoordinatesToCanvasCoordinates() {

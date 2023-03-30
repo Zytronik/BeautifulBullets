@@ -28,7 +28,9 @@ export class Bullet {
     }
     nextPos() {
         this.trailHistory.unshift({ x: this.x, y: this.y });
-        this.trailHistory.length = this.visuals.trailLength;
+        if (this.trailHistory.length > this.visuals.trailLength) {
+            this.trailHistory.length = this.visuals.trailLength;
+        }
         let xyShift = this.trajectoryFunction();
         this.x += xyShift[0];
         this.y += xyShift[1];
@@ -46,16 +48,17 @@ export class Bullet {
 }
 
 const EXAMPLE_VISUALS = {
-    radius: 10,                                      //size of the bullet. used in hitdetection
-    mainColor: "rgba(255, 0, 0, 1)",                    //main color visible inside of bullet
-    subColor: "rgba(200, 123, 0, 0.3)",                   //sub color  visible inside of bullet
+    radius: 10,                                     //size of the bullet. used in hitdetection
+    mainColor: "rgba(255, 70, 70, 1)",              //main color visible inside of bullet
+    subColor: "rgba(200, 123, 0, 0.4)",             //sub color  visible inside of bullet
     showBorder: true,                               //whether or not the border should be drawn
     animateBorder: true,                            //whether or not the border should be rotating
     borderWith: 3,                                  //width of the rotating border. not part of hitdetection
     rotationsPerSecond: 0.5,                        //rotation speed of the border 
     showPulse: true,                                //whether or not the pulse should be drawn
-    pulsesPerSecond: 2,                           //pulse speed of the inner bullet gradient
-    trailColor: "rgb(255, 0, 0)",                   //trailcolor
+    pulsesPerSecond: 2,                             //pulse speed of the inner bullet gradient
+    showTrail: true,                                //whether or not a bullet trail should be drawn
+    trailColor: "rgb(255, 70, 70, 0.6)",            //trailcolor
     trailLength: 4,                                 //amount of bullet frameLocations to keep track of and display as trail
 }
 
