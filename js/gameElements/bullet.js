@@ -38,7 +38,7 @@ export class Bullet {
         return (this.framesAlive >= this.lifetime) || this.#isBulletOutOfFrame();
     }
     #isBulletOutOfFrame() {
-        let border = this.visuals.radius * 3;
+        let border = this.visuals.radius * 3 + 100;
         let outsideX = this.x <= -border || this.x >= BOARD_WIDTH + border;
         let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT + border;
         return outsideX || outsideY;
