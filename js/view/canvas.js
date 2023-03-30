@@ -10,109 +10,134 @@ const GRADIENT_LOCATIONS = [0, 1/3, 2/3, 3/3, 4/3, 5/3, 6/3, 7/3];
 const GRADIENT_BREAKPOINT = 8/3;
 export class GameCanvas {
     constructor(container) {
-        this.characterCanvas = document.createElement("canvas");
-        this.bulletCanvas = document.createElement("canvas");
-        this.characterCtx = this.characterCanvas.getContext("2d");
-        this.bulletCtx = this.bulletCanvas.getContext("2d"); // , { alpha: false }
         this.container = container;
+        this.#setContainerSize();
+        this.characterApp = new PIXI.Application({ resizeTo: container, backgroundAlpha: 0 });
+        this.characterContainer = new PIXI.Container();
+        this.bulletApp = new PIXI.Application({ resizeTo: container, backgroundAlpha: 0 });
+        this.bulletContainer = new PIXI.Container();
         this.canvasHeight;
         this.canvasWidth;
-
+        this.challengerSprite;
+        this.bossSprite;
+        
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
         this.resizeCanvas();
-        this.updateCanvas();
+        this.#preloadImgs();
+    }
+    #preloadImgs() {
+        PIXI.Assets.add('challengerSprite', challenger.sprite.src);
+        PIXI.Assets.add('bossSprite', boss.sprite.src);
+        const spritePromise = PIXI.Assets.load(['challengerSprite', 'bossSprite']);
+        spritePromise.then((textures) => {
+            this.challengerSprite = textures.challengerSprite;
+            this.bossSprite = textures.bossSprite;
+            this.updateCanvas();
+        });
+    }
+    #setContainerSize(){
+        this.container.style.width = this.container.clientHeight * 2 / 3+"px";
+    }
+    #createCharacterCanvas() {
+        this.characterApp.stage.addChild(this.characterContainer);
+        this.container.appendChild(this.characterApp.view);
+        this.characterApp.view.classList.add("characterCanvas");
+    }
+    #createBulletCanvas() {
+        this.bulletApp.stage.addChild(this.bulletContainer);
+        this.container.appendChild(this.bulletApp.view);
+        this.bulletApp.view.classList.add("bulletCanvas");
     }
     resizeCanvas() {
+        //TODO Omar resize gaht glaub nonig
         this.canvasHeight = this.container.offsetHeight;
+        this.canvasWidth = this.container.clientHeight * 2 / 3
+        CANVAS_UNIT = this.canvasWidth / BOARD_WIDTH;
+        /* this.canvasHeight = this.container.offsetHeight;
         this.characterCanvas.height = this.canvasHeight;
         this.canvasWidth = this.characterCanvas.height * 2 / 3;
         this.characterCanvas.width = this.canvasWidth;
         this.bulletCanvas.width = this.characterCanvas.width;
         this.bulletCanvas.height = this.characterCanvas.height;
-        CANVAS_UNIT = this.canvasWidth / BOARD_WIDTH;
+        CANVAS_UNIT = this.canvasWidth / BOARD_WIDTH; */
     }
     updateCanvas() {
-        this.characterCtx.clearRect(0, 0, this.characterCanvas.width, this.characterCanvas.height);
         this.#drawChallenger();
         this.#drawBoss();
         this.#drawBulletsAndTrails();
-    }
-    #createCharacterCanvas() {
-        this.characterCanvas.height = this.container.clientHeight;
-        this.characterCanvas.width = this.characterCanvas.height * 2 / 3;
-        this.container.appendChild(this.characterCanvas);
-        this.characterCanvas.classList.add("characterCanvas");
-    }
-    #createBulletCanvas() {
-        this.bulletCanvas.height = this.container.clientHeight;
-        this.bulletCanvas.width = this.characterCanvas.height * 2 / 3;
-        this.container.appendChild(this.bulletCanvas);
-        this.bulletCanvas.classList.add("bulletCanvas");
-    }
+        //TODO Omar mit Simu How the fuck does Pixi Renderer works with update loop??
+        this.characterApp.renderer.render(this.characterContainer);
+        this.bulletApp.renderer.render(this.bulletContainer);
+        /* this.characterCtx.clearRect(0, 0, this.characterCanvas.width, this.characterCanvas.height);
+        this.#drawChallenger();
+        this.#drawBoss();
+        this.#drawBulletsAndTrails();*/
+    } 
     #drawChallenger() {
         //can potentially be stored
         let challengerAspectRatio = challenger.sprite.width / challenger.sprite.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
         let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
-        this.characterCtx.drawImage(
-            challenger.sprite,
-            CANVAS_UNIT * challenger.x - challengerWidth / 2,
-            CANVAS_UNIT * challenger.y - challengerHeight / 2,
-            challengerWidth,
-            challengerHeight,
-        );
+        const challengerSprite = PIXI.Sprite.from(this.challengerSprite);
+        challengerSprite.anchor.set(0.5);
+        challengerSprite.x = CANVAS_UNIT * challenger.x;
+        challengerSprite.y = CANVAS_UNIT * challenger.y;
+        challengerSprite.width = challengerWidth;
+        challengerSprite.height = challengerHeight;
+
         if (INPUTS_CHALLENGER.shift) {
-            this.characterCtx.beginPath();
-            this.characterCtx.arc(CANVAS_UNIT * challenger.x, CANVAS_UNIT * challenger.y, CANVAS_UNIT * challenger.radius, 0, 2 * Math.PI);
-            this.characterCtx.fillStyle = challenger.hitboxColor;
-            this.characterCtx.fill();
+            const challengerShiftGraphic = new PIXI.Graphics();
+            challengerShiftGraphic.lineStyle(0);
+            challengerShiftGraphic.beginFill(challenger.hitboxColor, 1);
+            challengerShiftGraphic.drawCircle(CANVAS_UNIT * challenger.x, CANVAS_UNIT * challenger.y, CANVAS_UNIT * challenger.radius);
+            challengerShiftGraphic.endFill();
+            this.characterApp.stage.addChild(challengerShiftGraphic);
         }
-        //console.log("challenger.x", challenger.x)
-        // console.log("challenger.y", challenger.y)
-        // console.log("this.canvasHeight", this.canvasHeight)
-        // console.log("CANVAS_UNIT", CANVAS_UNIT)
-        // console.log("BOARD_WIDTH", BOARD_WIDTH, "canvasWidth", this.canvasWidth, "canvasWidth / BOARD_WIDTH", this.canvasWidth / BOARD_WIDTH)
-        // console.log("BOARD_HEIGHT", BOARD_HEIGHT, "canvasHeight", this.canvasHeight, "canvasHeight/ BOARD_HEIGHT", this.canvasHeight / BOARD_HEIGHT)
+
+        this.characterApp.stage.addChild(challengerSprite);
     }
     #drawBoss() {
         //can potentially be stored
         let bossAspectRatio = boss.sprite.width / boss.sprite.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
-        this.characterCtx.drawImage(
-            boss.sprite,
-            CANVAS_UNIT * boss.x - bossWidth / 2,
-            CANVAS_UNIT * boss.y - bossHeight / 2,
-            bossWidth,
-            bossHeight
-        );
+        const bossSprite = PIXI.Sprite.from(this.bossSprite);
+        bossSprite.anchor.set(0.5);
+        bossSprite.x = CANVAS_UNIT * boss.x;
+        bossSprite.y = CANVAS_UNIT * boss.y;
+        bossSprite.width = bossWidth;
+        bossSprite.height = bossHeight;
+
+        this.characterApp.stage.addChild(bossSprite);
     }
     #drawBulletsAndTrails() {
-        this.bulletCtx.clearRect(0, 0, this.bulletCanvas.width, this.bulletCanvas.height);
+        // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
+        /* this.bulletCtx.clearRect(0, 0, this.bulletCanvas.width, this.bulletCanvas.height);
         allBullets.forEach(bullet => {
             this.#drawBullet(bullet)
-        });
+        }); */
     }
     #drawBullet(bullet) {
-        let bulletx = Math.floor(bullet.x);
+        // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
+        /* let bulletx = Math.floor(bullet.x);
         let bullety = Math.floor(bullet.y);
         let fillStyle = this.bulletCtx.createRadialGradient(bulletx, bullety, 0, bulletx, bullety, bullet.visuals.radius);
         if (GRAPHIC_SETTINGS.PULSATING_BULLETS && bullet.visuals.showPulse) {
             for (let i = 0; i < GRADIENT_LOCATIONS.length; i++) {
                 let gradientLocation = GRADIENT_LOCATIONS[i];
-                gradientLocation = bullet.getGradientLocationOfCurrentPulse(gradientLocation, GRADIENT_BREAKPOINT)
+                gradientLocation = bullet.getGradientLocationOfCurrentPulse(gradientLocation, GRADIENT_BREAKPOINT) */
     
                 //GRADIENT_LOCATIONS are ordered as follows: [subColor, subColor, mainColor, mainColor, subColor, subColor, mainColor, mainColor]
-                let useSubColor = (Math.floor(i / 2) % 2) === 0;
+               /*  let useSubColor = (Math.floor(i / 2) % 2) === 0;
                 if (gradientLocation <= 1 && useSubColor) {
                     fillStyle.addColorStop(gradientLocation, bullet.visuals.subColor);
                 } else if (gradientLocation <= 1 && !useSubColor) {
                     fillStyle.addColorStop(gradientLocation, bullet.visuals.mainColor);
-                }
-            }
+                } 
+            } */
             //naive approach to find the 4th gradient out of bounds to manually set it to 1
-            let leftOutGradientLocations = []
+            /* let leftOutGradientLocations = []
             let addedGradientsAmount = 0;
             GRADIENT_LOCATIONS.forEach(point => {
                 if (point > 1) {
@@ -153,17 +178,17 @@ export class GameCanvas {
                 xRot = 1;
                 yRot = 1;
                 lineGradient = COLORS.BULLET_BORDER_WHITE
-            }
+            } */
             // let radius = bullet.visuals.radius;
             // lineGradient = this.bulletCtx.createLinearGradient(bulletx - radius * xRot, bullety - radius * yRot, bulletx + radius * xRot, bullety + radius * yRot);
             // lineGradient.addColorStop("0", COLORS.BULLET_BORDER_WHITE);
             // lineGradient.addColorStop("1.0", COLORS.BULLET_BORDER_BLACK);
-            this.bulletCtx.strokeStyle = lineGradient;
+           /*  this.bulletCtx.strokeStyle = lineGradient;
             this.bulletCtx.lineWidth = bullet.visuals.borderWith;
             this.bulletCtx.stroke();
         }
-        this.bulletCtx.closePath();
-    }
+        this.bulletCtx.closePath();*/
+    } 
 }
 
 export function convertMouseCoordinatesToCanvasCoordinates() {
