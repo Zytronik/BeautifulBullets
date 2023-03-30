@@ -37,7 +37,9 @@ export const INPUTS_CHEATS = {
     k: false,
     t: false,
     e: false,
-    altLeft: false,
+    c: false,
+    b: false,
+    shiftLeft: false,
     hb: false,
     ab: false,
     cb: false,
@@ -73,7 +75,9 @@ export let CHEAT_BUTTONS = {
     k: "KeyK",
     t: "KeyT",
     e: "KeyE",
-    altLeft: "AltLeft",
+    c: "KeyC",
+    b: "KeyB",
+    shiftLeft: "ShiftLeft",
 }
 
 document.addEventListener("keydown", (event) => {
@@ -127,8 +131,12 @@ document.addEventListener("keydown", (event) => {
         INPUTS_CHEATS.t = true;
     } else if (event.code === CHEAT_BUTTONS.e) {
         INPUTS_CHEATS.e = true;
-    } else if (event.code === CHEAT_BUTTONS.altLeft) {
-        INPUTS_CHEATS.altLeft = true;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = true;
+    } else if (event.code === CHEAT_BUTTONS.b) {
+        INPUTS_CHEATS.b = true;
+    } else if (event.code === CHEAT_BUTTONS.shiftLeft) {
+        INPUTS_CHEATS.shiftLeft = true;
     }
     
     if (INPUTS_CHEATS.h && !INPUTS_CHEATS.a && !INPUTS_CHEATS.c && !INPUTS_CHEATS.k) {
@@ -144,16 +152,16 @@ document.addEventListener("keydown", (event) => {
         INPUTS_CHEATS.kb = true;
         cheats();
     }
-    if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.h) {
+    if (INPUTS_CHEATS.shiftLeft && INPUTS_CHEATS.c && INPUTS_CHEATS.h) {
         lowerChallengerHealth();
     }
-    if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.k) {
+    if (INPUTS_CHEATS.shiftLeft && INPUTS_CHEATS.b && INPUTS_CHEATS.h) {
         lowerBossHealth();
     }
-    if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.t) {
-        // setTime();
+    if (INPUTS_CHEATS.shiftLeft && INPUTS_CHEATS.t) {
+        setTime();
     }
-    if (INPUTS_CHEATS.altLeft && INPUTS_CHEATS.e) {
+    if (INPUTS_CHEATS.shiftLeft && INPUTS_CHEATS.e) {
         main_setGameStateEnraged();
         console.log("Game State set to Enraged");
     }
@@ -209,7 +217,11 @@ document.addEventListener("keyup", (event) => {
         INPUTS_CHEATS.t = false;
     } else if (event.code === CHEAT_BUTTONS.e) {
         INPUTS_CHEATS.e = false;
-    } else if (event.code === CHEAT_BUTTONS.altLeft) {
-        INPUTS_CHEATS.altLeft = false;
+    } else if (event.code === CHEAT_BUTTONS.b) {
+        INPUTS_CHEATS.b = false;
+    } else if (event.code === CHEAT_BUTTONS.c) {
+        INPUTS_CHEATS.c = false;
+    } else if (event.code === CHEAT_BUTTONS.shiftLeft) {
+        INPUTS_CHEATS.shiftLeft = false;
     }
 });
