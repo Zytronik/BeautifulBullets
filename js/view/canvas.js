@@ -137,7 +137,7 @@ export class GameCanvas {
     
         this.bulletCtx.beginPath();
         this.bulletCtx.fillStyle = fillStyle;
-        this.bulletCtx.arc(bulletx, bullety, bullet.visuals.radius, 0, 2 * Math.PI);
+        this.bulletCtx.arc(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, bullet.visuals.radius, 0, 2 * Math.PI);
         this.bulletCtx.fill();
     
         if (GRAPHIC_SETTINGS.SHOW_BULLET_BORDER && bullet.visuals.showBorder) {
