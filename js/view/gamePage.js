@@ -183,9 +183,9 @@ function loadGameOverScreen(){
                 tg = convertFramecountIntoMinutesSeconds(rounds[i]["player2Stats"]["timeInGraceInFrames"]);
                 dd = Math.round(100 * rounds[i]["player2Stats"]["damageDealt"]) + "%";
             }
-            content += '<p class="damageDealt">Damage Dealt: <span>'+dd+'</span></p>'+
-            '<p class="time">Time Survived: <span>'+ts[0]+':'+ts[1]+'</span></p>'+
-            '<p class="timeGrace">Time in Grace: <span>'+tg[0]+':'+tg[1]+'</span></p>';
+            content += '<p class="damageDealt">Damage: <span>'+dd+'</span></p>'+
+            '<p class="time">Time: <span>'+ts[0]+':'+ts[1]+'</span></p>'+
+            '<p class="timeGrace">Grace: <span>'+tg[0]+':'+tg[1]+'</span></p>';
             content += "</div>";
         }
         player.querySelector(".matchStatsRounds").innerHTML = content;

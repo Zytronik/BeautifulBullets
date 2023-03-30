@@ -72,7 +72,7 @@ function gameLoop() {
     previousFrameAt = currentlyAt;
 
     let t1 = performance.now()
-    // player1Canvas.updateCanvas();
+    player1Canvas.updateCanvas();
     player2Canvas.updateCanvas();
     canvasRenderTime = Math.round(performance.now() - t1);
 
@@ -212,13 +212,13 @@ function hitDetectionChallenger() {
     const challengerY2 = challenger.y * challenger.y;
 
     let challengerDied = false;
-    bossBullets.forEach(function (bullet, index) {
-        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES) {
+    allBullets.forEach(function (bullet, index) {
+        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES&& bullet.origin === BULLET_ORIGIN.BOSS) {
             let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
             let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
             let hitRange = Math.pow((challenger.radius + bullet.visuals.radius), 2);
             if (xDiffSquared + yDiffSquared < hitRange) {
-                bossBullets.splice(index, 1);
+                allBullets.splice(index, 1);
                 challengerDied = challenger.takeDamageAndCheckDead();
                 if (challengerDied) {
                     main_challengerDeath();
@@ -232,19 +232,18 @@ function hitDetectionChallenger() {
 }
 
 function hitDetectionBoss() {
-    const challengerBullets = getBulletsByOrigin(BULLET_ORIGIN.CHALLENGER);
     const bossX = boss.x;
     const bossX2 = boss.x * boss.x;
     const bossY = boss.y;
     const bossY2 = boss.y * boss.y;
     let bossDied = false;
-    challengerBullets.forEach(function (bullet, index) {
-        if (!bossDied) {
+    allBullets.forEach(function (bullet, index) {
+        if (!bossDied && bullet.origin === BULLET_ORIGIN.CHALLENGER) {
             let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * bossX) + bossX2;
             let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
             let hitRange = (boss.radius + bullet.visuals.radius) * (boss.radius + bullet.visuals.radius);
             if (xDiffSquared + yDiffSquared < hitRange) {
-                challengerBullets.splice(index, 1);
+                allBullets.splice(index, 1);
                 bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
                 if (bossDied) {
                     goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);
