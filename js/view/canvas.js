@@ -95,8 +95,8 @@ export class GameCanvas {
         });
     }
     #drawBullet(bullet) {
-        let bulletx = Math.floor(bullet.x);
-        let bullety = Math.floor(bullet.y);
+        let bulletx = Math.floor(CANVAS_UNIT * bullet.x);
+        let bullety = Math.floor(CANVAS_UNIT * bullet.y);
         let fillStyle = this.bulletCtx.createRadialGradient(bulletx, bullety, 0, bulletx, bullety, bullet.visuals.radius);
         if (GRAPHIC_SETTINGS.PULSATING_BULLETS && bullet.visuals.showPulse) {
             for (let i = 0; i < GRADIENT_LOCATIONS.length; i++) {
@@ -137,7 +137,7 @@ export class GameCanvas {
     
         this.bulletCtx.beginPath();
         this.bulletCtx.fillStyle = fillStyle;
-        this.bulletCtx.arc(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, bullet.visuals.radius, 0, 2 * Math.PI);
+        this.bulletCtx.arc(bulletx, bullety, bullet.visuals.radius, 0, 2 * Math.PI);
         this.bulletCtx.fill();
     
         if (GRAPHIC_SETTINGS.SHOW_BULLET_BORDER && bullet.visuals.showBorder) {
