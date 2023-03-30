@@ -249,7 +249,44 @@ export function frontend_gameOverScreen(){
     }, 200 * 5);
     setTimeout(() => {
         document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner .dialogText").classList.add("fadeIn");
+        document.body.addEventListener('keypress', openGameOverMenu);
     }, 200 * 6);
+}
+
+export function frontend_closeGameOverScreen(){
+    document.body.removeEventListener('keypress', openGameOverMenu);
+    switchUI();
+    closeGameOverMenu();
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner .dialogText").classList.remove("fadeIn");
+    }, 200);
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner img").classList.remove("fadeIn");
+    }, 200 * 2);
+    setTimeout(() => {
+        let rounds = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer1 .matchStatsRounds >  div");
+        Array.prototype.forEach.call(rounds, function (round, index) {
+            setTimeout(() => {
+                round.classList.remove("fadeIn");
+                document.querySelectorAll("article.game .resultScreen .matchStatsPlayer2 .matchStatsRounds >  div")[index].classList.remove("fadeIn");
+            }, 100 * index);  
+        });
+    }, 200 * 4);
+    setTimeout(() => {
+        let matchStatsPlayers =  document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
+        Array.prototype.forEach.call(matchStatsPlayers, function (matchStatsPlayer) {
+            matchStatsPlayer.querySelector(".score").classList.remove("fadeIn");
+            matchStatsPlayer.querySelector(".roundsInfo").classList.remove("fadeIn");
+            matchStatsPlayer.querySelector(".matchStatsRounds").classList.remove("fadeIn");
+        });
+    }, 200 * 5);
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen").classList.remove("active");
+        document.querySelector("article.game .resultScreen .matchOverInfo").classList.remove("fadeIn");
+    }, 200 * 6);
+    setTimeout(() => {
+        showCanvasContent();
+    }, 200 * 7);
 }
 
 function closeRoundEndScreen(){
@@ -356,19 +393,21 @@ export function fadeInUI() {
 }
 
 function updateChallengerHealthbar() {
-    let players = document.querySelectorAll("article.game .player");
-    Array.prototype.forEach.call(players, function (player) {
-        let hBar = player.querySelector(".challenger-healthbar");
-        hBar.innerHTML = "";
-        var hearts = "";
-        for (let i = 0; i < challenger.maxHealth; i++) {
-            hearts += '<div class="heart"></div>';
-        }
-        hBar.innerHTML = hearts;
-        for (let i = 0; i < challenger.currentHealth; i++) {
-            hBar.children[i].classList.add("life");
-        }
-    });
+    if(challenger != undefined){
+        let players = document.querySelectorAll("article.game .player");
+        Array.prototype.forEach.call(players, function (player) {
+            let hBar = player.querySelector(".challenger-healthbar");
+            hBar.innerHTML = "";
+            var hearts = "";
+            for (let i = 0; i < challenger.maxHealth; i++) {
+                hearts += '<div class="heart"></div>';
+            }
+            hBar.innerHTML = hearts;
+            for (let i = 0; i < challenger.currentHealth; i++) {
+                hBar.children[i].classList.add("life");
+            }
+        });
+    }
 }
 
 function updateBossHealthbar() {
@@ -385,19 +424,21 @@ function updateBossHealthbar() {
 }
 
 function setupBossHealthBar() {
-    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        hBar.innerHTML = '<div class="boss-desc">' +
-            '<div>' +
-            '<img src="' + boss.healthBarSpriteUrl + '">' +
-            '<p>' + boss.healthBarName + '</p>' +
-            '</div>' +
-            '<span>0%</span>' +
-            '</div>' +
-            '<div class="life-bar">' +
-            '<div></div>' +
-            '</div>';
-    });
+    if(boss != undefined){
+        let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
+        Array.prototype.forEach.call(playersHealthBar, function (hBar) {
+            hBar.innerHTML = '<div class="boss-desc">' +
+                '<div>' +
+                '<img src="' + boss.healthBarSpriteUrl + '">' +
+                '<p>' + boss.healthBarName + '</p>' +
+                '</div>' +
+                '<span>0%</span>' +
+                '</div>' +
+                '<div class="life-bar">' +
+                '<div></div>' +
+                '</div>';
+        });
+    }
 }
 
 function updateChallengerSpecialCharge() {
@@ -408,10 +449,12 @@ function updateChallengerSpecialCharge() {
 }
 
 function setupChallengerSpecialChargeBar() {
-    document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML = "<div></div>";
-    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
-    for (let i = 0; i < barCount; i++) {
-        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
+    if(challenger != undefined){
+        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML = "<div></div>";
+        let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
+        for (let i = 0; i < barCount; i++) {
+            document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
+        }
     }
 }
 
@@ -426,8 +469,10 @@ function updateDebugUI() {
 
 
 function updateBossChallengerHealthbarPosition() {
-    document.querySelector(':root').style.setProperty('--bossChallengerHealthX', challenger.x * CANVAS_UNIT + 'px');
-    document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
+    if(challenger != undefined){
+        document.querySelector(':root').style.setProperty('--bossChallengerHealthX', challenger.x * CANVAS_UNIT + 'px');
+        document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
+    }
 }
 
 function updateBossAbilities() {
@@ -439,16 +484,18 @@ function updateBossAbilities() {
 }
 
 function setupBossAbilities() {
-    document.querySelector("article.game .boss .boss-abilities").innerHTML = "";
-    for (var index in boss.abilities) {
-        document.querySelector("article.game .boss .boss-abilities").innerHTML +=
-            '<div class="ability-wrapper" data-ability="' + index + '">' +
-            '<img src="' + boss.abilities[index].iconUrl + '" alt="' + boss.abilities[index].abilityName + '">' +
-            '<div class="overlay">' +
-            '<span></span>' +
-            '<div></div>' +
-            '</div>' +
-            '</div>';
+    if(boss != undefined){
+        document.querySelector("article.game .boss .boss-abilities").innerHTML = "";
+        for (var index in boss.abilities) {
+            document.querySelector("article.game .boss .boss-abilities").innerHTML +=
+                '<div class="ability-wrapper" data-ability="' + index + '">' +
+                '<img src="' + boss.abilities[index].iconUrl + '" alt="' + boss.abilities[index].abilityName + '">' +
+                '<div class="overlay">' +
+                '<span></span>' +
+                '<div></div>' +
+                '</div>' +
+                '</div>';
+        }
     }
 }
 
@@ -521,4 +568,12 @@ export function playCountDown(){
         fadeInChallengerBossHealthbar();
         goToState(GAMESTATE.GAMEPLAY_REGULAR);
     }, 500);
+}
+
+function openGameOverMenu(){
+    document.querySelector("article.game .resultScreen .menu-wrapper").classList.add("active");
+}
+
+function closeGameOverMenu(){
+    document.querySelector("article.game .resultScreen .menu-wrapper").classList.remove("active");
 }

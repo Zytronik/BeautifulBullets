@@ -1,5 +1,5 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
 import { playGameStartCutscene } from "./view/cutScenes.js";
@@ -53,10 +53,10 @@ STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.MAIN_MENU, resultSc
 currentGameState = GAMESTATE.MAIN_MENU;
 export function goToState(GAMESTATE) {
     // Helps with finding where the spaghetti began :)
-    // try { throw Error() }
-    // catch (e) {
-    //     console.debug("Function callstack:\n", e.stack);
-    // }
+    try { throw Error() }
+    catch (e) {
+        console.debug("Function callstack:\n", e.stack);
+    }
     let transitionMethod = STATE_TRANSITION_MAP.get(currentGameState + GAMESTATE);
     if (transitionMethod == null) {
         console.error(`Illegal GameStateTransition. CurrentGameState: ${currentGameState}, desired next GameState: ${GAMESTATE}. 
@@ -385,8 +385,11 @@ function resultScreenToGameStartCutscene() {
             - play intro cutscene
             - go to GAMEPLAY_REGULAR after cutscene
     */
+    frontend_closeGameOverScreen();
     main_loadGame(frontend_getSelectedCharacters());
-    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
+    setTimeout(() => {
+        playGameStartCutscene();
+    }, 1000);
 }
 
 function resultScreenToCharacterSelection() {
@@ -399,6 +402,10 @@ function resultScreenToCharacterSelection() {
             - reset ready buttons
     */
     main_closeGameLoop();
+    frontend_closeGameOverScreen();
+    setTimeout(() => {
+        frontend_showPage(PAGES.CHARACTER_SELECTION);
+    }, 200 * 7);
 }
 
 function resultScreenToMainMenu() {
@@ -410,4 +417,8 @@ function resultScreenToMainMenu() {
             - show main menu screen
     */
     main_closeGameLoop();
+    frontend_closeGameOverScreen();
+    setTimeout(() => {
+        frontend_showPage(PAGES.MAIN_MENU);
+    }, 200 * 7);
 }
