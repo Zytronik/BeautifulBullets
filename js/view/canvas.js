@@ -12,9 +12,15 @@ export class GameCanvas {
     constructor(container) {
         this.container = container;
         this.#setContainerSize();
-        this.characterApp = new PIXI.Application({ resizeTo: container, backgroundAlpha: 0 });
+        this.characterApp = new PIXI.Application({ 
+            resizeTo: container,
+            backgroundAlpha: 0,
+        });
         this.characterContainer = new PIXI.Container();
-        this.bulletApp = new PIXI.Application({ resizeTo: container, backgroundAlpha: 0 });
+        this.bulletApp = new PIXI.Application({
+            resizeTo: container,
+            backgroundAlpha: 0,
+        });
         this.bulletContainer = new PIXI.Container();
         this.canvasHeight;
         this.canvasWidth;
@@ -31,8 +37,8 @@ export class GameCanvas {
         PIXI.Assets.add('bossSprite', boss.sprite.src);
         const spritePromise = PIXI.Assets.load(['challengerSprite', 'bossSprite']);
         spritePromise.then((textures) => {
-            this.challengerSprite = textures.challengerSprite;
-            this.bossSprite = textures.bossSprite;
+            this.challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
+            this.bossSprite = PIXI.Sprite.from(textures.bossSprite);;
             this.updateCanvas();
         });
     }
@@ -40,13 +46,13 @@ export class GameCanvas {
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
     }
     #createCharacterCanvas() {
-        this.characterApp.stage.addChild(this.characterContainer);
         this.container.appendChild(this.characterApp.view);
+        this.characterApp.stage.addChild(this.characterContainer);
         this.characterApp.view.classList.add("characterCanvas");
     }
     #createBulletCanvas() {
-        this.bulletApp.stage.addChild(this.bulletContainer);
         this.container.appendChild(this.bulletApp.view);
+        this.bulletApp.stage.addChild(this.bulletContainer);
         this.bulletApp.view.classList.add("bulletCanvas");
     }
     resizeCanvas() {
@@ -67,8 +73,8 @@ export class GameCanvas {
         this.#drawBoss();
         this.#drawBulletsAndTrails();
         //TODO Omar mit Simu How the fuck does Pixi Renderer works with update loop??
-        this.characterApp.renderer.render(this.characterContainer);
-        this.bulletApp.renderer.render(this.bulletContainer);
+        //this.characterApp.renderer.render(this.characterContainer);
+        //this.bulletApp.renderer.render(this.bulletContainer);
         /* this.characterCtx.clearRect(0, 0, this.characterCanvas.width, this.characterCanvas.height);
         this.#drawChallenger();
         this.#drawBoss();
@@ -79,12 +85,11 @@ export class GameCanvas {
         let challengerAspectRatio = challenger.sprite.width / challenger.sprite.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
         let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
-        const challengerSprite = PIXI.Sprite.from(this.challengerSprite);
-        challengerSprite.anchor.set(0.5);
-        challengerSprite.x = CANVAS_UNIT * challenger.x;
-        challengerSprite.y = CANVAS_UNIT * challenger.y;
-        challengerSprite.width = challengerWidth;
-        challengerSprite.height = challengerHeight;
+        this.challengerSprite.anchor.set(0.5);
+        this.challengerSprite.x = CANVAS_UNIT * challenger.x;
+        this.challengerSprite.y = CANVAS_UNIT * challenger.y;
+        this.challengerSprite.width = challengerWidth;
+        this.challengerSprite.height = challengerHeight;
 
         if (INPUTS_CHALLENGER.shift) {
             const challengerShiftGraphic = new PIXI.Graphics();
@@ -95,21 +100,20 @@ export class GameCanvas {
             this.characterApp.stage.addChild(challengerShiftGraphic);
         }
 
-        this.characterApp.stage.addChild(challengerSprite);
+        this.characterApp.stage.addChild(this.challengerSprite);
     }
     #drawBoss() {
         //can potentially be stored
         let bossAspectRatio = boss.sprite.width / boss.sprite.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
-        const bossSprite = PIXI.Sprite.from(this.bossSprite);
-        bossSprite.anchor.set(0.5);
-        bossSprite.x = CANVAS_UNIT * boss.x;
-        bossSprite.y = CANVAS_UNIT * boss.y;
-        bossSprite.width = bossWidth;
-        bossSprite.height = bossHeight;
+        this.bossSprite.anchor.set(0.5);
+        this.bossSprite.x = CANVAS_UNIT * boss.x;
+        this.bossSprite.y = CANVAS_UNIT * boss.y;
+        this.bossSprite.width = bossWidth;
+        this.bossSprite.height = bossHeight;
 
-        this.characterApp.stage.addChild(bossSprite);
+        this.characterApp.stage.addChild(this.bossSprite);
     }
     #drawBulletsAndTrails() {
         // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
@@ -119,6 +123,12 @@ export class GameCanvas {
         }); */
     }
     #drawBullet(bullet) {
+        let bulletx = Math.floor(bullet.x);
+        let bullety = Math.floor(bullet.y);
+        
+
+
+        
         // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
         /* let bulletx = Math.floor(bullet.x);
         let bullety = Math.floor(bullet.y);
@@ -173,7 +183,6 @@ export class GameCanvas {
                 let rotation = bullet.getCurrentRotation();
                 xRot = Math.cos(rotation) - Math.sin(rotation);
                 yRot = Math.sin(rotation) + Math.cos(rotation);
-                console.log("hello")
             } else {
                 xRot = 1;
                 yRot = 1;

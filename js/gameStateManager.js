@@ -133,7 +133,7 @@ function characterSelectionToGameStartCutscene() {
     */
     frontend_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters());
-    //playGameStartCutscene();
+    playGameStartCutscene();
     frontend_setupGameUI();
 }
 
@@ -151,7 +151,7 @@ function gameStartCutsceneToGameplayRegular() {
             - show ingame UI
     */
     fadeInUI();
-    main_startGame();
+    //main_startGame();
 }
 
 function gameplayRegularToTimeOverCutscene() {

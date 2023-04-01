@@ -22,29 +22,18 @@ export function playGameStartCutscene(){
         }
         if(boss.y >= BOARD_HEIGHT / 6 && challenger.y <= BOARD_HEIGHT * 5 / 6){
             playingCutScene = false;
+            player1Canvas.characterApp.ticker.stop();
             playCountDown();
         }
     }
 }
 
-let currentlyAtCS = 0;
-let nextCalculationAtCS = 0;
 let playingCutScene = false;
 
 function cutSceneLoop() {
-    do {
-        currentlyAtCS = performance.now();
-    } while (currentlyAtCS < nextCalculationAtCS);
-    let amountWaitedTooLong = currentlyAtCS - nextCalculationAtCS;
-    if (amountWaitedTooLong > 1000 / FPS) {
-        amountWaitedTooLong = 0
-    }
-    playGameStartCutscene();
-    player1Canvas.updateCanvas();
-    player2Canvas.updateCanvas();
-
-    nextCalculationAtCS = currentlyAtCS + 1000 / FPS - amountWaitedTooLong;
-    if(playingCutScene){
-        requestAnimationFrame(cutSceneLoop);
-    }
+    player1Canvas.characterApp.ticker.add(() => {
+        playGameStartCutscene();
+        player1Canvas.updateCanvas();
+        player2Canvas.updateCanvas();
+    });
 }
