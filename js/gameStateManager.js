@@ -151,7 +151,7 @@ function gameStartCutsceneToGameplayRegular() {
             - show ingame UI
     */
     fadeInUI();
-    //main_startGame();
+    main_startGame();
 }
 
 function gameplayRegularToTimeOverCutscene() {

@@ -43,7 +43,11 @@ export function main_swapSides() {
     match.swapSides();
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());
+    player1Canvas.swapSprites();
+    player2Canvas.swapSprites();
 }
+
+let createGameLoopOnce = true;
 
 export function main_startGame() {
     challenger = new Challenger(match.getChallenger());
@@ -51,7 +55,10 @@ export function main_startGame() {
     main_clearAllBullets()
     isGameStateEnraged = false;
     gamePaused = false;
-    gameLoop();
+    if(createGameLoopOnce){
+        gameLoop();
+        createGameLoopOnce = false;
+    }
 }
 
 let previousFrameAt = 0;
@@ -59,7 +66,14 @@ let currentlyAt = 0;
 let nextCalculationAt = 0;
 let finishedAt = 0;
 function gameLoop() {
-    nonJSTime = Math.round(performance.now() - finishedAt);
+    
+    player1Canvas.characterApp.ticker.add(() => {
+        console.log("main loop");
+        player1Canvas.updateCanvas();
+        player2Canvas.updateCanvas();
+        gameLogic();
+    });
+    /* nonJSTime = Math.round(performance.now() - finishedAt);
     //Wait for next frame on high refreshrates
     do {
         currentlyAt = performance.now();
@@ -87,7 +101,7 @@ function gameLoop() {
     finishedAt = performance.now();
     if (!gamePaused) {
         requestAnimationFrame(gameLoop);
-    }
+    } */
 }
 
 function gameLogic() {
@@ -107,11 +121,12 @@ function gameLogic() {
 
 export function main_pauseGameLogic() {
     gamePaused = true;
+    player2Canvas.characterApp.ticker.stop();
 }
 
 export function main_unpauseGameLogic() {
     gamePaused = false;
-    requestAnimationFrame(gameLoop);
+    player2Canvas.characterApp.ticker.start();
 }
 
 export function main_clearAllBullets() {

@@ -26,6 +26,7 @@ export class GameCanvas {
         this.canvasWidth;
         this.challengerSprite;
         this.bossSprite;
+        this.bulletGraphic = new PIXI.Graphics();
         
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
@@ -38,9 +39,14 @@ export class GameCanvas {
         const spritePromise = PIXI.Assets.load(['challengerSprite', 'bossSprite']);
         spritePromise.then((textures) => {
             this.challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
-            this.bossSprite = PIXI.Sprite.from(textures.bossSprite);;
+            this.bossSprite = PIXI.Sprite.from(textures.bossSprite);
             this.updateCanvas();
         });
+    }
+    swapSprites() {
+        let temp = this.challengerSprite;
+        this.challengerSprite = this.bossSprite;
+        this.bossSprite = temp;
     }
     #setContainerSize(){
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
@@ -69,8 +75,8 @@ export class GameCanvas {
         CANVAS_UNIT = this.canvasWidth / BOARD_WIDTH; */
     }
     updateCanvas() {
-        this.#drawChallenger();
         this.#drawBoss();
+        this.#drawChallenger();
         this.#drawBulletsAndTrails();
         //TODO Omar mit Simu How the fuck does Pixi Renderer works with update loop??
         //this.characterApp.renderer.render(this.characterContainer);
@@ -90,7 +96,6 @@ export class GameCanvas {
         this.challengerSprite.y = CANVAS_UNIT * challenger.y;
         this.challengerSprite.width = challengerWidth;
         this.challengerSprite.height = challengerHeight;
-
         if (INPUTS_CHALLENGER.shift) {
             const challengerShiftGraphic = new PIXI.Graphics();
             challengerShiftGraphic.lineStyle(0);
@@ -99,7 +104,6 @@ export class GameCanvas {
             challengerShiftGraphic.endFill();
             this.characterApp.stage.addChild(challengerShiftGraphic);
         }
-
         this.characterApp.stage.addChild(this.challengerSprite);
     }
     #drawBoss() {
@@ -112,22 +116,22 @@ export class GameCanvas {
         this.bossSprite.y = CANVAS_UNIT * boss.y;
         this.bossSprite.width = bossWidth;
         this.bossSprite.height = bossHeight;
-
         this.characterApp.stage.addChild(this.bossSprite);
     }
     #drawBulletsAndTrails() {
-        // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
-        /* this.bulletCtx.clearRect(0, 0, this.bulletCanvas.width, this.bulletCanvas.height);
+        this.bulletGraphic.clear();
         allBullets.forEach(bullet => {
             this.#drawBullet(bullet)
-        }); */
+        });
     }
     #drawBullet(bullet) {
         let bulletx = Math.floor(bullet.x);
         let bullety = Math.floor(bullet.y);
-        
-
-
+        this.bulletGraphic.lineStyle(0);
+        this.bulletGraphic.beginFill(bullet.visuals.mainColor, 1);
+        this.bulletGraphic.drawCircle(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, CANVAS_UNIT * bullet.visuals.radius);
+        this.bulletGraphic.endFill();
+        this.bulletApp.stage.addChild(this.bulletGraphic);
         
         // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
         /* let bulletx = Math.floor(bullet.x);
