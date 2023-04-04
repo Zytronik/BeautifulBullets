@@ -27,6 +27,9 @@ export class GameCanvas {
         this.challengerSprite;
         this.bossSprite;
         this.bulletGraphic = new PIXI.Graphics();
+
+        this.characterApp.ticker.maxFPS = 60;
+        this.bulletApp.ticker.maxFPS = 60;
         
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
@@ -40,14 +43,15 @@ export class GameCanvas {
         spritePromise.then((textures) => {
             this.challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
             this.bossSprite = PIXI.Sprite.from(textures.bossSprite);
+            console.log("loaded imgs");
             this.updateCanvas();
         });
     }
-    swapSprites() {
+/*     swapSprites() {
         let temp = this.challengerSprite;
         this.challengerSprite = this.bossSprite;
         this.bossSprite = temp;
-    }
+    } */
     #setContainerSize(){
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
     }
@@ -124,34 +128,47 @@ export class GameCanvas {
             this.#drawBullet(bullet)
         });
     }
-    #drawBullet(bullet) {
+    #drawBullet(bullet) {      
+        // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
         let bulletx = Math.floor(bullet.x);
         let bullety = Math.floor(bullet.y);
-        this.bulletGraphic.lineStyle(0);
-        this.bulletGraphic.beginFill(bullet.visuals.mainColor, 1);
-        this.bulletGraphic.drawCircle(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, CANVAS_UNIT * bullet.visuals.radius);
-        this.bulletGraphic.endFill();
-        this.bulletApp.stage.addChild(this.bulletGraphic);
+
+        if (GRAPHIC_SETTINGS.SHOW_BULLET_BORDER && bullet.visuals.showBorder) {
+            let lineGradient;
+            let xRot;
+            let yRot;
+            if (GRAPHIC_SETTINGS.ANIMATE_BULLET_BORDER && bullet.visuals.animateBorder) {
+                /* let rotation = bullet.getCurrentRotation();
+                xRot = Math.cos(rotation) - Math.sin(rotation);
+                yRot = Math.sin(rotation) + Math.cos(rotation); */
+            } else {
+                xRot = 1;
+                yRot = 1;
+                lineGradient = COLORS.BULLET_BORDER_WHITE
+            } 
+            // let radius = bullet.visuals.radius;
+            // lineGradient = this.bulletCtx.createLinearGradient(bulletx - radius * xRot, bullety - radius * yRot, bulletx + radius * xRot, bullety + radius * yRot);
+            // lineGradient.addColorStop("0", COLORS.BULLET_BORDER_WHITE);
+            // lineGradient.addColorStop("1.0", COLORS.BULLET_BORDER_BLACK);
+            this.bulletGraphic.lineStyle(bullet.visuals.borderWith, lineGradient, 1);
+        }
         
-        // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
-        /* let bulletx = Math.floor(bullet.x);
-        let bullety = Math.floor(bullet.y);
-        let fillStyle = this.bulletCtx.createRadialGradient(bulletx, bullety, 0, bulletx, bullety, bullet.visuals.radius);
-        if (GRAPHIC_SETTINGS.PULSATING_BULLETS && bullet.visuals.showPulse) {
+        //let fillStyle = this.bulletCtx.createRadialGradient(bulletx, bullety, 0, bulletx, bullety, bullet.visuals.radius);
+        /*if (GRAPHIC_SETTINGS.PULSATING_BULLETS && bullet.visuals.showPulse) {
             for (let i = 0; i < GRADIENT_LOCATIONS.length; i++) {
                 let gradientLocation = GRADIENT_LOCATIONS[i];
-                gradientLocation = bullet.getGradientLocationOfCurrentPulse(gradientLocation, GRADIENT_BREAKPOINT) */
+                gradientLocation = bullet.getGradientLocationOfCurrentPulse(gradientLocation, GRADIENT_BREAKPOINT)
     
                 //GRADIENT_LOCATIONS are ordered as follows: [subColor, subColor, mainColor, mainColor, subColor, subColor, mainColor, mainColor]
-               /*  let useSubColor = (Math.floor(i / 2) % 2) === 0;
+                let useSubColor = (Math.floor(i / 2) % 2) === 0;
                 if (gradientLocation <= 1 && useSubColor) {
                     fillStyle.addColorStop(gradientLocation, bullet.visuals.subColor);
                 } else if (gradientLocation <= 1 && !useSubColor) {
                     fillStyle.addColorStop(gradientLocation, bullet.visuals.mainColor);
                 } 
-            } */
+            } 
             //naive approach to find the 4th gradient out of bounds to manually set it to 1
-            /* let leftOutGradientLocations = []
+            let leftOutGradientLocations = []
             let addedGradientsAmount = 0;
             GRADIENT_LOCATIONS.forEach(point => {
                 if (point > 1) {
@@ -172,35 +189,15 @@ export class GameCanvas {
         } else {
             fillStyle.addColorStop(0.5, bullet.visuals.subColor);
             fillStyle.addColorStop(1, bullet.visuals.mainColor);
-        }
+        }*/
     
-        this.bulletCtx.beginPath();
-        this.bulletCtx.fillStyle = fillStyle;
-        this.bulletCtx.arc(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, bullet.visuals.radius, 0, 2 * Math.PI);
-        this.bulletCtx.fill();
+        this.bulletGraphic.beginFill(bullet.visuals.mainColor, 1);
+        this.bulletGraphic.drawCircle(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, CANVAS_UNIT * bullet.visuals.radius);
+        this.bulletGraphic.endFill();
     
-        if (GRAPHIC_SETTINGS.SHOW_BULLET_BORDER && bullet.visuals.showBorder) {
-            let lineGradient;
-            let xRot;
-            let yRot;
-            if (GRAPHIC_SETTINGS.ANIMATE_BULLET_BORDER && bullet.visuals.animateBorder) {
-                let rotation = bullet.getCurrentRotation();
-                xRot = Math.cos(rotation) - Math.sin(rotation);
-                yRot = Math.sin(rotation) + Math.cos(rotation);
-            } else {
-                xRot = 1;
-                yRot = 1;
-                lineGradient = COLORS.BULLET_BORDER_WHITE
-            } */
-            // let radius = bullet.visuals.radius;
-            // lineGradient = this.bulletCtx.createLinearGradient(bulletx - radius * xRot, bullety - radius * yRot, bulletx + radius * xRot, bullety + radius * yRot);
-            // lineGradient.addColorStop("0", COLORS.BULLET_BORDER_WHITE);
-            // lineGradient.addColorStop("1.0", COLORS.BULLET_BORDER_BLACK);
-           /*  this.bulletCtx.strokeStyle = lineGradient;
-            this.bulletCtx.lineWidth = bullet.visuals.borderWith;
-            this.bulletCtx.stroke();
-        }
-        this.bulletCtx.closePath();*/
+        
+        //this.bulletCtx.closePath();
+        this.bulletApp.stage.addChild(this.bulletGraphic);
     } 
 }
 

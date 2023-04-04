@@ -36,6 +36,8 @@ export function main_loadGame([character1, character2]) {
         loadOnFirstCall = false;
         player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
         player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+        /* console.log(player1Canvas.characterApp.ticker);
+        console.log(player2Canvas.characterApp.ticker); */
     }
 }
 
@@ -43,8 +45,8 @@ export function main_swapSides() {
     match.swapSides();
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());
-    player1Canvas.swapSprites();
-    player2Canvas.swapSprites();
+   /*  player1Canvas.swapSprites();
+    player2Canvas.swapSprites(); */
 }
 
 let createGameLoopOnce = true;
@@ -55,25 +57,27 @@ export function main_startGame() {
     main_clearAllBullets()
     isGameStateEnraged = false;
     gamePaused = false;
-    if(createGameLoopOnce){
+    /* if(createGameLoopOnce){
         gameLoop();
         createGameLoopOnce = false;
-    }
+    }else{
+        player2Canvas.characterApp.ticker.start();
+    } */
+    gameLoop();
 }
 
 let previousFrameAt = 0;
 let currentlyAt = 0;
 let nextCalculationAt = 0;
 let finishedAt = 0;
-function gameLoop() {
-    
-    player1Canvas.characterApp.ticker.add(() => {
-        console.log("main loop");
+function gameLoop() { 
+    /* player2Canvas.characterApp.ticker.add(() => {
+        currentFPS = Math.round(player2Canvas.characterApp.ticker.FPS);
         player1Canvas.updateCanvas();
         player2Canvas.updateCanvas();
         gameLogic();
-    });
-    /* nonJSTime = Math.round(performance.now() - finishedAt);
+    }); */
+    nonJSTime = Math.round(performance.now() - finishedAt);
     //Wait for next frame on high refreshrates
     do {
         currentlyAt = performance.now();
@@ -101,7 +105,7 @@ function gameLoop() {
     finishedAt = performance.now();
     if (!gamePaused) {
         requestAnimationFrame(gameLoop);
-    } */
+    } 
 }
 
 function gameLogic() {
@@ -121,12 +125,13 @@ function gameLogic() {
 
 export function main_pauseGameLogic() {
     gamePaused = true;
-    player2Canvas.characterApp.ticker.stop();
+    //player2Canvas.characterApp.ticker.stop();
 }
 
 export function main_unpauseGameLogic() {
     gamePaused = false;
-    player2Canvas.characterApp.ticker.start();
+    requestAnimationFrame(gameLoop);
+    //player2Canvas.characterApp.ticker.start();
 }
 
 export function main_clearAllBullets() {

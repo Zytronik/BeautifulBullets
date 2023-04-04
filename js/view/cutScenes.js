@@ -4,7 +4,7 @@ import { boss, challenger, player1Canvas, player2Canvas } from "../main.js";
 
 let createCutSceneLoopOnce = true;
 
-export function playGameStartCutscene(){
+/* export function playGameStartCutscene(){
     if (!playingCutScene) {
         boss.y = -BOARD_HEIGHT / 6;
         boss.x = BOARD_WIDTH / 2;
@@ -37,6 +37,7 @@ let playingCutScene = false;
 function createCutSceneLoop() {
     createCutSceneLoopOnce = false;
     setTimeout(() => {
+        console.log("yallah cut");
         player1Canvas.characterApp.ticker.add(() => {
             console.log("cutscene loop");
             playGameStartCutscene();
@@ -44,4 +45,51 @@ function createCutSceneLoop() {
             player2Canvas.updateCanvas();
         });
     }, 100);
+} */
+
+export function playGameStartCutscene(){
+    if (!playingCutScene) {
+        boss.y = -BOARD_HEIGHT / 6;
+        boss.x = BOARD_WIDTH / 2;
+        challenger.x = BOARD_WIDTH / 2;
+        challenger.y = BOARD_HEIGHT * 7 / 6;
+        setTimeout(() => {
+            playingCutScene = true;
+            cutSceneLoop();
+        }, 500);
+        showCutSceneBars();
+    }else{
+        if(boss.y < BOARD_HEIGHT / 6){
+            boss.y += 5;
+        }
+        if(challenger.y > BOARD_HEIGHT * 5 / 6){
+            challenger.y -= 5;
+        }
+        if(boss.y >= BOARD_HEIGHT / 6 && challenger.y <= BOARD_HEIGHT * 5 / 6){
+            playingCutScene = false;
+            playCountDown();
+        }
+    }
+}
+
+let currentlyAtCS = 0;
+let nextCalculationAtCS = 0;
+let playingCutScene = false;
+
+function cutSceneLoop() {
+    do {
+        currentlyAtCS = performance.now();
+    } while (currentlyAtCS < nextCalculationAtCS);
+    let amountWaitedTooLong = currentlyAtCS - nextCalculationAtCS;
+    if (amountWaitedTooLong > 1000 / FPS) {
+        amountWaitedTooLong = 0
+    }
+    playGameStartCutscene();
+    player1Canvas.updateCanvas();
+    player2Canvas.updateCanvas();
+
+    nextCalculationAtCS = currentlyAtCS + 1000 / FPS - amountWaitedTooLong;
+    if(playingCutScene){
+        requestAnimationFrame(cutSceneLoop);
+    }
 }
