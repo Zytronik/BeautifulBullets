@@ -510,21 +510,55 @@ export const CHARACTER_DATA = {
             "passive": {
                 "use": function () {
                     sounds["bossShotSound"].play();
-                    let bulletAmount = 20;
-                    let lifetime = 10
-                    for (let i = 0; i < bulletAmount; i++) {
-                        let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                        let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
-                        allBullets.push(bullet);
+                    let bulletAmount = 75;
+                    let lifetime = 10;
+
+                    if ((bulletAmount % 5) != 0) {
+                        bulletAmount += 5 - (bulletAmount % 5);
                     }
 
+                    let distributor = (bulletAmount) / 5,
+                        adder = -1;
+
+                    for (let i = 0; i < bulletAmount; i++) {
+                        let angle = i * 2 * Math.PI / bulletAmount;
+                        if ((i % distributor) == 0 && i != bulletAmount) {
+                            adder++;
+                        }
+                        let lastVertex = (36 + adder * 72) * Math.PI / 180,
+                            stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
+                            x = Math.sin(angle) / stretchFactor + boss.x,
+                            y = Math.cos(angle) / stretchFactor + boss.y,
+                            attributes = [i, bulletAmount, angle, lastVertex, 1],
+                            bullet = new Bullet(x, y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                        allBullets.push(bullet);
+                        // console.log(Math.sqrt((x - boss.x) ** 2 + (y - boss.y) ** 2), x, y);
+                    }
+
+                    // console.log("==================================")
                     function trajectory() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
+                        let angle = this.attributes[2],
+                            lastVertex = this.attributes[3],
+                            stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
+                            x = 0,
+                            y = 0;
+                        if (this.framesAlive <= 180) {
+                            let shiftAngle = 1 * Math.PI / 180;
+                            this.attributes[2] += shiftAngle;
+                            this.attributes[3] += shiftAngle;
+                            this.attributes[4] += 0.25;
+                            x = (this.attributes[4] * Math.sin(angle) / stretchFactor + boss.x) - this.x + boss.xSpeedNormalized;
+                            y = (this.attributes[4] * Math.cos(angle) / stretchFactor + boss.y) - this.y + boss.ySpeedNormalized;
+                            this.attributes[5] = Math.sqrt((this.x - boss.x) ** 2 + (this.y - boss.y) ** 2);
+                        } else if (this.framesAlive >= 180 && this.framesAlive <= 300) {
+                            // console.log(this.attributes[5], this.attributes[0], this.attributes[4]);
+                             
+                            x = Math.sin(angle) / stretchFactor * 0.1 * (Math.sqrt(this.attributes[5] - this.attributes[4]));
+                            y = Math.cos(angle) / stretchFactor * 0.1 * (Math.sqrt(this.attributes[5] - this.attributes[4]));
+                        } else {
+
+                        }
+                        // console.log(x, y)
                         return [x, y];
                     }
                 },
@@ -532,7 +566,7 @@ export const CHARACTER_DATA = {
                     "radius": 7,
                     "color": "white"
                 },
-                "frequency": 0.2, //in seconds
+                "frequency": 5, //in seconds
 
                 "abilityName": "Passive",
                 "description": "This is a description for a Passive Ability.",
