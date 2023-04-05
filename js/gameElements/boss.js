@@ -1,4 +1,4 @@
-import { isGameStateEnraged } from "../main.js";
+import { isGameStateEnraged, spriteAnimator } from "../main.js";
 import { BOARD_WIDTH, BOARD_HEIGHT, FPS } from "../settings/gameSettings.js";
 import { INPUTS_BOSS } from "../settings/inputSettings.js";
 
@@ -15,8 +15,9 @@ export class Boss {
         this.ySpeedNormalized = 0;
         this.yBarrier = BOARD_HEIGHT * 2 / 7;
 
-        this.sprite = new Image();
-        this.sprite.src = bossData.spriteUrl;
+        this.sprites = spriteAnimator.getBossSprites();
+        /* this.sprite = new Image();
+        this.sprite.src = bossData.spriteUrl; */
         this.spriteScaling = bossData.spriteScaling;
         this.radius = bossData.stats.radius;3
 

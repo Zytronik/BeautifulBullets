@@ -5,7 +5,7 @@ import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { player1SelectedCharacter, player2SelectedCharacter } from "./characterSelectionPage.js";
 import { convertFramecountIntoMinutesSeconds } from "../data/match.js";
-import {convertMouseCoordinatesToCanvasCoordinates} from "./canvas.js";
+import { convertMouseCoordinatesToCanvasCoordinates } from "./canvas.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
 
@@ -23,19 +23,19 @@ export function frontend_setupGameUI() {
     setupBossAbilities();
 }
 
-export function updateBossCursor(){
+export function updateBossCursor() {
     let coords = convertMouseCoordinatesToCanvasCoordinates();
     let cursor = document.querySelector("#bossCursor");
     let body = document.querySelector("body");
-    if(coords[0] >= 0 && coords[0] <= BOARD_WIDTH && coords[1] >= 0 && coords[1] <= BOARD_HEIGHT && !gamePaused){
+    if (coords[0] >= 0 && coords[0] <= BOARD_WIDTH && coords[1] >= 0 && coords[1] <= BOARD_HEIGHT && !gamePaused) {
         cursor.classList.add("active");
         body.classList.add("hideCursor");
-    }else{
+    } else {
         cursor.classList.remove("active");
         body.classList.remove("hideCursor");
     }
-    cursor.style.left = mouseCoordinates[0]+"px";
-    cursor.style.top = mouseCoordinates[1]+"px";
+    cursor.style.left = mouseCoordinates[0] + "px";
+    cursor.style.top = mouseCoordinates[1] + "px";
 }
 
 export function updateGameUI() {
@@ -48,18 +48,18 @@ export function updateGameUI() {
     updateTimer();
 }
 
-function zoomToChallenger(){
+function zoomToChallenger() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         let scale = 2;
         let centerX = (BOARD_WIDTH / 2 - challenger.x) * scale;
-        let centerY = (BOARD_HEIGHT / 2 -challenger.y) * scale;
-        player.querySelector("article.game .characterCanvas").style.transform = "translate("+centerX+"px, "+centerY+"px) scale("+scale+")";
-        player.querySelector("article.game .bulletCanvas").style.transform = "translate("+centerX+"px, "+centerY+"px) scale("+scale+")";
+        let centerY = (BOARD_HEIGHT / 2 - challenger.y) * scale;
+        player.querySelector("article.game .characterCanvas").style.transform = "translate(" + centerX + "px, " + centerY + "px) scale(" + scale + ")";
+        player.querySelector("article.game .bulletCanvas").style.transform = "translate(" + centerX + "px, " + centerY + "px) scale(" + scale + ")";
     });
 }
 
-function resetZoomChallenger(){
+function resetZoomChallenger() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         player.querySelector("article.game .characterCanvas").style.transform = "";
@@ -67,7 +67,7 @@ function resetZoomChallenger(){
     });
 }
 
-function deadAnimation(){
+function deadAnimation() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         player.querySelector("article.game .characterCanvas").classList.add("deadAnimation");
@@ -81,15 +81,15 @@ function deadAnimation(){
     }, 2000);
 }
 
-function hideCanvasContent(){
+function hideCanvasContent() {
     document.querySelector("article.game").classList.add("hideContent");
 }
 
-function showCanvasContent(){
+function showCanvasContent() {
     document.querySelector("article.game").classList.remove("hideContent");
 }
 
-function moveBossAndChallengOutsideOfCanvas(){
+function moveBossAndChallengOutsideOfCanvas() {
     challenger.x = BOARD_WIDTH / 2;
     challenger.y = BOARD_HEIGHT * 7 / 6;
     boss.y = -BOARD_HEIGHT / 6;
@@ -98,11 +98,11 @@ function moveBossAndChallengOutsideOfCanvas(){
     player2Canvas.updateCanvas();
 }
 
-function fadeInChallengerBossHealthbar(){
+function fadeInChallengerBossHealthbar() {
     document.querySelector("article.game .boss .challenger-healthbar").classList.remove("fadeOut");
 }
 
-export function challengerDeathCutsceneToBlack(){
+export function challengerDeathCutsceneToBlack() {
     fadeOutUI();
     showCutSceneBars();
     setTimeout(() => {
@@ -121,7 +121,7 @@ export function challengerDeathCutsceneToBlack(){
     }, 700);
 }
 
-export function challengerDeathCutscene(){
+export function challengerDeathCutscene() {
     fadeOutUI();
     showCutSceneBars();
     setTimeout(() => {
@@ -152,7 +152,7 @@ export function frontend_switchSidesAnimations() {
     }, 1200);
 }
 
-export function frontend_gameOverAnimation(){
+export function frontend_gameOverAnimation() {
     document.querySelector("article.game .infoScreen").classList.add("matchOverActive");
     setTimeout(() => {
         document.querySelector("article.game .infoScreen").classList.remove("matchOverActive");
@@ -163,29 +163,29 @@ export function frontend_gameOverAnimation(){
     }, 1200);
 }
 
-function loadGameOverScreen(){
-    document.querySelector("article.game .resultScreen .matchOverInfo span").innerHTML = "FT"+ match.matchSettings.firstTo;
+function loadGameOverScreen() {
+    document.querySelector("article.game .resultScreen .matchOverInfo span").innerHTML = "FT" + match.matchSettings.firstTo;
     document.querySelector("article.game .resultScreen .matchStatsPlayer1 .score").innerHTML = match.scoreP1;
     document.querySelector("article.game .resultScreen .matchStatsPlayer2 .score").innerHTML = match.scoreP2;
     let rounds = match.previousRounds;
     let players = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
-    let ts, dd ,tg;
+    let ts, dd, tg;
     Array.prototype.forEach.call(players, function (player) {
         let content = "";
         for (var i in rounds) {
             content += '<div class="roundWrapper">';
-            if(player.classList.contains("matchStatsPlayer1")){
+            if (player.classList.contains("matchStatsPlayer1")) {
                 ts = convertFramecountIntoMinutesSeconds(rounds[i]["player1Stats"]["timeSurvivedInFrames"]);
                 tg = convertFramecountIntoMinutesSeconds(rounds[i]["player1Stats"]["timeInGraceInFrames"]);
                 dd = Math.round(100 * rounds[i]["player1Stats"]["damageDealt"]) + "%";
-            }else{
+            } else {
                 ts = convertFramecountIntoMinutesSeconds(rounds[i]["player2Stats"]["timeSurvivedInFrames"]);
                 tg = convertFramecountIntoMinutesSeconds(rounds[i]["player2Stats"]["timeInGraceInFrames"]);
                 dd = Math.round(100 * rounds[i]["player2Stats"]["damageDealt"]) + "%";
             }
-            content += '<p class="damageDealt">Damage: <span>'+dd+'</span></p>'+
-            '<p class="time">Time: <span>'+ts[0]+':'+ts[1]+'</span></p>'+
-            '<p class="timeGrace">Grace: <span>'+tg[0]+':'+tg[1]+'</span></p>';
+            content += '<p class="damageDealt">Damage: <span>' + dd + '</span></p>' +
+                '<p class="time">Time: <span>' + ts[0] + ':' + ts[1] + '</span></p>' +
+                '<p class="timeGrace">Grace: <span>' + tg[0] + ':' + tg[1] + '</span></p>';
             content += "</div>";
         }
         player.querySelector(".matchStatsRounds").innerHTML = content;
@@ -193,42 +193,42 @@ function loadGameOverScreen(){
 
     let classPlayer1 = "";
     let classPlayer2 = "";
-    if(match.matchWinner === 2){
+    if (match.matchWinner === 2) {
         classPlayer2 = "winner";
         classPlayer1 = "loser";
-    }else{
+    } else {
         classPlayer1 = "winner";
         classPlayer2 = "loser";
     }
 
-    document.querySelector("article.game .resultScreen .matchStatsPlayer1").innerHTML += 
-    '<div class="characterWrapper '+classPlayer1+'">'+
-    '<img src="'+CHARACTER_DATA[player1SelectedCharacter].spriteUrl+'">'+
-    '<div class="dialogText">'+
-    '<p class="name">'+CHARACTER_DATA[player1SelectedCharacter].name+'</p>'+
-    '<p class="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam!!!</p>'+
-    '</div>'+
-    '</div>';
-    
-    document.querySelector("article.game .resultScreen .matchStatsPlayer2").innerHTML += 
-    '<div class="characterWrapper '+classPlayer2+'">'+
-    '<img src="'+CHARACTER_DATA[player2SelectedCharacter].spriteUrl+'">'+
-    '<div class="dialogText">'+
-    '<p class="name">'+CHARACTER_DATA[player2SelectedCharacter].name+'</p>'+
-    '<p class="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr!!</p>'+
-    '</div>'+
-    '</div>';
+    document.querySelector("article.game .resultScreen .matchStatsPlayer1").innerHTML +=
+        '<div class="characterWrapper ' + classPlayer1 + '">' +
+        '<img src="' + CHARACTER_DATA[player1SelectedCharacter].spriteUrl + '">' +
+        '<div class="dialogText">' +
+        '<p class="name">' + CHARACTER_DATA[player1SelectedCharacter].name + '</p>' +
+        '<p class="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam!!!</p>' +
+        '</div>' +
+        '</div>';
+
+    document.querySelector("article.game .resultScreen .matchStatsPlayer2").innerHTML +=
+        '<div class="characterWrapper ' + classPlayer2 + '">' +
+        '<img src="' + CHARACTER_DATA[player2SelectedCharacter].spriteUrl + '">' +
+        '<div class="dialogText">' +
+        '<p class="name">' + CHARACTER_DATA[player2SelectedCharacter].name + '</p>' +
+        '<p class="text">Lorem ipsum dolor sit amet, consetetur sadipscing elitr!!</p>' +
+        '</div>' +
+        '</div>';
 
 }
 
-export function frontend_gameOverScreen(){
+export function frontend_gameOverScreen() {
     loadGameOverScreen();
     setTimeout(() => {
         document.querySelector("article.game .resultScreen").classList.add("active");
         document.querySelector("article.game .resultScreen .matchOverInfo").classList.add("fadeIn");
     }, 200);
     setTimeout(() => {
-        let matchStatsPlayers =  document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
+        let matchStatsPlayers = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
         Array.prototype.forEach.call(matchStatsPlayers, function (matchStatsPlayer) {
             matchStatsPlayer.querySelector(".score").classList.add("fadeIn");
             matchStatsPlayer.querySelector(".roundsInfo").classList.add("fadeIn");
@@ -241,7 +241,7 @@ export function frontend_gameOverScreen(){
             setTimeout(() => {
                 round.classList.add("fadeIn");
                 document.querySelectorAll("article.game .resultScreen .matchStatsPlayer2 .matchStatsRounds >  div")[index].classList.add("fadeIn");
-            }, 100 * index);  
+            }, 100 * index);
         });
     }, 200 * 3);
     setTimeout(() => {
@@ -249,10 +249,47 @@ export function frontend_gameOverScreen(){
     }, 200 * 5);
     setTimeout(() => {
         document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner .dialogText").classList.add("fadeIn");
+        document.body.addEventListener('keypress', openGameOverMenu);
     }, 200 * 6);
 }
 
-function closeRoundEndScreen(){
+export function frontend_closeGameOverScreen() {
+    document.body.removeEventListener('keypress', openGameOverMenu);
+    switchUI();
+    closeGameOverMenu();
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner .dialogText").classList.remove("fadeIn");
+    }, 200);
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen .matchStatsPlayer .characterWrapper.winner img").classList.remove("fadeIn");
+    }, 200 * 2);
+    setTimeout(() => {
+        let rounds = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer1 .matchStatsRounds >  div");
+        Array.prototype.forEach.call(rounds, function (round, index) {
+            setTimeout(() => {
+                round.classList.remove("fadeIn");
+                document.querySelectorAll("article.game .resultScreen .matchStatsPlayer2 .matchStatsRounds >  div")[index].classList.remove("fadeIn");
+            }, 100 * index);
+        });
+    }, 200 * 4);
+    setTimeout(() => {
+        let matchStatsPlayers = document.querySelectorAll("article.game .resultScreen .matchStatsPlayer");
+        Array.prototype.forEach.call(matchStatsPlayers, function (matchStatsPlayer) {
+            matchStatsPlayer.querySelector(".score").classList.remove("fadeIn");
+            matchStatsPlayer.querySelector(".roundsInfo").classList.remove("fadeIn");
+            matchStatsPlayer.querySelector(".matchStatsRounds").classList.remove("fadeIn");
+        });
+    }, 200 * 5);
+    setTimeout(() => {
+        document.querySelector("article.game .resultScreen").classList.remove("active");
+        document.querySelector("article.game .resultScreen .matchOverInfo").classList.remove("fadeIn");
+    }, 200 * 6);
+    setTimeout(() => {
+        showCanvasContent();
+    }, 200 * 7);
+}
+
+function closeRoundEndScreen() {
     let elems = document.querySelectorAll("article.game .roundEndScreen .roundStatsPlayer1, article.game .roundEndScreen .roundStatsPlayer2");
     Array.prototype.forEach.call(elems, function (ele) {
         ele.animate(
@@ -269,7 +306,7 @@ function closeRoundEndScreen(){
     });
 }
 
-function fadeOutRoundScreen(){
+function fadeOutRoundScreen() {
     let elems = document.querySelectorAll("article.game .roundEndScreen.active .generalStats > *,article.game .roundEndScreen.active .roundStatsPlayer1 > *,article.game .roundEndScreen.active .roundStatsPlayer2 > *");
     Array.prototype.forEach.call(elems, function (ele) {
         ele.animate(
@@ -287,7 +324,7 @@ function fadeOutRoundScreen(){
 }
 
 export function frontend_showRoundEndScreen(scoreP1, scoreP2, firstTo) {
-    document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = "FT"+firstTo;
+    document.querySelector("article.game .roundEndScreen .generalStats span").innerHTML = "FT" + firstTo;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 .score").innerHTML = scoreP1;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer2 .score").innerHTML = scoreP2;
     document.querySelector("article.game .roundEndScreen .roundStatsPlayer1 h4").innerHTML = CHARACTER_DATA[player1SelectedCharacter].name;
@@ -322,17 +359,17 @@ function switchUI() {
     updateBossChallengerHealthbarPosition();
 }
 
-export function showCutSceneBars(){
+export function showCutSceneBars() {
     document.querySelector("article.game .cutSceneBars").classList.add("active");
 }
 
-export function hideCutSceneBars(){
+export function hideCutSceneBars() {
     document.querySelector("article.game .cutSceneBars").classList.remove("active");
 }
 
-function updateTimer(){
+function updateTimer() {
     let time = convertFramecountIntoMinutesSeconds(match.elapsedTimeInFrames);
-    document.querySelector("#gameTimer span").innerHTML = time[0] +":"+time[1];
+    document.querySelector("#gameTimer span").innerHTML = time[0] + ":" + time[1];
 }
 
 function fadeOutUI() {
@@ -356,19 +393,21 @@ export function fadeInUI() {
 }
 
 function updateChallengerHealthbar() {
-    let players = document.querySelectorAll("article.game .player");
-    Array.prototype.forEach.call(players, function (player) {
-        let hBar = player.querySelector(".challenger-healthbar");
-        hBar.innerHTML = "";
-        var hearts = "";
-        for (let i = 0; i < challenger.maxHealth; i++) {
-            hearts += '<div class="heart"></div>';
-        }
-        hBar.innerHTML = hearts;
-        for (let i = 0; i < challenger.currentHealth; i++) {
-            hBar.children[i].classList.add("life");
-        }
-    });
+    if (challenger != undefined) {
+        let players = document.querySelectorAll("article.game .player");
+        Array.prototype.forEach.call(players, function (player) {
+            let hBar = player.querySelector(".challenger-healthbar");
+            hBar.innerHTML = "";
+            var hearts = "";
+            for (let i = 0; i < challenger.maxHealth; i++) {
+                hearts += '<div class="heart"></div>';
+            }
+            hBar.innerHTML = hearts;
+            for (let i = 0; i < challenger.currentHealth; i++) {
+                hBar.children[i].classList.add("life");
+            }
+        });
+    }
 }
 
 function updateBossHealthbar() {
@@ -385,19 +424,21 @@ function updateBossHealthbar() {
 }
 
 function setupBossHealthBar() {
-    let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
-    Array.prototype.forEach.call(playersHealthBar, function (hBar) {
-        hBar.innerHTML = '<div class="boss-desc">' +
-            '<div>' +
-            '<img src="' + boss.healthBarSpriteUrl + '">' +
-            '<p>' + boss.healthBarName + '</p>' +
-            '</div>' +
-            '<span>0%</span>' +
-            '</div>' +
-            '<div class="life-bar">' +
-            '<div></div>' +
-            '</div>';
-    });
+    if (boss != undefined) {
+        let playersHealthBar = document.querySelectorAll("article.game .player .boss-healthbar");
+        Array.prototype.forEach.call(playersHealthBar, function (hBar) {
+            hBar.innerHTML = '<div class="boss-desc">' +
+                '<div>' +
+                '<img src="' + boss.healthBarSpriteUrl + '">' +
+                '<p>' + boss.healthBarName + '</p>' +
+                '</div>' +
+                '<span>0%</span>' +
+                '</div>' +
+                '<div class="life-bar">' +
+                '<div></div>' +
+                '</div>';
+        });
+    }
 }
 
 function updateChallengerSpecialCharge() {
@@ -408,10 +449,12 @@ function updateChallengerSpecialCharge() {
 }
 
 function setupChallengerSpecialChargeBar() {
-    document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML = "<div></div>";
-    let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
-    for (let i = 0; i < barCount; i++) {
-        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
+    if (challenger != undefined) {
+        document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML = "<div></div>";
+        let barCount = Math.floor(challenger.specialMaxCharge / challenger.specialChargeRequired);
+        for (let i = 0; i < barCount; i++) {
+            document.querySelector("article.game .challenger .challenger-abilitie .grace-bar").innerHTML += '<span style="height:' + 100 / barCount + '%"></span>';
+        }
     }
 }
 
@@ -426,8 +469,10 @@ function updateDebugUI() {
 
 
 function updateBossChallengerHealthbarPosition() {
-    document.querySelector(':root').style.setProperty('--bossChallengerHealthX', challenger.x * CANVAS_UNIT + 'px');
-    document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
+    if (challenger != undefined) {
+        document.querySelector(':root').style.setProperty('--bossChallengerHealthX', challenger.x * CANVAS_UNIT + 'px');
+        document.querySelector(':root').style.setProperty('--bossChallengerHealthY', challenger.y * CANVAS_UNIT + 'px');
+    }
 }
 
 function updateBossAbilities() {
@@ -439,16 +484,18 @@ function updateBossAbilities() {
 }
 
 function setupBossAbilities() {
-    document.querySelector("article.game .boss .boss-abilities").innerHTML = "";
-    for (var index in boss.abilities) {
-        document.querySelector("article.game .boss .boss-abilities").innerHTML +=
-            '<div class="ability-wrapper" data-ability="' + index + '">' +
-            '<img src="' + boss.abilities[index].iconUrl + '" alt="' + boss.abilities[index].abilityName + '">' +
-            '<div class="overlay">' +
-            '<span></span>' +
-            '<div></div>' +
-            '</div>' +
-            '</div>';
+    if (boss != undefined) {
+        document.querySelector("article.game .boss .boss-abilities").innerHTML = "";
+        for (var index in boss.abilities) {
+            document.querySelector("article.game .boss .boss-abilities").innerHTML +=
+                '<div class="ability-wrapper" data-ability="' + index + '">' +
+                '<img src="' + boss.abilities[index].iconUrl + '" alt="' + boss.abilities[index].abilityName + '">' +
+                '<div class="overlay">' +
+                '<span></span>' +
+                '<div></div>' +
+                '</div>' +
+                '</div>';
+        }
     }
 }
 
@@ -506,7 +553,7 @@ function getHealthbarColors(c1, c2, st) {
     return steps;
 };
 
-export function playCountDown(){
+export function playCountDown() {
     let players = document.querySelectorAll("article.game .player");
     Array.prototype.forEach.call(players, function (player) {
         let playCountDown = player.querySelector(".gameCountDown");
@@ -521,4 +568,12 @@ export function playCountDown(){
         fadeInChallengerBossHealthbar();
         goToState(GAMESTATE.GAMEPLAY_REGULAR);
     }, 500);
+}
+
+function openGameOverMenu() {
+    document.querySelector("article.game .resultScreen .menu-wrapper").classList.add("active");
+}
+
+function closeGameOverMenu() {
+    document.querySelector("article.game .resultScreen .menu-wrapper").classList.remove("active");
 }
