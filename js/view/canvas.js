@@ -171,14 +171,80 @@ export class GameCanvas {
             trailCoords.unshift({ x: bullet.x, y: bullet.y });
             this.bulletCtx.strokeStyle = bullet.visuals.trailColor;
             this.bulletCtx.lineWidth = bullet.visuals.radius * 2;
+
+            let x1 = CANVAS_UNIT * trailCoords[trailCoords.length-1].x;
+            let y1 = CANVAS_UNIT * trailCoords[trailCoords.length-1].y;
+            let x2 = CANVAS_UNIT * trailCoords[Math.floor((trailCoords.length-1)/2)].x;
+            let y2 = CANVAS_UNIT * trailCoords[Math.floor((trailCoords.length-1)/2)].y;
+            let x3 = CANVAS_UNIT * trailCoords[0].x;
+            let y3 = CANVAS_UNIT * trailCoords[0].y;
+
+            let w1 = CANVAS_UNIT * bullet.visuals.trailMinWidth;
+            let w2 = CANVAS_UNIT * bullet.visuals.radius;
+
+            let xdiff = x3 - x1
+            let ydiff = y3 - y1
+            let alpha = Math.atan(ydiff / xdiff)
+            let beta = Math.PI / 2 - alpha
+
+            let startX1 = x1 - Math.cos(beta) * w1
+            let startY1 = y1 + Math.sin(beta) * w1
+            let midX1 = x2 - Math.cos(beta) * (w1 + w2) / 2
+            let midY1 = y2 + Math.sin(beta) * (w1 + w2) / 2
+            let endX1 = x3 - Math.cos(beta) * w2
+            let endY1 = y3 + Math.sin(beta) * w2
+
+            let endX2 = x3 + Math.cos(beta) * w2
+            let endY2 = y3 - Math.sin(beta) * w2
+            let midX2 = x2 + Math.cos(beta) * (w1 + w2) / 2
+            let midY2 = y2 - Math.sin(beta) * (w1 + w2) / 2
+            let startX2 = x1 + Math.cos(beta) * w1
+            let startY2 = y1 - Math.sin(beta) * w1
+            
+            let gradient = this.bulletCtx.createLinearGradient(startX1, startY1, endX2, endY2);
+            gradient.addColorStop(0, "rgba(0,0,0,0)");
+            gradient.addColorStop(1, bullet.visuals.trailColor);
+
             this.bulletCtx.beginPath();
-            for (let i = 0; i < trailCoords.length-1; i++) {
-                this.bulletCtx.moveTo(CANVAS_UNIT * trailCoords[i].x, CANVAS_UNIT * trailCoords[i].y);
-                this.bulletCtx.lineTo(CANVAS_UNIT * trailCoords[i+1].x, CANVAS_UNIT * trailCoords[i+1].y);
-            }
+            this.bulletCtx.fillStyle = gradient;
+            this.bulletCtx.moveTo(startX1, startY1);
+            this.bulletCtx.quadraticCurveTo(midX1, midY1, endX1, endY1);
+            this.bulletCtx.lineTo(endX2, endY2);
+            this.bulletCtx.quadraticCurveTo(midX2, midY2, startX2, startY2);
+            this.bulletCtx.fill();
             this.bulletCtx.closePath();
-            this.bulletCtx.stroke();
         }
+        /*
+        trailmath:
+            let x1 = 20
+            let y1 = 20
+            let x2 = 120
+            let y2 = 50
+            let x3 = 220
+            let y3 = 310
+
+            let w1 = 3
+            let w2 = 20
+
+            let xdiff = x3 - x1
+            let ydiff = y3 - y1
+            let alpha = Math.atan(ydiff / xdiff)
+            let beta = Math.PI/2 - alpha
+
+            let startX1 = x1 - Math.cos(beta) * w1
+            let startY1 = y1 + Math.sin(beta) * w1
+            let midX1 = x2 - Math.cos(beta) * (w1 + w2) / 2
+            let midY1 = y2 + Math.sin(beta) * (w1 + w2) / 2
+            let endX1 = x3 - Math.cos(beta) * w2
+            let endY1 = y3 + Math.sin(beta) * w2
+
+            let endX2 = x3 + Math.cos(beta) * w2
+            let endY2 = y3 - Math.sin(beta) * w2
+            let midX2= x2 + Math.cos(beta) * (w1 + w2) / 2
+            let midY2 = y2 - Math.sin(beta) * (w1 + w2) / 2
+            let startX2 = x1 + Math.cos(beta) * w1
+            let startY2 = y1 - Math.sin(beta) * w1
+        */
     }
     /*
         2radius -> minwidth
