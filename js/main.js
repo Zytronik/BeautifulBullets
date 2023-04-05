@@ -4,6 +4,7 @@ import { updateGameUI } from "./view/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./data/match.js";
+import { SpriteAnimator } from "./view/spriteAnimator.js";
 import { BULLET_SPAWN_PROTECTION_FRAMES, FPS, GRACE_RANGE_SQUARED } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
 import { allBullets, BULLET_ORIGIN, getBulletsByOrigin } from "./gameElements/bullet.js";
@@ -16,6 +17,7 @@ export let gamePaused = true;
 
 export let player1Canvas;
 export let player2Canvas;
+export let spriteAnimator;
 
 export let currentFPS = 0;
 export let canvasRenderTime = 0;
@@ -24,8 +26,8 @@ export let totalJSTime = 0;
 export let nonJSTime = 0;
 
 let loadOnFirstCall = true;
-export function main_loadGame([character1, character2]) {
-    match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+export function main_loadGame([character1, character2], onLoad) {
+    /* match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
     challenger = new Challenger(match.player1Character.challenger);
     boss = new Boss(match.player2Character.boss);
     main_clearAllBullets()
@@ -34,8 +36,33 @@ export function main_loadGame([character1, character2]) {
 
     if (loadOnFirstCall) {
         loadOnFirstCall = false;
-        player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
-        player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+        spriteAnimator = new SpriteAnimator();
+        spriteAnimator.preloadAllSprites(()=>{
+            player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
+            player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+        });
+    } */
+    main_clearAllBullets()
+    isGameStateEnraged = false;
+    gamePaused = true;
+
+    if (loadOnFirstCall) {
+        loadOnFirstCall = false;
+        spriteAnimator = new SpriteAnimator(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+        match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+        challenger = new Challenger(match.player1Character.challenger);
+        boss = new Boss(match.player2Character.boss);
+        spriteAnimator.preloadAllSprites(()=>{
+            challenger.sprites = spriteAnimator.getChallengerSprites();
+            boss.sprites = spriteAnimator.getBossSprites();
+            player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
+            player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+            onLoad();
+        });
+    } else {
+        match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+        challenger = new Challenger(match.player1Character.challenger);
+        boss = new Boss(match.player2Character.boss);
     }
 }
 

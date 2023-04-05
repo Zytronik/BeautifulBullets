@@ -11,7 +11,7 @@ html {
 	overflow: hidden;
 }
 
-body.hideCursor{
+body.hideCursor {
 	cursor: none;
 }
 
@@ -214,17 +214,17 @@ article.game section:last-of-type::before {
 	border-left: 2px dotted white;
 }
 
-article.game #bossCursor{
+article.game #bossCursor {
 	width: 20px;
 	object-fit: contain;
 	display: none;
 	position: absolute;
-	top:0;
+	top: 0;
 	left: 0;
 	transform: translate(-50%, -50%);
 }
 
-article.game #bossCursor.active{
+article.game #bossCursor.active {
 	display: block;
 }
 
@@ -273,7 +273,7 @@ article.game.hideContent::before {
 	height: 100%;
 }
 
-article.game .player .canvas > canvas {
+article.game .player .canvas>canvas {
 	transition: 1.5s;
 }
 
@@ -348,12 +348,46 @@ article.game .resultScreen .matchStatsPlayer .score {
 	padding-bottom: 15px;
 }
 
-article.game .resultScreen .characterWrapper.winner{
+article.game .resultScreen .characterWrapper.winner {
 	left: 50%;
 	height: 85%;
 	transform: translateX(-50%);
 	position: absolute;
 	bottom: 0;
+}
+
+article.game .resultScreen .menu-wrapper {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+article.game .resultScreen .menu-wrapper.active {
+	opacity: 1;
+	visibility: visible;
+	z-index: 100;
+	pointer-events: auto;
+}
+
+article.game .resultScreen .menu-wrapper h3 {
+	font-size: 50px;
+	margin-bottom: 15px;
+}
+
+article.game .resultScreen .menu-wrapper button {
+	font-size: 35px;
+	padding: 5px;
+	width: 25%;
+	margin-bottom: 15px;
 }
 
 article.game .resultScreen .characterWrapper.winner img {
@@ -362,7 +396,7 @@ article.game .resultScreen .characterWrapper.winner img {
 }
 
 article.game .resultScreen .characterWrapper.loser .dialogText,
-article.game .resultScreen .characterWrapper.loser{
+article.game .resultScreen .characterWrapper.loser {
 	display: none;
 }
 
@@ -382,15 +416,15 @@ article.game .resultScreen .characterWrapper.winner .dialogText {
 	width: 130%;
 }
 
-article.game .resultScreen .characterWrapper.winner .dialogText > p.name {
+article.game .resultScreen .characterWrapper.winner .dialogText>p.name {
 	margin-bottom: 5px;
 }
 
-article.game .resultScreen .characterWrapper.winner .dialogText > p.text {
+article.game .resultScreen .characterWrapper.winner .dialogText>p.text {
 	border: 2px solid white;
 	padding: 10px 15px;
 	height: 100%;
-	background-color: rgba(0,0,0,0.6);
+	background-color: rgba(0, 0, 0, 0.6);
 }
 
 article.game .resultScreen .matchOverInfo h3 {
@@ -406,29 +440,27 @@ article.game .resultScreen .matchStatsPlayer .matchStatsRounds {
 	width: 100%;
 	margin-top: -20px;
 	position: relative;
-    --scrollbar-width: 8px;
-    --mask-height: 20px;
-    overflow-y: auto;
-    height: 20%;
-    padding-bottom: var(--mask-height);
+	--scrollbar-width: 8px;
+	--mask-height: 20px;
+	overflow-y: auto;
+	height: 20%;
+	padding-bottom: var(--mask-height);
 	padding-top: var(--mask-height);
-    --mask-image-content: linear-gradient(
-        to bottom,
-        transparent,
-        black var(--mask-height),
-        black calc(100% - var(--mask-height)),
-        transparent
-    );
-    --mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
-    --mask-image-scrollbar: linear-gradient(black, black);
-    --mask-size-scrollbar: var(--scrollbar-width) 100%;
-    mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
-    mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
-    mask-position: 0 0, 100% 0;
-    mask-repeat: no-repeat, no-repeat;
+	--mask-image-content: linear-gradient(to bottom,
+			transparent,
+			black var(--mask-height),
+			black calc(100% - var(--mask-height)),
+			transparent);
+	--mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
+	--mask-image-scrollbar: linear-gradient(black, black);
+	--mask-size-scrollbar: var(--scrollbar-width) 100%;
+	mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
+	mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
+	mask-position: 0 0, 100% 0;
+	mask-repeat: no-repeat, no-repeat;
 }
 
-article.game .resultScreen .matchStatsPlayer .matchStatsRounds > div {
+article.game .resultScreen .matchStatsPlayer .matchStatsRounds>div {
 	display: flex;
 	flex-direction: row;
 	border: 2px solid white;
@@ -441,10 +473,11 @@ article.game .resultScreen .matchStatsPlayer .matchStatsRounds > div {
 
 article.game .resultScreen .matchOverInfo,
 article.game .resultScreen .matchStatsPlayer .score,
-article.game .resultScreen .matchStatsPlayer .matchStatsRounds > *,
+article.game .resultScreen .matchStatsPlayer .matchStatsRounds>*,
 article.game .resultScreen .matchStatsPlayer .matchStatsRounds,
 article.game .resultScreen .matchStatsPlayer .roundsInfo,
-article.game .resultScreen .matchStatsPlayer .characterWrapper > * {
+article.game .resultScreen .matchStatsPlayer .characterWrapper>*,
+article.game .resultScreen .menu-wrapper {
 	opacity: 0;
 	visibility: hidden;
 	transition: 1s;
@@ -477,7 +510,7 @@ article.game .infoScreen {
 	align-items: center;
 }
 
-article.game .cutSceneBars{
+article.game .cutSceneBars {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -490,7 +523,7 @@ article.game .cutSceneBars{
 }
 
 article.game .cutSceneBars.active::before,
-article.game .cutSceneBars.active::after{
+article.game .cutSceneBars.active::after {
 	height: 10%;
 }
 
@@ -520,14 +553,14 @@ article.game .cutSceneBars::after {
 	transition: 800ms;
 }
 
-article.game .infoScreen.switchingSidesActive h3.switchingSides{
+article.game .infoScreen.switchingSidesActive h3.switchingSides {
 	font-size: 65px;
 	opacity: 1;
 	visibility: visible;
 	pointer-events: auto;
 }
 
-article.game .infoScreen.matchOverActive h3.matchOver{
+article.game .infoScreen.matchOverActive h3.matchOver {
 	font-size: 65px;
 	opacity: 1;
 	visibility: visible;
@@ -591,16 +624,15 @@ article.game .roundEndScreen.active .roundStatsPlayer2 {
 	animation: roundEndScreenWidth 600ms ease-in-out forwards;
 }
 
-article.game .roundEndScreen.active .generalStats > *,
-article.game .roundEndScreen.active .roundStatsPlayer1 > *,
-article.game .roundEndScreen.active .roundStatsPlayer2 > * {
+article.game .roundEndScreen.active .generalStats>*,
+article.game .roundEndScreen.active .roundStatsPlayer1>*,
+article.game .roundEndScreen.active .roundStatsPlayer2>* {
 	animation: roundEndScreenOpacity 0.5s ease-in-out 0.2s forwards;
 }
 
 /* .removeRoundEndScreenWidth{
 	animation: roundEndScreenWidth 1s ease-in-out 1s backwards !important;
 }
-
 .removeRoundEndScreenOpacity{
 	animation: roundEndScreenOpacity 3s ease-in-out backwards !important;
 } */
@@ -651,17 +683,17 @@ article.game .roundEndScreen .roundStatsPlayer2 h4 {
 }
 
 article.game .roundEndScreen .roundStatsPlayer1 span,
-article.game .roundEndScreen .roundStatsPlayer2 span{
+article.game .roundEndScreen .roundStatsPlayer2 span {
 	font-size: 400px;
 	opacity: 0;
 }
 
-article.game .roundEndScreen .roundStatsPlayer1{
-	background-color: rgba(13,13,13,1);
+article.game .roundEndScreen .roundStatsPlayer1 {
+	background-color: rgba(13, 13, 13, 1);
 }
 
-article.game .roundEndScreen .roundStatsPlayer2{
-	background-color: rgba(28,28,28,1);
+article.game .roundEndScreen .roundStatsPlayer2 {
+	background-color: rgba(28, 28, 28, 1);
 }
 
 article.game .pauseScreen {
@@ -672,7 +704,7 @@ article.game .pauseScreen {
 	bottom: 0;
 	width: 100%;
 	height: 100%;
-	background-color: rgba(0,0,0,0.7);
+	background-color: rgba(0, 0, 0, 0.7);
 	z-index: -100;
 	visibility: hidden;
 	opacity: 0;
@@ -686,7 +718,7 @@ article.game .pauseScreen.paused {
 	pointer-events: auto;
 }
 
-article.game .pauseScreen > div {
+article.game .pauseScreen>div {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -695,15 +727,15 @@ article.game .pauseScreen > div {
 	gap: 15px
 }
 
-article.game .pauseScreen > div button {
+article.game .pauseScreen>div button {
 	font-size: 35px;
 	padding: 5px 5%;
 }
 
-article.game .pauseScreen > div h3 {
+article.game .pauseScreen>div h3 {
 	font-size: 50px;
 	margin-bottom: 15px;
-	
+
 }
 
 article.game .player-wrapper {
@@ -742,7 +774,7 @@ article.game .boss-abilities .ability-wrapper .overlay {
 	bottom: 0;
 }
 
-article.game .boss-abilities .ability-wrapper .overlay > div {
+article.game .boss-abilities .ability-wrapper .overlay>div {
 	background-color: red;
 	height: 0%;
 	bottom: 0;
@@ -750,9 +782,9 @@ article.game .boss-abilities .ability-wrapper .overlay > div {
 	width: 100%;
 }
 
-article.game .boss-abilities .ability-wrapper > img {
+article.game .boss-abilities .ability-wrapper>img {
 	object-fit: contain;
-	width:100%;
+	width: 100%;
 	background-color: white;
 }
 
@@ -1242,7 +1274,7 @@ article.characterSelection a.control_next {
 	cursor: pointer;
 }
 
-article.characterSelection a.control_next>img, 
+article.characterSelection a.control_next>img,
 article.characterSelection a.control_prev>img {
 	width: 40%;
 	object-fit: contain;
@@ -1329,8 +1361,9 @@ article.config .player .settings::after {
 	right: -9px;
 	background: black;
 	z-index: -1;
-  }
-  article.config .player .settings::before {
+}
+
+article.config .player .settings::before {
 	content: "";
 	display: block;
 	position: absolute;
@@ -1340,9 +1373,9 @@ article.config .player .settings::after {
 	right: -15px;
 	background: black;
 	z-index: -1;
-  }
+}
 
-article.config .player .setting > div:last-of-type {
+article.config .player .setting>div:last-of-type {
 	background-color: #343434;
 	padding: 5px 0;
 	width: 20%;
@@ -1350,7 +1383,7 @@ article.config .player .setting > div:last-of-type {
 	text-align: center;
 }
 
-article.config .player .setting > div:last-of-type:hover {
+article.config .player .setting>div:last-of-type:hover {
 	opacity: 0.6;
 }
 
@@ -1385,11 +1418,12 @@ article.config .choosingKey.active {
 	animation: deadAnimation 150ms 3 linear;
 }
 
-@keyframes deadAnimation{
+@keyframes deadAnimation {
 	0% {
-		opacity:1;
+		opacity: 1;
 		filter: brightness(0%);
 	}
+
 	50% {
 		opacity: 0;
 	}

@@ -1,5 +1,5 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
-import { challenger, boss } from "../main.js";
+import { challenger, boss, spriteAnimator } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { GRAPHIC_SETTINGS, COLORS } from "../settings/graphicSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
@@ -52,11 +52,12 @@ export class GameCanvas {
     }
     #drawChallenger() {
         //can potentially be stored
-        let challengerAspectRatio = challenger.sprite.width / challenger.sprite.height;
+        let challengerSprite = spriteAnimator.getCurrentChallengerSprite();
+        let challengerAspectRatio = challengerSprite.width / challengerSprite.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
         let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
         this.characterCtx.drawImage(
-            challenger.sprite,
+            challengerSprite,
             CANVAS_UNIT * challenger.x - challengerWidth / 2,
             CANVAS_UNIT * challenger.y - challengerHeight / 2,
             challengerWidth,
@@ -77,11 +78,12 @@ export class GameCanvas {
     }
     #drawBoss() {
         //can potentially be stored
-        let bossAspectRatio = boss.sprite.width / boss.sprite.height;
+        let bossSprite = spriteAnimator.getCurrentBossSprite();
+        let bossAspectRatio = bossSprite.width / bossSprite.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
         this.characterCtx.drawImage(
-            boss.sprite,
+            bossSprite,
             CANVAS_UNIT * boss.x - bossWidth / 2,
             CANVAS_UNIT * boss.y - bossHeight / 2,
             bossWidth,

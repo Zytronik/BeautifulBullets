@@ -1,8 +1,8 @@
 import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
+import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
-import { playGameStartCutscene } from "./view/cutScenes.js";
+import { playGameStartCutscene, prepareGameStartCutscene } from "./view/cutScenes.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -132,9 +132,11 @@ function characterSelectionToGameStartCutscene() {
             - go to GAMEPLAY_REGULAR after cutscene
     */
     frontend_showPage(PAGES.GAMEPLAY);
-    main_loadGame(frontend_getSelectedCharacters());
-    playGameStartCutscene();
-    frontend_setupGameUI();
+    main_loadGame(frontend_getSelectedCharacters(), ()=>{
+        playGameStartCutscene();
+        frontend_setupGameUI();
+    });
+    prepareGameStartCutscene()
 }
 
 function gameStartCutsceneToGameplayRegular() {
@@ -385,8 +387,13 @@ function resultScreenToGameStartCutscene() {
             - play intro cutscene
             - go to GAMEPLAY_REGULAR after cutscene
     */
-    main_loadGame(frontend_getSelectedCharacters());
-    goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
+    frontend_closeGameOverScreen();
+    main_loadGame(frontend_getSelectedCharacters(), ()=>{
+        goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
+    });
+    setTimeout(() => {
+        playGameStartCutscene();
+    }, 1000);
 }
 
 function resultScreenToCharacterSelection() {
@@ -399,6 +406,10 @@ function resultScreenToCharacterSelection() {
             - reset ready buttons
     */
     main_closeGameLoop();
+    frontend_closeGameOverScreen();
+    setTimeout(() => {
+        frontend_showPage(PAGES.CHARACTER_SELECTION);
+    }, 200 * 7);
 }
 
 function resultScreenToMainMenu() {
@@ -410,4 +421,8 @@ function resultScreenToMainMenu() {
             - show main menu screen
     */
     main_closeGameLoop();
+    frontend_closeGameOverScreen();
+    setTimeout(() => {
+        frontend_showPage(PAGES.MAIN_MENU);
+    }, 200 * 7);
 }

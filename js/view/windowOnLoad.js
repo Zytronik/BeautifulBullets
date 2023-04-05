@@ -57,6 +57,18 @@ function prepareFrontendButtons() {
         sounds["clickSound"].play();
         goToState(GAMESTATE.MAIN_MENU);
     });
+    document.querySelector("article.game .resultScreen .menu-wrapper .retry").addEventListener("click", function (e) {
+        sounds["clickSound"].play();
+        goToState(GAMESTATE.GAMESTART_CUTSCENE);
+    });
+    document.querySelector("article.game .resultScreen .menu-wrapper .changeCharacters").addEventListener("click", function (e) {
+        sounds["clickSound"].play();
+        goToState(GAMESTATE.CHARACTER_SELECTION);
+    });
+    document.querySelector("article.game .resultScreen .menu-wrapper .quitGame").addEventListener("click", function (e) {
+        sounds["clickSound"].play();
+        goToState(GAMESTATE.MAIN_MENU);
+    });
 }
 
 function prepareCharacterSelectionData() {
