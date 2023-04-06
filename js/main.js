@@ -101,8 +101,8 @@ function gameLogic() {
         bullet.nextPos();
         if (bullet.hasBulletFaded()) {
             allBullets.splice(index, 1);
-            player1Canvas.removeBullet(this);
-            player2Canvas.removeBullet(this);
+            player1Canvas.removeBullet(bullet);
+            player2Canvas.removeBullet(bullet);
         }
     });
     hitDetectionChallenger();
@@ -121,6 +121,9 @@ export function main_unpauseGameLogic() {
 }
 
 export function main_clearAllBullets() {
+    allBullets.forEach((bullet) => {
+        bullet.destroy(true);
+    });
     allBullets.length = 0;
 }
 
@@ -214,14 +217,15 @@ function hitDetectionChallenger() {
     const challengerY2 = challenger.y * challenger.y;
     let challengerDied = false;
     allBullets.forEach(function (bullet, index) {
-        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.origin === BULLET_ORIGIN.BOSS) {
-            let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
-            let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
-            let hitRange = Math.pow((challenger.radius + bullet.visuals.radius), 2);
+        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.bulletProperties.origin === BULLET_ORIGIN.BOSS) {
+            
+            let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * challengerX) + challengerX2;
+            let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * challengerY) + challengerY2;
+            let hitRange = Math.pow((challenger.radius + bullet.radius), 2);
             if (xDiffSquared + yDiffSquared < hitRange) {
                 allBullets.splice(index, 1);
-                player1Canvas.removeBullet(this);
-                player2Canvas.removeBullet(this);
+                player1Canvas.removeBullet(bullet);
+                player2Canvas.removeBullet(bullet);
                 challengerDied = challenger.takeDamageAndCheckDead();
                 if (challengerDied) {
                     main_challengerDeath();
@@ -241,14 +245,14 @@ function hitDetectionBoss() {
     const bossY2 = boss.y * boss.y;
     let bossDied = false;
     allBullets.forEach(function (bullet, index) {
-        if (!bossDied && bullet.origin === BULLET_ORIGIN.CHALLENGER) {
-            let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * bossX) + bossX2;
-            let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * bossY) + bossY2;
-            let hitRange = (boss.radius + bullet.visuals.radius) * (boss.radius + bullet.visuals.radius);
+        if (!bossDied && bullet.bulletProperties.origin === BULLET_ORIGIN.CHALLENGER) {
+            let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * bossX) + bossX2;
+            let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * bossY) + bossY2;
+            let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
             if (xDiffSquared + yDiffSquared < hitRange) {
                 allBullets.splice(index, 1);
-                player1Canvas.removeBullet(this);
-                player2Canvas.removeBullet(this);
+                player1Canvas.removeBullet(bullet);
+                player2Canvas.removeBullet(bullet);
                 bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
                 if (bossDied) {
                     goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);

@@ -75,6 +75,7 @@ export class GameCanvas {
         this.bulletApp.stage.addChild(bullet);
     }
     removeBullet(bullet) {
+        //bullet.destroy(true);
         this.bulletApp.stage.removeChild(bullet);
     }
     #drawChallenger() {
@@ -116,8 +117,8 @@ export class GameCanvas {
         this.bulletApp.render();
     }
     #updateBulletPosition(bullet) {
-        bullet.position.x = CANVAS_UNIT * bullet.logicX;
-        bullet.position.y = CANVAS_UNIT * bullet.logicY;      
+        bullet.position.x = CANVAS_UNIT * (bullet.logicX -  bullet.radius);
+        bullet.position.y = CANVAS_UNIT * (bullet.logicY -  bullet.radius);      
     }
 }
 
