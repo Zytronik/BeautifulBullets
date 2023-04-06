@@ -1,8 +1,9 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
-import { allBullets, Bullet, BULLET_ORIGIN } from "./bullet.js";
-import { boss, isGameStateEnraged } from "../main.js";
+import { allBullets, Bullet } from "./bullet.js";
+import { boss, bulletTexture, isGameStateEnraged } from "../main.js";
 import { sounds } from "../sound/sound.js";
+import { EXAMPLE_BULLET_PROPERTIES_CHALLENGER } from "../data/bulletPresets.js";
 
 export class Challenger {
     constructor(challengerData) {
@@ -115,8 +116,8 @@ export class Challenger {
         if (this.fireRateTracker >= this.fireRateInFrames) {
             for (let i = 0; i < this.bullets; i++) {
                 sounds["challengerShotSound"].play();
-                let attributes = [this.homing, 0, 0, i, this.bullets],
-                    bullet = new Bullet(this.x, this.y, null, BULLET_ORIGIN.CHALLENGER, null, trajectory, 5, attributes);
+                let attributes = [this.homing, 0, 0, i, this.bullets];
+                let bullet = new Bullet(this.x, this.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES_CHALLENGER, trajectory, attributes, 5);
                 allBullets.push(bullet);
                 this.fireRateTracker = 0;
             }
@@ -125,33 +126,33 @@ export class Challenger {
         }
 
         function trajectory() {
-            let homing = this.attributes[0],
-                prevX = this.attributes[1],
-                prevY = this.attributes[2],
-                bulletNumber = this.attributes[3],
-                totalBullets = this.attributes[4],
+            let homing = this.trajectoryAttributes[0],
+                prevX = this.trajectoryAttributes[1],
+                prevY = this.trajectoryAttributes[2],
+                bulletNumber = this.trajectoryAttributes[3],
+                totalBullets = this.trajectoryAttributes[4],
                 maxSpeed = 0.5,
                 x = 0,
                 y = 0;
-            if (this.attributes[4] == 1) {
+            if (this.trajectoryAttributes[4] == 1) {
                 let angle = Math.atan2(boss.y - this.y, boss.x - this.x);
-                x = Math.cos(angle) * (maxSpeed * (homing + (homing / 4))) + prevX + (boss.xSpeedNormalized*homing/30);
-                y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + prevY + (boss.ySpeedNormalized*homing/30);
+                x = Math.cos(angle) * (maxSpeed * (homing + (homing / 4))) + prevX + (boss.xSpeedNormalized * homing / 30);
+                y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + prevY + (boss.ySpeedNormalized * homing / 30);
                 if (y >= 0) {
                     y = 0;
                 }
-                this.attributes[1] = x;
-                this.attributes[2] = y;
+                this.trajectoryAttributes[1] = x;
+                this.trajectoryAttributes[2] = y;
             } else {
                 let c = Math.PI / ((10 - totalBullets) * 2) ** (0.011 * totalBullets ** 2 - 0.178 * totalBullets + 1.211),
                     angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (totalBullets - 1) * bulletNumber);
-                x = Math.sin(c / (totalBullets - 1) * bulletNumber + Math.PI - c / 2) * 10 + prevX + (boss.xSpeedNormalized*homing/30);
-                y = Math.cos(c / (totalBullets - 1) * bulletNumber + Math.PI - c / 2) - 20 + prevX + (boss.ySpeedNormalized*homing/30);
+                x = Math.sin(c / (totalBullets - 1) * bulletNumber + Math.PI - c / 2) * 10 + prevX + (boss.xSpeedNormalized * homing / 30);
+                y = Math.cos(c / (totalBullets - 1) * bulletNumber + Math.PI - c / 2) - 20 + prevX + (boss.ySpeedNormalized * homing / 30);
                 if (y >= 0) {
                     y = 0;
                 }
-                this.attributes[1] += Math.cos(angle + c / (totalBullets - 1) * bulletNumber) * (maxSpeed * (homing + homing / 3));
-                this.attributes[2] += Math.sin(angle + c / (totalBullets - 1) * bulletNumber) * maxSpeed * homing / 4;
+                this.trajectoryAttributes[1] += Math.cos(angle + c / (totalBullets - 1) * bulletNumber) * (maxSpeed * (homing + homing / 3));
+                this.trajectoryAttributes[2] += Math.sin(angle + c / (totalBullets - 1) * bulletNumber) * maxSpeed * homing / 4;
             }
             return [x, y - 20]
         }
@@ -172,7 +173,7 @@ export class Challenger {
         if (this.specialActive && this.specialActiveFor <= this.specialDuration) {
             this.specialAbility.use();
             this.specialActiveFor++;
-            if(this.specialActiveFor >= this.specialDuration){
+            if (this.specialActiveFor >= this.specialDuration) {
                 this.specialAbility.deactivate();
                 this.specialActive = false;
             }

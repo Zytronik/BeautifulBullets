@@ -3,10 +3,11 @@ import { GameCanvas } from "./view/canvas.js";
 import { updateGameUI } from "./view/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
-import { Match } from "./data/match.js";
+import { Match } from "./gameElements/match.js";
 import { BULLET_SPAWN_PROTECTION_FRAMES, FPS, GRACE_RANGE_SQUARED } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
-import { allBullets, BULLET_ORIGIN, getBulletsByOrigin } from "./gameElements/bullet.js";
+import { allBullets } from "./gameElements/bullet.js";
+import { BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./data/bulletPresets.js";
 
 export let challenger;
 export let boss;
@@ -16,6 +17,7 @@ export let gamePaused = true;
 
 export let player1Canvas;
 export let player2Canvas;
+export let bulletTexture;
 
 export let currentFPS = 0;
 export let canvasRenderTime = 0;
@@ -36,8 +38,8 @@ export function main_loadGame([character1, character2]) {
         loadOnFirstCall = false;
         player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
         player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
-        /* console.log(player1Canvas.characterApp.ticker);
-        console.log(player2Canvas.characterApp.ticker); */
+        //TODO Replace with animator loading
+        bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);
     }
 }
 
@@ -45,11 +47,7 @@ export function main_swapSides() {
     match.swapSides();
     challenger = new Challenger(match.getChallenger());
     boss = new Boss(match.getBoss());
-   /*  player1Canvas.swapSprites();
-    player2Canvas.swapSprites(); */
 }
-
-let createGameLoopOnce = true;
 
 export function main_startGame() {
     challenger = new Challenger(match.getChallenger());
@@ -57,12 +55,6 @@ export function main_startGame() {
     main_clearAllBullets()
     isGameStateEnraged = false;
     gamePaused = false;
-    /* if(createGameLoopOnce){
-        gameLoop();
-        createGameLoopOnce = false;
-    }else{
-        player2Canvas.characterApp.ticker.start();
-    } */
     gameLoop();
 }
 
@@ -70,15 +62,9 @@ let previousFrameAt = 0;
 let currentlyAt = 0;
 let nextCalculationAt = 0;
 let finishedAt = 0;
-function gameLoop() { 
-    /* player2Canvas.characterApp.ticker.add(() => {
-        currentFPS = Math.round(player2Canvas.characterApp.ticker.FPS);
-        player1Canvas.updateCanvas();
-        player2Canvas.updateCanvas();
-        gameLogic();
-    }); */
+function gameLoop() {
     nonJSTime = Math.round(performance.now() - finishedAt);
-    //Wait for next frame on high refreshrates
+    //Wait for next frame on high refreshrate monitor
     do {
         currentlyAt = performance.now();
     } while (currentlyAt < nextCalculationAt);
@@ -105,7 +91,7 @@ function gameLoop() {
     finishedAt = performance.now();
     if (!gamePaused) {
         requestAnimationFrame(gameLoop);
-    } 
+    }
 }
 
 function gameLogic() {
@@ -115,6 +101,8 @@ function gameLogic() {
         bullet.nextPos();
         if (bullet.hasBulletFaded()) {
             allBullets.splice(index, 1);
+            player1Canvas.removeBullet(this);
+            player2Canvas.removeBullet(this);
         }
     });
     hitDetectionChallenger();
@@ -125,13 +113,11 @@ function gameLogic() {
 
 export function main_pauseGameLogic() {
     gamePaused = true;
-    //player2Canvas.characterApp.ticker.stop();
 }
 
 export function main_unpauseGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
-    //player2Canvas.characterApp.ticker.start();
 }
 
 export function main_clearAllBullets() {
@@ -217,28 +203,25 @@ export function lowerBossHealth() {
 export function setTime() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         match.elapsedTimeInFrames = 115 * FPS;
-        console.log("Timer set to "+match.elapsedTimeInFrames / FPS+" Seconds");
+        console.log("Timer set to " + match.elapsedTimeInFrames / FPS + " Seconds");
     }
 }
 
-//TODO Move to BulletCollection
 function hitDetectionChallenger() {
-    // TODO:
-    // freshly spawned bullet shouldnt hurt
-    const bossBullets = getBulletsByOrigin(BULLET_ORIGIN.BOSS);
     const challengerX = challenger.x;
     const challengerX2 = challenger.x * challenger.x;
     const challengerY = challenger.y;
     const challengerY2 = challenger.y * challenger.y;
-
     let challengerDied = false;
     allBullets.forEach(function (bullet, index) {
-        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES&& bullet.origin === BULLET_ORIGIN.BOSS) {
+        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.origin === BULLET_ORIGIN.BOSS) {
             let xDiffSquared = bullet.x * bullet.x - (2 * bullet.x * challengerX) + challengerX2;
             let yDiffSquared = bullet.y * bullet.y - (2 * bullet.y * challengerY) + challengerY2;
             let hitRange = Math.pow((challenger.radius + bullet.visuals.radius), 2);
             if (xDiffSquared + yDiffSquared < hitRange) {
                 allBullets.splice(index, 1);
+                player1Canvas.removeBullet(this);
+                player2Canvas.removeBullet(this);
                 challengerDied = challenger.takeDamageAndCheckDead();
                 if (challengerDied) {
                     main_challengerDeath();
@@ -264,6 +247,8 @@ function hitDetectionBoss() {
             let hitRange = (boss.radius + bullet.visuals.radius) * (boss.radius + bullet.visuals.radius);
             if (xDiffSquared + yDiffSquared < hitRange) {
                 allBullets.splice(index, 1);
+                player1Canvas.removeBullet(this);
+                player2Canvas.removeBullet(this);
                 bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
                 if (bossDied) {
                     goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);

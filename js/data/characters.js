@@ -1,8 +1,9 @@
-import { challenger, boss } from "../main.js";
-import { allBullets, Bullet, BULLET_ORIGIN } from "../gameElements/bullet.js";
+import { challenger, boss, bulletTexture } from "../main.js";
+import { allBullets, Bullet } from "../gameElements/bullet.js";
 import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
 import { sounds } from "../sound/sound.js";
+import { EXAMPLE_BULLET_PROPERTIES } from "./bulletPresets.js";
 
 export const CHARACTER_DATA = {
     "nabibi": {
@@ -77,7 +78,7 @@ export const CHARACTER_DATA = {
                             let lifetime = 10
                             for (let i = 0; i < bulletAmount; i++) {
                                 let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                                let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory1, lifetime, attributes);
+                                let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, attributes, lifetime);
                                 this.mybullets.push(bullet)
                                 allBullets.push(bullet);
                             }
@@ -92,12 +93,12 @@ export const CHARACTER_DATA = {
                         }
 
                         function trajectory1() {
-                            let currentBulletID = this.attributes[0];
-                            let totalBullets = this.attributes[1];
-                            let shiftMovement = this.attributes[2] / this.attributes[3];
+                            let currentBulletID = this.trajectoryAttributes[0];
+                            let totalBullets = this.trajectoryAttributes[1];
+                            let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                             let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                             let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                            this.attributes[2]++;
+                            this.trajectoryAttributes[2]++;
                             return [x, y];
                         }
 
@@ -128,7 +129,7 @@ export const CHARACTER_DATA = {
                             let lifetime = 10
                             for (let i = 0; i < bulletAmount; i++) {
                                 let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                                let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory1, lifetime, attributes);
+                                let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, attributes, lifetime);
                                 this.mybullets.push(bullet)
                                 allBullets.push(bullet);
                             }
@@ -143,12 +144,12 @@ export const CHARACTER_DATA = {
                         }
 
                         function trajectory1() {
-                            let currentBulletID = this.attributes[0];
-                            let totalBullets = this.attributes[1];
-                            let shiftMovement = this.attributes[2] / this.attributes[3];
+                            let currentBulletID = this.trajectoryAttributes[0];
+                            let totalBullets = this.trajectoryAttributes[1];
+                            let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                             let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                             let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                            this.attributes[2]++;
+                            this.trajectoryAttributes[2]++;
                             return [x, y];
                         }
 
@@ -179,7 +180,7 @@ export const CHARACTER_DATA = {
                             let lifetime = 10
                             for (let i = 0; i < bulletAmount; i++) {
                                 let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                                let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory1, lifetime, attributes);
+                                let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, attributes, lifetime);
                                 this.mybullets.push(bullet)
                                 allBullets.push(bullet);
                             }
@@ -194,12 +195,12 @@ export const CHARACTER_DATA = {
                         }
 
                         function trajectory1() {
-                            let currentBulletID = this.attributes[0];
-                            let totalBullets = this.attributes[1];
-                            let shiftMovement = this.attributes[2] / this.attributes[3];
+                            let currentBulletID = this.trajectoryAttributes[0];
+                            let totalBullets = this.trajectoryAttributes[1];
+                            let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                             let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                             let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                            this.attributes[2]++;
+                            this.trajectoryAttributes[2]++;
                             return [x, y];
                         }
 
@@ -231,17 +232,17 @@ export const CHARACTER_DATA = {
                     let lifetime = 10
                     for (let i = 0; i < bulletAmount; i++) {
                         let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                        let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                        let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                         allBullets.push(bullet);
                     }
 
                     function trajectory() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
+                        let currentBulletID = this.trajectoryAttributes[0];
+                        let totalBullets = this.trajectoryAttributes[1];
+                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                         let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                         let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
+                        this.trajectoryAttributes[2]++;
                         return [x, y];
                     }
                 },
@@ -261,17 +262,17 @@ export const CHARACTER_DATA = {
                     let lifetime = 10
                     for (let i = 0; i < bulletAmount; i++) {
                         let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                        let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                        let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                         allBullets.push(bullet);
                     }
 
                     function trajectory() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
+                        let currentBulletID = this.trajectoryAttributes[0];
+                        let totalBullets = this.trajectoryAttributes[1];
+                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                         let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                         let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
+                        this.trajectoryAttributes[2]++;
                         return [x, y];
                     }
                 },
@@ -362,14 +363,14 @@ export const CHARACTER_DATA = {
                             for (let i = 0; i < bulletAmount; i++) {
                                 let attributes = [i, bulletAmount, random1, 0, Math.random() * 15 + 1, bulletAmount],
                                     customBulletVisuals = { radius: 10, color: "yellow" },
-                                    bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectoryBeforeSecondCast, lifetime, attributes);
+                                    bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectoryBeforeSecondCast, attributes, lifetime);
                                 this.mybullets.push(bullet);
                                 allBullets.push(bullet);
                             }
                             for (let i = 0; i < Math.round(bulletAmount / 1.5); i++) {
                                 let attributes = [i, Math.round(bulletAmount / 1.5), random1, 0, Math.random() * 15 + 1, bulletAmount],
                                     customBulletVisuals = { radius: 10, color: "yellow" },
-                                    bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectoryBeforeSecondCast, lifetime, attributes);
+                                    bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectoryBeforeSecondCast, attributes, lifetime);
                                 this.mybullets.push(bullet);
                                 allBullets.push(bullet);
                             }
@@ -387,7 +388,7 @@ export const CHARACTER_DATA = {
                         }
 
                         function trajectoryBeforeSecondCast() {
-                            let randomNumber1 = this.attributes[2],
+                            let randomNumber1 = this.trajectoryAttributes[2],
                                 x = randomNumber1 * 5 - 2.5,
                                 y = 1;
                             return [x, y];
@@ -396,11 +397,11 @@ export const CHARACTER_DATA = {
                         function trajectoryAfterSecondCast() {
                             let x = 0,
                                 y = 0,
-                                bulletNumber = this.attributes[0],
-                                bulletAmount1 = this.attributes[1],
-                                accelerator = this.attributes[3],
-                                randomNumber2 = this.attributes[4],
-                                bulletAmount2 = this.attributes[5];
+                                bulletNumber = this.trajectoryAttributes[0],
+                                bulletAmount1 = this.trajectoryAttributes[1],
+                                accelerator = this.trajectoryAttributes[3],
+                                randomNumber2 = this.trajectoryAttributes[4],
+                                bulletAmount2 = this.trajectoryAttributes[5];
 
                             if (bulletAmount1 == bulletAmount2) {
                                 x = Math.sin((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2,
@@ -413,9 +414,9 @@ export const CHARACTER_DATA = {
                                 y = 2;
                             }
                             if (accelerator <= 5) {
-                                this.attributes[3] += 0.01;
+                                this.trajectoryAttributes[3] += 0.01;
                             }
-                            this.attributes[4] = randomNumber2 ** 0.96;
+                            this.trajectoryAttributes[4] = randomNumber2 ** 0.96;
                             return [x, y];
                         }
                     },
@@ -444,7 +445,7 @@ export const CHARACTER_DATA = {
                             let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
                                 x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
                                 y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                                bullet = new Bullet(x, y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                                bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                             this.mybullets.push(bullet)
                             allBullets.push(bullet);
                         }
@@ -452,12 +453,12 @@ export const CHARACTER_DATA = {
                         function trajectory() {
                             let x = 0,
                                 y = 1,
-                                bulletNumber = this.attributes[0],
-                                bulletAmount = this.attributes[1],
-                                shiftCounter = this.attributes[2],
-                                lifetime = this.attributes[3],
-                                bossX = this.attributes[4],
-                                bossY = this.attributes[5],
+                                bulletNumber = this.trajectoryAttributes[0],
+                                bulletAmount = this.trajectoryAttributes[1],
+                                shiftCounter = this.trajectoryAttributes[2],
+                                lifetime = this.trajectoryAttributes[3],
+                                bossX = this.trajectoryAttributes[4],
+                                bossY = this.trajectoryAttributes[5],
                                 shiftMovement = shiftCounter / lifetime;
 
                             if (this.framesAlive <= 60) {
@@ -466,12 +467,12 @@ export const CHARACTER_DATA = {
                                 let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
                                     lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
                                     length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
-                                this.attributes[4] = lengthX / length;
-                                this.attributes[5] = lengthY / length;
+                                this.trajectoryAttributes[4] = lengthX / length;
+                                this.trajectoryAttributes[5] = lengthY / length;
                             } else {
                                 x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
                                 y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
-                                this.attributes[2] += 0.6;
+                                this.trajectoryAttributes[2] += 0.6;
                             }
                             return [x, y];
                         }
@@ -566,7 +567,7 @@ export const CHARACTER_DATA = {
                                             length = Math.sqrt((secondMouseX - firstMouseX) ** 2 + (secondMouseY - firstMouseY) ** 2),
                                             random = Math.random() * 1 + 0.5,
                                             attributes = [i, firstMouseX, firstMouseY, secondMouseX, secondMouseY, length, angle, random, 0],
-                                            bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                                            bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                                         allBullets.push(bullet);
                                     }
                                 }
@@ -582,15 +583,15 @@ export const CHARACTER_DATA = {
                         }
 
                         function trajectory() {
-                            let bulletNumber = this.attributes[0],
-                                firstMouseX = this.attributes[1],
-                                firstMouseY = this.attributes[2],
-                                secondMouseX = this.attributes[3],
-                                secondMouseY = this.attributes[4],
-                                length = this.attributes[5],
-                                angle = this.attributes[6],
-                                random = this.attributes[7],
-                                accelerator = this.attributes[8],
+                            let bulletNumber = this.trajectoryAttributes[0],
+                                firstMouseX = this.trajectoryAttributes[1],
+                                firstMouseY = this.trajectoryAttributes[2],
+                                secondMouseX = this.trajectoryAttributes[3],
+                                secondMouseY = this.trajectoryAttributes[4],
+                                length = this.trajectoryAttributes[5],
+                                angle = this.trajectoryAttributes[6],
+                                random = this.trajectoryAttributes[7],
+                                accelerator = this.trajectoryAttributes[8],
                                 multiplier = 2,
                                 divider = 4,
                                 x = 0,
@@ -616,7 +617,7 @@ export const CHARACTER_DATA = {
                             }
 
                             if (accelerator <= 5) {
-                                this.attributes[8] += 0.006;
+                                this.trajectoryAttributes[8] += 0.006;
                             }
 
                             let maxSpeed = 3;
@@ -668,21 +669,21 @@ export const CHARACTER_DATA = {
                         let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
                             spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
                             attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0],
-                            bullet = new Bullet(spawnBulletX, spawnBulletY, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                            bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                         allBullets.push(bullet);
                     }
 
                     function trajectory() {
-                        let currentBulletID = this.attributes[0],
-                            totalBullets = this.attributes[1],
-                            shiftCounter = this.attributes[2],
-                            lifetime = this.attributes[3],
-                            bool = this.attributes[4],
-                            bossX = this.attributes[5],
-                            bossY = this.attributes[6],
-                            bulletPosX = this.attributes[7],
-                            bulletPosY = this.attributes[8],
-                            accelerator = this.attributes[9],
+                        let currentBulletID = this.trajectoryAttributes[0],
+                            totalBullets = this.trajectoryAttributes[1],
+                            shiftCounter = this.trajectoryAttributes[2],
+                            lifetime = this.trajectoryAttributes[3],
+                            bool = this.trajectoryAttributes[4],
+                            bossX = this.trajectoryAttributes[5],
+                            bossY = this.trajectoryAttributes[6],
+                            bulletPosX = this.trajectoryAttributes[7],
+                            bulletPosY = this.trajectoryAttributes[8],
+                            accelerator = this.trajectoryAttributes[9],
                             shiftMovement = shiftCounter / lifetime,
                             x = 0,
                             y = 0;
@@ -690,9 +691,9 @@ export const CHARACTER_DATA = {
                         if (Math.random() <= 0.997 && bool == false) {
                             x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                             y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
-                            this.attributes[7] = this.x;
-                            this.attributes[8] = this.y;
-                            this.attributes[2] += 0.4;
+                            this.trajectoryAttributes[7] = this.x;
+                            this.trajectoryAttributes[8] = this.y;
+                            this.trajectoryAttributes[2] += 0.4;
                         } else {
                             x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
                             if (y >= 1.5) {
@@ -700,9 +701,9 @@ export const CHARACTER_DATA = {
                             } else {
                                 y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
                             }
-                            this.attributes[4] = true;
+                            this.trajectoryAttributes[4] = true;
                             if (accelerator <= 6) {
-                                this.attributes[9] += 0.03
+                                this.trajectoryAttributes[9] += 0.03
                             }
                         }
                         return [x, y];
@@ -728,21 +729,21 @@ export const CHARACTER_DATA = {
                         let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
                             spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
                             attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0],
-                            bullet = new Bullet(spawnBulletX, spawnBulletY, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                            bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                         allBullets.push(bullet);
                     }
 
                     function trajectory() {
-                        let currentBulletID = this.attributes[0],
-                            totalBullets = this.attributes[1],
-                            shiftCounter = this.attributes[2],
-                            lifetime = this.attributes[3],
-                            bool = this.attributes[4],
-                            bossX = this.attributes[5],
-                            bossY = this.attributes[6],
-                            bulletPosX = this.attributes[7],
-                            bulletPosY = this.attributes[8],
-                            accelerator = this.attributes[9],
+                        let currentBulletID = this.trajectoryAttributes[0],
+                            totalBullets = this.trajectoryAttributes[1],
+                            shiftCounter = this.trajectoryAttributes[2],
+                            lifetime = this.trajectoryAttributes[3],
+                            bool = this.trajectoryAttributes[4],
+                            bossX = this.trajectoryAttributes[5],
+                            bossY = this.trajectoryAttributes[6],
+                            bulletPosX = this.trajectoryAttributes[7],
+                            bulletPosY = this.trajectoryAttributes[8],
+                            accelerator = this.trajectoryAttributes[9],
                             shiftMovement = shiftCounter / lifetime,
                             x = 0,
                             y = 0;
@@ -750,9 +751,9 @@ export const CHARACTER_DATA = {
                         if (Math.random() <= 0.995 && bool == false) {
                             x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                             y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
-                            this.attributes[7] = this.x;
-                            this.attributes[8] = this.y;
-                            this.attributes[2] += 0.4;
+                            this.trajectoryAttributes[7] = this.x;
+                            this.trajectoryAttributes[8] = this.y;
+                            this.trajectoryAttributes[2] += 0.4;
                         } else {
                             x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
                             if (y >= 1.5) {
@@ -760,9 +761,9 @@ export const CHARACTER_DATA = {
                             } else {
                                 y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
                             }
-                            this.attributes[4] = true;
+                            this.trajectoryAttributes[4] = true;
                             if (accelerator <= 6) {
-                                this.attributes[9] += 0.03
+                                this.trajectoryAttributes[9] += 0.03
                             }
                         }
                         return [x, y];

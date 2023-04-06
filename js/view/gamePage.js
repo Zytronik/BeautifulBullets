@@ -4,7 +4,7 @@ import { BOARD_WIDTH, BOARD_HEIGHT } from "../settings/gameSettings.js";
 import { CANVAS_UNIT } from "./canvas.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
 import { player1SelectedCharacter, player2SelectedCharacter } from "./characterSelectionPage.js";
-import { convertFramecountIntoMinutesSeconds } from "../data/match.js";
+import { convertFramecountIntoMinutesSeconds } from "../gameElements/match.js";
 import {convertMouseCoordinatesToCanvasCoordinates} from "./canvas.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";

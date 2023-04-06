@@ -1,13 +1,10 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
 import { challenger, boss } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
-import { GRAPHIC_SETTINGS, COLORS } from "../settings/graphicSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
 
 export let CANVAS_UNIT;
-const GRADIENT_LOCATIONS = [0, 1/3, 2/3, 3/3, 4/3, 5/3, 6/3, 7/3];
-const GRADIENT_BREAKPOINT = 8/3;
 export class GameCanvas {
     constructor(container) {
         this.container = container;
@@ -21,12 +18,10 @@ export class GameCanvas {
             resizeTo: container,
             backgroundAlpha: 0,
         });
-        this.bulletContainer = new PIXI.Container();
         this.canvasHeight;
         this.canvasWidth;
         this.challengerSprite;
         this.bossSprite;
-        this.bulletGraphic = new PIXI.Graphics();
 
         this.characterApp.ticker.maxFPS = 60;
         this.bulletApp.ticker.maxFPS = 60;
@@ -43,15 +38,9 @@ export class GameCanvas {
         spritePromise.then((textures) => {
             this.challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
             this.bossSprite = PIXI.Sprite.from(textures.bossSprite);
-            console.log("loaded imgs");
             this.updateCanvas();
         });
     }
-/*     swapSprites() {
-        let temp = this.challengerSprite;
-        this.challengerSprite = this.bossSprite;
-        this.bossSprite = temp;
-    } */
     #setContainerSize(){
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
     }
@@ -62,7 +51,6 @@ export class GameCanvas {
     }
     #createBulletCanvas() {
         this.container.appendChild(this.bulletApp.view);
-        this.bulletApp.stage.addChild(this.bulletContainer);
         this.bulletApp.view.classList.add("bulletCanvas");
     }
     resizeCanvas() {
@@ -82,14 +70,13 @@ export class GameCanvas {
         this.#drawBoss();
         this.#drawChallenger();
         this.#drawBulletsAndTrails();
-        //TODO Omar mit Simu How the fuck does Pixi Renderer works with update loop??
-        //this.characterApp.renderer.render(this.characterContainer);
-        //this.bulletApp.renderer.render(this.bulletContainer);
-        /* this.characterCtx.clearRect(0, 0, this.characterCanvas.width, this.characterCanvas.height);
-        this.#drawChallenger();
-        this.#drawBoss();
-        this.#drawBulletsAndTrails();*/
     } 
+    addBullet(bullet) {
+        this.bulletApp.stage.addChild(bullet);
+    }
+    removeBullet(bullet) {
+        this.bulletApp.stage.removeChild(bullet);
+    }
     #drawChallenger() {
         //can potentially be stored
         let challengerAspectRatio = challenger.sprite.width / challenger.sprite.height;
@@ -123,82 +110,15 @@ export class GameCanvas {
         this.characterApp.stage.addChild(this.bossSprite);
     }
     #drawBulletsAndTrails() {
-        this.bulletGraphic.clear();
         allBullets.forEach(bullet => {
-            this.#drawBullet(bullet)
+            this.#updateBulletPosition(bullet)
         });
+        this.bulletApp.render();
     }
-    #drawBullet(bullet) {      
-        // TODO Simu PLS uwu (uskommentierte Code isch Original vo vorher);
-        let bulletx = Math.floor(bullet.x);
-        let bullety = Math.floor(bullet.y);
-
-        if (GRAPHIC_SETTINGS.SHOW_BULLET_BORDER && bullet.visuals.showBorder) {
-            let lineGradient;
-            let xRot;
-            let yRot;
-            if (GRAPHIC_SETTINGS.ANIMATE_BULLET_BORDER && bullet.visuals.animateBorder) {
-                /* let rotation = bullet.getCurrentRotation();
-                xRot = Math.cos(rotation) - Math.sin(rotation);
-                yRot = Math.sin(rotation) + Math.cos(rotation); */
-            } else {
-                xRot = 1;
-                yRot = 1;
-                lineGradient = COLORS.BULLET_BORDER_WHITE
-            } 
-            // let radius = bullet.visuals.radius;
-            // lineGradient = this.bulletCtx.createLinearGradient(bulletx - radius * xRot, bullety - radius * yRot, bulletx + radius * xRot, bullety + radius * yRot);
-            // lineGradient.addColorStop("0", COLORS.BULLET_BORDER_WHITE);
-            // lineGradient.addColorStop("1.0", COLORS.BULLET_BORDER_BLACK);
-            this.bulletGraphic.lineStyle(bullet.visuals.borderWith, lineGradient, 1);
-        }
-        
-        //let fillStyle = this.bulletCtx.createRadialGradient(bulletx, bullety, 0, bulletx, bullety, bullet.visuals.radius);
-        /*if (GRAPHIC_SETTINGS.PULSATING_BULLETS && bullet.visuals.showPulse) {
-            for (let i = 0; i < GRADIENT_LOCATIONS.length; i++) {
-                let gradientLocation = GRADIENT_LOCATIONS[i];
-                gradientLocation = bullet.getGradientLocationOfCurrentPulse(gradientLocation, GRADIENT_BREAKPOINT)
-    
-                //GRADIENT_LOCATIONS are ordered as follows: [subColor, subColor, mainColor, mainColor, subColor, subColor, mainColor, mainColor]
-                let useSubColor = (Math.floor(i / 2) % 2) === 0;
-                if (gradientLocation <= 1 && useSubColor) {
-                    fillStyle.addColorStop(gradientLocation, bullet.visuals.subColor);
-                } else if (gradientLocation <= 1 && !useSubColor) {
-                    fillStyle.addColorStop(gradientLocation, bullet.visuals.mainColor);
-                } 
-            } 
-            //naive approach to find the 4th gradient out of bounds to manually set it to 1
-            let leftOutGradientLocations = []
-            let addedGradientsAmount = 0;
-            GRADIENT_LOCATIONS.forEach(point => {
-                if (point > 1) {
-                    leftOutGradientLocations.push(point);
-                } else {
-                    addedGradientsAmount++;
-                }
-            });
-            if (addedGradientsAmount === 3) {
-                let indexOfNextGradientToAdd = GRADIENT_LOCATIONS.indexOf(Math.min(...leftOutGradientLocations))
-                let colorSelection = (Math.floor(indexOfNextGradientToAdd / 2) % 2) === 0;
-                if (colorSelection) {
-                    fillStyle.addColorStop(1, bullet.visuals.subColor);
-                } else {
-                    fillStyle.addColorStop(1, bullet.visuals.mainColor);
-                }
-            }
-        } else {
-            fillStyle.addColorStop(0.5, bullet.visuals.subColor);
-            fillStyle.addColorStop(1, bullet.visuals.mainColor);
-        }*/
-    
-        this.bulletGraphic.beginFill(bullet.visuals.mainColor, 1);
-        this.bulletGraphic.drawCircle(CANVAS_UNIT * bulletx, CANVAS_UNIT * bullety, CANVAS_UNIT * bullet.visuals.radius);
-        this.bulletGraphic.endFill();
-    
-        
-        //this.bulletCtx.closePath();
-        this.bulletApp.stage.addChild(this.bulletGraphic);
-    } 
+    #updateBulletPosition(bullet) {
+        bullet.position.x = CANVAS_UNIT * bullet.logicX;
+        bullet.position.y = CANVAS_UNIT * bullet.logicY;      
+    }
 }
 
 export function convertMouseCoordinatesToCanvasCoordinates() {
