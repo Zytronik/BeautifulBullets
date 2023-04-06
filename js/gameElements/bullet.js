@@ -59,8 +59,8 @@ const EXAMPLE_VISUALS = {
     pulsesPerSecond: 2,                             //pulse speed of the inner bullet gradient
     showTrail: true,                                //whether or not a bullet trail should be drawn
     trailColor: "rgb(255, 70, 70, 0.6)",            //trailcolor
-    trailLength: 4,                                 //amount of bullet frameLocations to keep track of and display as trail
-    trailMinWidth: 3,                               //minimum width of the trail towrads the end
+    trailLength: 5,                                 //amount of bullet frameLocations to keep track of and display as trail
+    trailMinWidth: 4,                               //minimum width of the trail towrads the end
 }
 
 export const BULLET_ORIGIN = {

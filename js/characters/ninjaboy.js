@@ -5,7 +5,7 @@ import { sounds } from "../sound/sound.js";
 
 export const ninjaboy = {
     "name": "Ninja Boy",
-    "spriteUrl": "./img/nabil.jpg",
+    "spriteUrl": "./img/nabil/nabil.png",
 
     // C H A L L E N G E R
     "challenger": {
@@ -14,19 +14,19 @@ export const ninjaboy = {
         "sprites": {
             "idle": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             },
             "left": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             }
@@ -76,25 +76,25 @@ export const ninjaboy = {
         "sprites": {
             "idle": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             },
             "left": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             }
         },
         "spriteScaling": 30,
-        "healthBarSpriteUrl": "./img/nabil.jpg",
+        "healthBarSpriteUrl": "./img/nabil/nabil.png",
         "healthBarName": "Nabil",
 
         // S T A T S 

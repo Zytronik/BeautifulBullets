@@ -5,7 +5,7 @@ import { sounds } from "../sound/sound.js";
 
 export const nabibi = {
     "name": "Nabil",
-    "spriteUrl": "./img/nabil.jpg",
+    "spriteUrl": "./img/nabil/nabil.png",
 
     // C H A L L E N G E R
     "challenger": {
@@ -14,19 +14,22 @@ export const nabibi = {
         "sprites": {
             "idle": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png",
+                    "./img/nabil/nabil2.png",
+                    "./img/nabil/nabil3.png",
+                    "./img/nabil/nabil4.png",
                 ],
-                "framerate": 20,
+                "framerate": 50,
             },
             "left": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             }
@@ -76,25 +79,28 @@ export const nabibi = {
         "sprites": {
             "idle": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png",
+                    "./img/nabil/nabil2.png",
+                    "./img/nabil/nabil3.png",
+                    "./img/nabil/nabil4.png",
                 ],
-                "framerate": 20,
+                "framerate": 50,
             },
             "left": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil.jpg"
+                    "./img/nabil/nabil.png"
                 ],
                 "framerate": 20,
             }
         },
         "spriteScaling": 30,
-        "healthBarSpriteUrl": "./img/nabil.jpg",
+        "healthBarSpriteUrl": "./img/nabil/nabil.png",
         "healthBarName": "Nabil",
 
         // S T A T S 

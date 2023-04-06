@@ -1,9 +1,10 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
-import { challenger, boss, spriteAnimator } from "../main.js";
+import { challenger, boss, spriteLoader } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { GRAPHIC_SETTINGS, COLORS } from "../settings/graphicSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
+import { SpriteAnimator } from "./spriteAnimator.js";
 
 export let CANVAS_UNIT;
 const GRADIENT_LOCATIONS = [0, 1 / 3, 2 / 3, 3 / 3, 4 / 3, 5 / 3, 6 / 3, 7 / 3];
@@ -17,6 +18,11 @@ export class GameCanvas {
         this.container = container;
         this.canvasHeight;
         this.canvasWidth;
+
+        let bossSprites = spriteLoader.getCurrentBossSprite()
+        this.bossAnimator = new SpriteAnimator(bossSprites.urls, bossSprites.framerate);
+        let challengerSprites = spriteLoader.getCurrentChallengerSprite()
+        this.challengerAnimator = new SpriteAnimator(challengerSprites.urls, challengerSprites.framerate);
 
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
@@ -52,7 +58,8 @@ export class GameCanvas {
     }
     #drawChallenger() {
         //can potentially be stored
-        let challengerSprite = spriteAnimator.getCurrentChallengerSprite();
+        let challengerSprite = this.challengerAnimator.getNextFrame();
+        //console.log(challengerSprite);
         let challengerAspectRatio = challengerSprite.width / challengerSprite.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
         let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
@@ -69,16 +76,10 @@ export class GameCanvas {
             this.characterCtx.fillStyle = challenger.hitboxColor;
             this.characterCtx.fill();
         }
-        //console.log("challenger.x", challenger.x)
-        // console.log("challenger.y", challenger.y)
-        // console.log("this.canvasHeight", this.canvasHeight)
-        // console.log("CANVAS_UNIT", CANVAS_UNIT)
-        // console.log("BOARD_WIDTH", BOARD_WIDTH, "canvasWidth", this.canvasWidth, "canvasWidth / BOARD_WIDTH", this.canvasWidth / BOARD_WIDTH)
-        // console.log("BOARD_HEIGHT", BOARD_HEIGHT, "canvasHeight", this.canvasHeight, "canvasHeight/ BOARD_HEIGHT", this.canvasHeight / BOARD_HEIGHT)
     }
     #drawBoss() {
         //can potentially be stored
-        let bossSprite = spriteAnimator.getCurrentBossSprite();
+        let bossSprite = this.bossAnimator.getNextFrame();
         let bossAspectRatio = bossSprite.width / bossSprite.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
