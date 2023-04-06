@@ -22,9 +22,6 @@ export class GameCanvas {
         this.canvasWidth;
         this.challengerSprite;
         this.bossSprite;
-
-        this.characterApp.ticker.maxFPS = 60;
-        this.bulletApp.ticker.maxFPS = 60;
         
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
@@ -75,8 +72,8 @@ export class GameCanvas {
         this.bulletApp.stage.addChild(bullet);
     }
     removeBullet(bullet) {
-        //bullet.destroy(true);
         this.bulletApp.stage.removeChild(bullet);
+        bullet.destroy(true);
     }
     #drawChallenger() {
         //can potentially be stored

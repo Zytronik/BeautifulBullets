@@ -100,9 +100,9 @@ function gameLogic() {
     allBullets.forEach(function (bullet, index) {
         bullet.nextPos();
         if (bullet.hasBulletFaded()) {
-            allBullets.splice(index, 1);
             player1Canvas.removeBullet(bullet);
             player2Canvas.removeBullet(bullet);
+            allBullets.splice(index, 1);
         }
     });
     hitDetectionChallenger();
@@ -122,7 +122,8 @@ export function main_unpauseGameLogic() {
 
 export function main_clearAllBullets() {
     allBullets.forEach((bullet) => {
-        bullet.destroy(true);
+        player1Canvas.removeBullet(bullet);
+        player2Canvas.removeBullet(bullet);
     });
     allBullets.length = 0;
 }
@@ -160,25 +161,9 @@ export function main_handleGoBackButton() {
 export function main_closeGameLoop() {
     challenger = null;
     boss = null;
-    allBullets.length = 0;
+    main_clearAllBullets();
     isGameStateEnraged = false;
     gamePaused = true;
-}
-
-export function handleGoBackButton() {
-    if (currentGameState === GAMESTATE.SETTINGS || currentGameState === GAMESTATE.CHARACTER_SELECTION) {
-        goToState(GAMESTATE.MAIN_MENU);
-    }
-
-    if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR) {
-        goToState(GAMESTATE.PAUSE_SCREEN);
-    } else if (currentGameState === GAMESTATE.PAUSE_SCREEN) {
-        if (isGameStateEnraged) {
-            goToState(GAMESTATE.GAMEPLAY_ENRAGED);
-        } else {
-            goToState(GAMESTATE.GAMEPLAY_REGULAR);
-        }
-    }
 }
 
 export function cheats() {

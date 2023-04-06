@@ -57,10 +57,10 @@ export function createBulletTexture(textureProperties) {
         renderTexture,
         transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
     });
-    player2Canvas.bulletApp.renderer.render(bulletGraphics, {
-        renderTexture,
-        transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
-    });
+    // player2Canvas.bulletApp.renderer.render(bulletGraphics, {
+    //     renderTexture,
+    //     transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
+    // });
     bulletGraphics.destroy(true);
     return renderTexture;
 }

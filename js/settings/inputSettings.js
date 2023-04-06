@@ -1,4 +1,4 @@
-import { cheats, lowerChallengerHealth, lowerBossHealth, main_setGameStateEnraged, handleGoBackButton } from "../main.js";
+import { cheats, lowerChallengerHealth, lowerBossHealth, main_setGameStateEnraged, main_handleGoBackButton } from "../main.js";
 import { updateConfigPage } from "../view/configPage.js";
 
 export function updateSetting(key, code, isBoss){
@@ -115,7 +115,7 @@ document.addEventListener("keydown", (event) => {
 
     //Single Inputs
     if (event.code === GO_BACK_BUTTON) {
-        handleGoBackButton();
+        main_handleGoBackButton();
     }
 
     // ***** Super Secret Sauce Cheaty Cheat Code Section *****

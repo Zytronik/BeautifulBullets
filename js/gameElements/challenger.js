@@ -135,7 +135,7 @@ export class Challenger {
                 x = 0,
                 y = 0;
             if (this.trajectoryAttributes[4] == 1) {
-                let angle = Math.atan2(boss.y - this.y, boss.x - this.x);
+                let angle = Math.atan2(boss.y - this.logicY, boss.x - this.logicX);
                 x = Math.cos(angle) * (maxSpeed * (homing + (homing / 4))) + prevX + (boss.xSpeedNormalized * homing / 30);
                 y = Math.sin(angle) * (maxSpeed * (homing)) / 3 + prevY + (boss.ySpeedNormalized * homing / 30);
                 if (y >= 0) {
@@ -145,7 +145,7 @@ export class Challenger {
                 this.trajectoryAttributes[2] = y;
             } else {
                 let c = Math.PI / ((10 - totalBullets) * 2) ** (0.011 * totalBullets ** 2 - 0.178 * totalBullets + 1.211),
-                    angle = Math.atan2(boss.y - this.y, boss.x - this.x) - (c / (totalBullets - 1) * bulletNumber);
+                    angle = Math.atan2(boss.y - this.logicY, boss.x - this.logicX) - (c / (totalBullets - 1) * bulletNumber);
                 x = Math.sin(c / (totalBullets - 1) * bulletNumber + Math.PI - c / 2) * 10 + prevX + (boss.xSpeedNormalized * homing / 30);
                 y = Math.cos(c / (totalBullets - 1) * bulletNumber + Math.PI - c / 2) - 20 + prevX + (boss.ySpeedNormalized * homing / 30);
                 if (y >= 0) {
