@@ -1,5 +1,5 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
-import { challenger, boss } from "../main.js";
+import { challenger, boss, spriteLoader } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
@@ -20,24 +20,22 @@ export class GameCanvas {
         });
         this.canvasHeight;
         this.canvasWidth;
-        this.challengerSprite;
-        this.bossSprite;
         
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
         this.resizeCanvas();
-        this.#preloadImgs();
+        /* this.#preloadImgs(); */
     }
-    #preloadImgs() {
+   /*  #preloadImgs() {
         PIXI.Assets.add('challengerSprite', challenger.sprite.src);
         PIXI.Assets.add('bossSprite', boss.sprite.src);
         const spritePromise = PIXI.Assets.load(['challengerSprite', 'bossSprite']);
         spritePromise.then((textures) => {
-            this.challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
-            this.bossSprite = PIXI.Sprite.from(textures.bossSprite);
+            challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
+            bossSprite = PIXI.Sprite.from(textures.bossSprite);
             this.updateCanvas();
         });
-    }
+    } */
     #setContainerSize(){
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
     }
@@ -77,14 +75,16 @@ export class GameCanvas {
     }
     #drawChallenger() {
         //can potentially be stored
-        let challengerAspectRatio = challenger.sprite.width / challenger.sprite.height;
+        let challengerSprites = spriteLoader.getCurrentChallengerSprite();
+        let challengerSprite = challengerSprites.urls[0];
+        let challengerAspectRatio = challengerSprite.width / challengerSprite.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
         let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
-        this.challengerSprite.anchor.set(0.5);
-        this.challengerSprite.x = CANVAS_UNIT * challenger.x;
-        this.challengerSprite.y = CANVAS_UNIT * challenger.y;
-        this.challengerSprite.width = challengerWidth;
-        this.challengerSprite.height = challengerHeight;
+        challengerSprite.anchor.set(0.5);
+        challengerSprite.x = CANVAS_UNIT * challenger.x;
+        challengerSprite.y = CANVAS_UNIT * challenger.y;
+        challengerSprite.width = challengerWidth;
+        challengerSprite.height = challengerHeight;
         if (INPUTS_CHALLENGER.shift) {
             const challengerShiftGraphic = new PIXI.Graphics();
             challengerShiftGraphic.lineStyle(0);
@@ -93,19 +93,21 @@ export class GameCanvas {
             challengerShiftGraphic.endFill();
             this.characterApp.stage.addChild(challengerShiftGraphic);
         }
-        this.characterApp.stage.addChild(this.challengerSprite);
+        this.characterApp.stage.addChild(challengerSprite);
     }
     #drawBoss() {
         //can potentially be stored
-        let bossAspectRatio = boss.sprite.width / boss.sprite.height;
+        let bossSprites = spriteLoader.getCurrentBossSprite();
+        let bossSprite = bossSprites.urls[0];
+        let bossAspectRatio = bossSprite.width / bossSprite.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
-        this.bossSprite.anchor.set(0.5);
-        this.bossSprite.x = CANVAS_UNIT * boss.x;
-        this.bossSprite.y = CANVAS_UNIT * boss.y;
-        this.bossSprite.width = bossWidth;
-        this.bossSprite.height = bossHeight;
-        this.characterApp.stage.addChild(this.bossSprite);
+        bossSprite.anchor.set(0.5);
+        bossSprite.x = CANVAS_UNIT * boss.x;
+        bossSprite.y = CANVAS_UNIT * boss.y;
+        bossSprite.width = bossWidth;
+        bossSprite.height = bossHeight;
+        this.characterApp.stage.addChild(bossSprite);
     }
     #drawBulletsAndTrails() {
         allBullets.forEach(bullet => {

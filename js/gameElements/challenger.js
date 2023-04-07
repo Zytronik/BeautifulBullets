@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
 import { allBullets, Bullet } from "./bullet.js";
-import { boss, bulletTexture, isGameStateEnraged } from "../main.js";
+import { boss, bulletTexture, isGameStateEnraged, spriteLoader } from "../main.js";
 import { sounds } from "../sound/sound.js";
 import { EXAMPLE_BULLET_PROPERTIES_CHALLENGER } from "../data/bulletPresets.js";
 
@@ -10,8 +10,9 @@ export class Challenger {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT * 5 / 6;
 
-        this.sprite = new Image();
-        this.sprite.src = challengerData.spriteUrl;
+        this.sprites = spriteLoader.getChallengerSprites();
+        /* this.sprite = new Image();
+        this.sprite.src = challengerData.spriteUrl; */
         this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;
         this.hitboxColor = challengerData.hitboxColor;

@@ -2,7 +2,7 @@ import { frontend_showPage, PAGES } from "./view/frontend.js";
 import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
-import { playGameStartCutscene } from "./view/cutScenes.js";
+import { playGameStartCutscene, prepareGameStartCutscene } from "./view/cutScenes.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -53,10 +53,10 @@ STATE_TRANSITION_MAP.set(GAMESTATE.RESULT_SCREEN + GAMESTATE.MAIN_MENU, resultSc
 currentGameState = GAMESTATE.MAIN_MENU;
 export function goToState(GAMESTATE) {
     // Helps with finding where the spaghetti began :)
-    try { throw Error() }
-    catch (e) {
-        console.debug("Function callstack:\n", e.stack);
-    }
+    // try { throw Error() }
+    // catch (e) {
+    //     console.debug("Function callstack:\n", e.stack);
+    // }
     let transitionMethod = STATE_TRANSITION_MAP.get(currentGameState + GAMESTATE);
     if (transitionMethod == null) {
         console.error(`Illegal GameStateTransition. CurrentGameState: ${currentGameState}, desired next GameState: ${GAMESTATE}. 
@@ -132,9 +132,11 @@ function characterSelectionToGameStartCutscene() {
             - go to GAMEPLAY_REGULAR after cutscene
     */
     frontend_showPage(PAGES.GAMEPLAY);
-    main_loadGame(frontend_getSelectedCharacters());
-    playGameStartCutscene();
-    frontend_setupGameUI();
+    main_loadGame(frontend_getSelectedCharacters(), ()=>{
+        playGameStartCutscene();
+        frontend_setupGameUI();
+    });
+    prepareGameStartCutscene()
 }
 
 function gameStartCutsceneToGameplayRegular() {
@@ -386,7 +388,9 @@ function resultScreenToGameStartCutscene() {
             - go to GAMEPLAY_REGULAR after cutscene
     */
     frontend_closeGameOverScreen();
-    main_loadGame(frontend_getSelectedCharacters());
+    main_loadGame(frontend_getSelectedCharacters(), ()=>{
+        goToState(GAMESTATE.GAMEPLAY_REGULAR); //TODO do it in cutscene
+    });
     setTimeout(() => {
         playGameStartCutscene();
     }, 1000);

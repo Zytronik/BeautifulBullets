@@ -8,6 +8,7 @@ import { BULLET_SPAWN_PROTECTION_FRAMES, FPS, GRACE_RANGE_SQUARED } from "./sett
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
 import { allBullets } from "./gameElements/bullet.js";
 import { BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./data/bulletPresets.js";
+import {SpriteLoader} from "./view/spriteLoader.js";
 
 export let challenger;
 export let boss;
@@ -17,6 +18,7 @@ export let gamePaused = true;
 
 export let player1Canvas;
 export let player2Canvas;
+export let spriteLoader;
 export let bulletTexture;
 
 export let currentFPS = 0;
@@ -26,6 +28,7 @@ export let totalJSTime = 0;
 export let nonJSTime = 0;
 
 let loadOnFirstCall = true;
+/*
 export function main_loadGame([character1, character2]) {
     match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
     challenger = new Challenger(match.player1Character.challenger);
@@ -40,6 +43,32 @@ export function main_loadGame([character1, character2]) {
         player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
         //TODO Replace with animator loading
         bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);
+    }
+}*/
+
+export function main_loadGame([character1, character2], onLoad) {
+    main_clearAllBullets()
+    isGameStateEnraged = false;
+    gamePaused = true;
+
+    if (loadOnFirstCall) {
+        loadOnFirstCall = false;
+        spriteLoader = new SpriteLoader(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+        match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+        challenger = new Challenger(match.player1Character.challenger);
+        boss = new Boss(match.player2Character.boss);
+        spriteLoader.preloadAllSprites(()=>{
+            challenger.sprites = spriteLoader.getChallengerSprites();
+            boss.sprites = spriteLoader.getBossSprites();
+            player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
+            player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
+            bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);
+            onLoad();
+        });
+    } else {
+        match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
+        challenger = new Challenger(match.player1Character.challenger);
+        boss = new Boss(match.player2Character.boss);
     }
 }
 
