@@ -18,7 +18,7 @@ export const EXAMPLE_BULLET_PROPERTIES = {
 }
 
 export const EXAMPLE_BULLET_PROPERTIES_CHALLENGER = {
-    origin: BULLET_ORIGIN.EXAMPLE_BULLET_PROPERTIES_CHALLENGER,
+    origin: BULLET_ORIGIN.CHALLENGER,
     tag: BULLET_TAG.REGULAR_SHOT,
     showTrail: true,                                //whether or not a bullet trail should be drawn
     trailColor: "rgb(255, 70, 70, 0.6)",            //trailcolor
@@ -57,10 +57,10 @@ export function createBulletTexture(textureProperties) {
         renderTexture,
         transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
     });
-    // player2Canvas.bulletApp.renderer.render(bulletGraphics, {
-    //     renderTexture,
-    //     transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
-    // });
+    player2Canvas.bulletApp.renderer.render(bulletGraphics, {
+        renderTexture,
+        transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
+    });
     bulletGraphics.destroy(true);
     return renderTexture;
 }

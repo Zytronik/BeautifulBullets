@@ -232,7 +232,6 @@ function hitDetectionChallenger() {
     let challengerDied = false;
     allBullets.forEach(function (bullet, index) {
         if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.bulletProperties.origin === BULLET_ORIGIN.BOSS) {
-            
             let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * challengerX) + challengerX2;
             let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * challengerY) + challengerY2;
             let hitRange = Math.pow((challenger.radius + bullet.radius), 2);

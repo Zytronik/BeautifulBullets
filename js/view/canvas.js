@@ -71,7 +71,6 @@ export class GameCanvas {
     }
     removeBullet(bullet) {
         this.bulletApp.stage.removeChild(bullet);
-        bullet.destroy(true);
     }
     #drawChallenger() {
         //can potentially be stored
