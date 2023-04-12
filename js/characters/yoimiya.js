@@ -445,8 +445,8 @@ export const yoimiya = {
                     if (Math.random() <= 0.997 && bool == false) {
                         x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                         y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
-                        this.trajectoryAttributes[7] = this.x;
-                        this.trajectoryAttributes[8] = this.y;
+                        this.trajectoryAttributes[7] = this.logicX;
+                        this.trajectoryAttributes[8] = this.logicY;
                         this.trajectoryAttributes[2] += 0.4;
                     } else {
                         x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
@@ -505,8 +505,8 @@ export const yoimiya = {
                     if (Math.random() <= 0.995 && bool == false) {
                         x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                         y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
-                        this.trajectoryAttributes[7] = this.x;
-                        this.trajectoryAttributes[8] = this.y;
+                        this.trajectoryAttributes[7] = this.logicX;
+                        this.trajectoryAttributes[8] = this.logicY;
                         this.trajectoryAttributes[2] += 0.4;
                     } else {
                         x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);

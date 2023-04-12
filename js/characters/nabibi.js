@@ -157,8 +157,6 @@ export const nabibi = {
                 },
                 "coolDown": 2, //in seconds
                 "duration": 0, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
 
                 "abilityName": "Ability 1",
                 "description": "This is a description DEAL WITH IT",

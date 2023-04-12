@@ -3,6 +3,7 @@ import { allBullets, Bullet } from "../gameElements/bullet.js";
 import { FPS } from "../settings/gameSettings.js";
 import { sounds } from "../sound/sound.js";
 import { EXAMPLE_BULLET_PROPERTIES } from "../data/bulletPresets.js";
+import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
 
 export const ninabil = {
     "name": "Ninja Boy",
@@ -112,37 +113,49 @@ export const ninabil = {
         "abilities": {
             "ability1": {
                 "use": function () {
-                    if (this.fancyStuff) {
-                        let bulletAmount = 70;
-                        let lifetime = 10
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let trajectoryAttributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, trajectoryAttributes, lifetime);
-                            this.mybullets.push(bullet)
-                            allBullets.push(bullet);
-                        }
-                        this.fancyStuff = !this.fancyStuff;
-                    }
-                    else if (!this.fancyStuff) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectory2;
-                        })
-                        this.fancyStuff = !this.fancyStuff;
-                        this.mybullets = []
+                    let bulletAmount = 2;
+                    let lifetime = 6;
+                    let mouseCoords = convertMouseCoordinatesToCanvasCoordinates();
+                    let amplitude = 0.001 * Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) + 0.75;
+                    let length = Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) / 5;
+                    for (let i = 0; i < bulletAmount; i++) {
+                        let trajectoryAttributes = [i, mouseCoords[0], mouseCoords[1], amplitude, boss.x, boss.y, length, 0, 0]
+                        let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
+                        allBullets.push(bullet);
                     }
 
-                    function trajectory1() {
-                        let currentBulletID = this.trajectoryAttributes[0];
-                        let totalBullets = this.trajectoryAttributes[1];
-                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.trajectoryAttributes[2]++;
+                    function trajectory() {
+                        let bulletID = this.trajectoryAttributes[0];
+                        let lengthX = this.trajectoryAttributes[1] - this.trajectoryAttributes[4];
+                        let lengthY = this.trajectoryAttributes[2] - this.trajectoryAttributes[5];
+                        let length = this.trajectoryAttributes[6];
+                        let amplitude = this.trajectoryAttributes[3];
+                        let angle = Math.PI / 2 +  Math.atan2(lengthY, lengthX);
+                        let x = 0;
+                        let y = 0;
+                        let stretchFactor = amplitude * Math.cos(Math.PI / length * this.framesAlive);
+                        let mouseX = this.trajectoryAttributes[1];
+                        let mouseY = this.trajectoryAttributes[2];
+
+                        if (bulletID % 2 == 0) {
+                            x = stretchFactor * Math.cos(angle) + lengthX / length;
+                            y = stretchFactor * Math.sin(angle) + lengthY / length;
+                        } else {
+                            x = -stretchFactor * Math.cos(angle) + lengthX / length;
+                            y = -stretchFactor * Math.sin(angle) + lengthY / length;
+                        }
+
+                        if (mouseX - 10 <= this.logicX && mouseX + 10 >= this.logicX && mouseY - 10 <= this.logicY && mouseY + 10 >= this.logicY && !this.arrived) {
+                            this.arrived = true;
+                            this.trajectoryFunction = trajectory2;
+                            this.trajectoryAttributes[7] = x;
+                            this.trajectoryAttributes[8] = y;
+                        }
                         return [x, y];
                     }
-
+                    
                     function trajectory2() {
-                        return [0, 6];
+                        return[this.trajectoryAttributes[7], this.trajectoryAttributes[8]];
                     }
                 },
                 "deactivate": function () {
@@ -154,8 +167,7 @@ export const ninabil = {
                 },
                 "coolDown": 2, //in seconds
                 "duration": 0, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
+                "arrived": false,
 
                 "abilityName": "Ability 1",
                 "description": "This is a description DEAL WITH IT",
