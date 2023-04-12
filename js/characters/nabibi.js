@@ -300,7 +300,7 @@ export const nabibi = {
         },
         "enrage": {
             "use": function () {
-                let bulletAmount = 50;
+                let bulletAmount = 40;
                 let lifetime = 10
                 for (let i = 0; i < bulletAmount; i++) {
                     let attributes = [i, bulletAmount, 0, lifetime * FPS]
@@ -322,7 +322,7 @@ export const nabibi = {
                 "radius": 10,
                 "color": "white"
             },
-            "frequency": 0.1, //in seconds
+            "frequency": 0.15, //in seconds
 
             "abilityName": "Passive",
             "description": "This is a description for a Passive Ability.",
