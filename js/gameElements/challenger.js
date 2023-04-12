@@ -10,7 +10,7 @@ export class Challenger {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT * 5 / 6;
 
-        this.sprites = spriteLoader.getChallengerSprites();
+        this.sprites = spriteLoader.getChallengerTextures();
         /* this.sprite = new Image();
         this.sprite.src = challengerData.spriteUrl; */
         this.spriteScaling = challengerData.spriteScaling;

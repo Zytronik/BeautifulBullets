@@ -15,7 +15,7 @@ export class Boss {
         this.ySpeedNormalized = 0;
         this.yBarrier = BOARD_HEIGHT * 2 / 7;
 
-        this.sprites = spriteLoader.getBossSprites();
+        this.sprites = spriteLoader.getBossTextures();
         /* this.sprite = new Image();
         this.sprite.src = bossData.spriteUrl; */
         this.spriteScaling = bossData.spriteScaling;
