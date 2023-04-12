@@ -24,13 +24,13 @@ export const nabibi = {
             },
             "left": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/nabil/nabil_left.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/nabil/nabil_right.png"
                 ],
                 "framerate": 20,
             }
@@ -89,13 +89,13 @@ export const nabibi = {
             },
             "left": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/nabil/nabil_left.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/nabil/nabil_right.png"
                 ],
                 "framerate": 20,
             }

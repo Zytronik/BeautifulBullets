@@ -28,23 +28,6 @@ export let totalJSTime = 0;
 export let nonJSTime = 0;
 
 let loadOnFirstCall = true;
-/*
-export function main_loadGame([character1, character2]) {
-    match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
-    challenger = new Challenger(match.player1Character.challenger);
-    boss = new Boss(match.player2Character.boss);
-    main_clearAllBullets()
-    isGameStateEnraged = false;
-    gamePaused = true;
-
-    if (loadOnFirstCall) {
-        loadOnFirstCall = false;
-        player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
-        player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
-        //TODO Replace with animator loading
-        bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);
-    }
-}*/
 
 export function main_loadGame([character1, character2], onLoad) {
     main_clearAllBullets()
