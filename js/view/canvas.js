@@ -27,6 +27,7 @@ export class GameCanvas {
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
         this.resizeCanvas();
+        this.#initSprites();
     }
     #setContainerSize(){
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
@@ -64,12 +65,20 @@ export class GameCanvas {
     removeBullet(bullet) {
         this.bulletApp.stage.removeChild(bullet.sprite1)
         this.bulletApp.stage.removeChild(bullet.sprite2)
-        // bullet.sprite1.destroy(true);
-        // bullet.sprite2.destroy(true);
+    }
+    #initSprites(){
+        this.characterApp.stage.addChild(this.challengerSprite);
+        this.characterApp.stage.addChild(this.bossSprite);
+        this.challengerSprite.y = 100000;
+        this.bossSprite.y = -100000;
+        for(const index in spriteLoader.loadedTexturesArray){
+            this.challengerSprite.texture = spriteLoader.loadedTexturesArray[index]
+            this.characterApp.render();
+        }
     }
     #drawChallenger() {
-        let challengerSprites = spriteLoader.getCurrentChallengerSprite();
-        this.challengerSprite.texture = challengerSprites.urls[0];
+        let challengerSprites = spriteLoader.getCurrentChallengerTexture();
+        this.challengerSprite.texture = challengerSprites.textures[0];
 
         let challengerAspectRatio = this.challengerSprite.texture.width / this.challengerSprite.texture.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
@@ -87,11 +96,11 @@ export class GameCanvas {
             challengerShiftGraphic.endFill();
             this.characterApp.stage.addChild(challengerShiftGraphic);
         }
-        this.characterApp.stage.addChild(this.challengerSprite);
+        
     }
     #drawBoss() {
-        let bossSprites = spriteLoader.getCurrentBossSprite();
-        this.bossSprite.texture = bossSprites.urls[0];
+        let bossSprites = spriteLoader.getCurrentBossTexture();
+        this.bossSprite.texture = bossSprites.textures[0];
         
         let bossAspectRatio = this.bossSprite.texture.width / this.bossSprite.texture.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
@@ -101,7 +110,6 @@ export class GameCanvas {
         this.bossSprite.y = CANVAS_UNIT * boss.y;
         this.bossSprite.width = bossWidth;
         this.bossSprite.height = bossHeight;
-        this.characterApp.stage.addChild(this.bossSprite);
     }
     #drawBulletsAndTrails() {
         allBullets.forEach(bullet => {

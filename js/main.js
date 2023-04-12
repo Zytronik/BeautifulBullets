@@ -40,9 +40,9 @@ export function main_loadGame([character1, character2], onLoad) {
         match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
         challenger = new Challenger(match.player1Character.challenger);
         boss = new Boss(match.player2Character.boss);
-        spriteLoader.preloadAllSprites(()=>{
-            challenger.sprites = spriteLoader.getChallengerSprites();
-            boss.sprites = spriteLoader.getBossSprites();
+        spriteLoader.preloadAllTextures(()=>{
+            challenger.sprites = spriteLoader.getChallengerTextures();
+            boss.sprites = spriteLoader.getBossTextures();
             player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
             player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
             bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);

@@ -215,7 +215,7 @@ article.game section:last-of-type::before {
 }
 
 article.game #bossCursor{
-	width: 20px;
+	width: 30px;
 	object-fit: contain;
 	display: none;
 	position: absolute;

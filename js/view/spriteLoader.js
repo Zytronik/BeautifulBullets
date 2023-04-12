@@ -5,22 +5,23 @@ export class SpriteLoader {
     constructor(character1, character2){
         this.character1 = character1;
         this.character2 = character2;
-        this.loadedSprites = {};
+        this.loadedTextures = {};
+        this.loadedTexturesArray = [];
     }
-    preloadAllSprites(allDone) {
-        let count = this.#countAllSprites();
+    preloadAllTextures(allDone) {
+        let count = this.#countAllUrls();
         var loadCompleted = () => {
             count--;
             if (0 == count) {
-                allDone(this.loadedSprites);
+                allDone(this.loadedTextures);
             }
         };
-        let allSprites = this.#getAllSprites();
-        for (const character in allSprites) {
-            for (const role in allSprites[character]) {
-                for (const state in allSprites[character][role]) {
-                    allSprites[character][role][state]["urls"].forEach((url) => {
-                        this.#loadSprite(url, loadCompleted, character, role, state, allSprites[character][role][state]["framerate"]);
+        let allUrls = this.#getAllUrls();
+        for (const character in allUrls) {
+            for (const role in allUrls[character]) {
+                for (const state in allUrls[character][role]) {
+                    allUrls[character][role][state]["urls"].forEach((url) => {
+                        this.#loadSprite(url, loadCompleted, character, role, state, allUrls[character][role][state]["framerate"]);
                     });
                 }
             }
@@ -29,36 +30,38 @@ export class SpriteLoader {
     #loadSprite(sprite, onComplete, character, player, state, framerate) {
         var onLoad = (e) =>  {
             e.target.removeEventListener("load", onLoad);
-            this.loadedSprites[character] = this.loadedSprites[character] || {};
-            this.loadedSprites[character][player] = this.loadedSprites[character][player] || {};
-            this.loadedSprites[character][player][state] = this.loadedSprites[character][player][state] || {};
-            this.loadedSprites[character][player][state]["urls"] = this.loadedSprites[character][player][state]["urls"] || [];
-            this.loadedSprites[character][player][state]["urls"].push(PIXI.Texture.from(e.target));
-            this.loadedSprites[character][player][state]["framerate"] = framerate;
+            this.loadedTextures[character] = this.loadedTextures[character] || {};
+            this.loadedTextures[character][player] = this.loadedTextures[character][player] || {};
+            this.loadedTextures[character][player][state] = this.loadedTextures[character][player][state] || {};
+            this.loadedTextures[character][player][state]["textures"] = this.loadedTextures[character][player][state]["textures"] || [];
+            let texture = PIXI.RenderTexture.from(e.target)
+            this.loadedTextures[character][player][state]["textures"].push(texture);
+            this.loadedTextures[character][player][state]["framerate"] = framerate;
+            this.loadedTexturesArray.push(texture);
             onComplete();
         }
         var img = new Image();
         img.addEventListener("load", onLoad, false);
         img.src = sprite;
     }
-    getChallengerSprites(){
-        if(!this.loadedSprites || Object.keys(this.loadedSprites).length === 0){
-            return this.loadedSprites;
+    getChallengerTextures(){
+        if(!this.loadedTextures || Object.keys(this.loadedTextures).length === 0){
+            return this.loadedTextures;
         }
         if(match.challenger === 1){
-            return this.loadedSprites["character1"]["challenger"];
+            return this.loadedTextures["character1"]["challenger"];
         }else{
-            return this.loadedSprites["character2"]["challenger"];
+            return this.loadedTextures["character2"]["challenger"];
         }
     }
-    getBossSprites(){
-        if(!this.loadedSprites || Object.keys(this.loadedSprites).length === 0){
-            return this.loadedSprites;
+    getBossTextures(){
+        if(!this.loadedTextures || Object.keys(this.loadedTextures).length === 0){
+            return this.loadedTextures;
         }
         if(match.boss === 2){
-            return this.loadedSprites["character2"]["boss"];
+            return this.loadedTextures["character2"]["boss"];
         }else{
-            return this.loadedSprites["character1"]["boss"];
+            return this.loadedTextures["character1"]["boss"];
         }
     }
     #getCurrentChallengerState(){
@@ -79,27 +82,27 @@ export class SpriteLoader {
         }
         return "idle";
     }
-    getCurrentChallengerSprite(){
+    getCurrentChallengerTexture(){
         return challenger.sprites[this.#getCurrentChallengerState()];
     }
-    getCurrentBossSprite(){
+    getCurrentBossTexture(){
         return boss.sprites[this.#getCurrentBossState()];
     }
-    #countAllSprites(){
-        let unloadedSprites = [];
-        let allSprites = this.#getAllSprites();
+    #countAllUrls(){
+        let unloadedTextures = [];
+        let allSprites = this.#getAllUrls();
         for(const character in allSprites){
             for(const role in allSprites[character]){
                 for(const state in allSprites[character][role]){
                     allSprites[character][role][state]["urls"].forEach((url)=> {
-                        unloadedSprites.push(url);
+                        unloadedTextures.push(url);
                     });
                 }
             }
         }
-        return unloadedSprites.length;
+        return unloadedTextures.length;
     }
-    #getAllSprites(){
+    #getAllUrls(){
         return {
             "character1" :{
                 "challenger" : {
