@@ -79,7 +79,6 @@ export class GameCanvas {
             this.challengerSprite.height = challengerHeight;
             this.characterApp.render();
         }
-        return new 
     }
     #drawChallenger() {
         let challengerSprites = spriteLoader.getCurrentChallengerTexture();
