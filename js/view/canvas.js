@@ -69,14 +69,10 @@ export class GameCanvas {
     #initSprites(){
         this.characterApp.stage.addChild(this.challengerSprite);
         this.characterApp.stage.addChild(this.bossSprite);
+        this.challengerSprite.y = 100000;
+        this.bossSprite.y = -100000;
         for(const index in spriteLoader.loadedTexturesArray){
             this.challengerSprite.texture = spriteLoader.loadedTexturesArray[index]
-            let challengerAspectRatio = this.challengerSprite.texture.width / this.challengerSprite.texture.height;
-            let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
-            let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
-            this.challengerSprite.anchor.set(0.5);
-            this.challengerSprite.width = challengerWidth;
-            this.challengerSprite.height = challengerHeight;
             this.characterApp.render();
         }
     }
