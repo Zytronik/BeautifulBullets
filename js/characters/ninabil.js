@@ -1,7 +1,8 @@
-import { boss } from "../main.js";
+import { boss, bulletTexture } from "../main.js";
 import { allBullets, Bullet } from "../gameElements/bullet.js";
 import { FPS } from "../settings/gameSettings.js";
 import { sounds } from "../sound/sound.js";
+import { EXAMPLE_BULLET_PROPERTIES } from "../data/bulletPresets.js";
 
 export const ninabil = {
     "name": "Ninja Boy",
@@ -115,8 +116,8 @@ export const ninabil = {
                         let bulletAmount = 70;
                         let lifetime = 10
                         for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory1, lifetime, attributes);
+                            let trajectoryAttributes = [i, bulletAmount, 0, lifetime * FPS]
+                            let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, trajectoryAttributes, lifetime);
                             this.mybullets.push(bullet)
                             allBullets.push(bullet);
                         }
@@ -131,12 +132,12 @@ export const ninabil = {
                     }
 
                     function trajectory1() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
+                        let currentBulletID = this.trajectoryAttributes[0];
+                        let totalBullets = this.trajectoryAttributes[1];
+                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                         let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                         let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
+                        this.trajectoryAttributes[2]++;
                         return [x, y];
                     }
 
@@ -166,8 +167,8 @@ export const ninabil = {
                         let bulletAmount = 70;
                         let lifetime = 10
                         for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory1, lifetime, attributes);
+                            let trajectoryAttributes = [i, bulletAmount, 0, lifetime * FPS]
+                            let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, trajectoryAttributes, lifetime);
                             this.mybullets.push(bullet)
                             allBullets.push(bullet);
                         }
@@ -182,12 +183,12 @@ export const ninabil = {
                     }
 
                     function trajectory1() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
+                        let currentBulletID = this.trajectoryAttributes[0];
+                        let totalBullets = this.trajectoryAttributes[1];
+                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                         let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                         let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
+                        this.trajectoryAttributes[2]++;
                         return [x, y];
                     }
 
@@ -217,8 +218,8 @@ export const ninabil = {
                         let bulletAmount = 70;
                         let lifetime = 10
                         for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory1, lifetime, attributes);
+                            let trajectoryAttributes = [i, bulletAmount, 0, lifetime * FPS]
+                            let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, trajectoryAttributes, lifetime);
                             this.mybullets.push(bullet)
                             allBullets.push(bullet);
                         }
@@ -233,12 +234,12 @@ export const ninabil = {
                     }
 
                     function trajectory1() {
-                        let currentBulletID = this.attributes[0];
-                        let totalBullets = this.attributes[1];
-                        let shiftMovement = this.attributes[2] / this.attributes[3];
+                        let currentBulletID = this.trajectoryAttributes[0];
+                        let totalBullets = this.trajectoryAttributes[1];
+                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
                         let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
                         let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.attributes[2]++;
+                        this.trajectoryAttributes[2]++;
                         return [x, y];
                     }
 
@@ -266,7 +267,7 @@ export const ninabil = {
         "passive": {
             "use": function () {
                 sounds["bossShotSound"].play();
-                let bulletAmount = 80;
+                let bulletAmount = 65;
                 let lifetime = 25;
 
                 if ((bulletAmount % 5) != 0) {
@@ -284,17 +285,16 @@ export const ninabil = {
                     }
                     let lastVertex = (36 + adder * 72) * Math.PI / 180,
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
-                        x = Math.sin(angle) / stretchFactor + boss.x,
-                        y = Math.cos(angle) / stretchFactor + boss.y,
-                        attributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0],
-                        bullet = new Bullet(x, y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                        x = boss.x - Math.sin(angle) / stretchFactor,
+                        y = boss.y - Math.cos(angle) / stretchFactor,
+                        trajectoryAttributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0],
+                        bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
                     allBullets.push(bullet);
                 }
 
-                // console.log("==================================")
                 function trajectory() {
-                    let angle = this.attributes[2],
-                        lastVertex = this.attributes[3],
+                    let angle = this.trajectoryAttributes[2],
+                        lastVertex = this.trajectoryAttributes[3],
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
                         x = 0,
                         y = 0;
@@ -302,41 +302,42 @@ export const ninabil = {
                     if (this.framesAlive <= 180) {
 
                         let shiftAngle = 1 * Math.PI / 180;
-                        this.attributes[2] += shiftAngle;
-                        this.attributes[3] += shiftAngle;
-                        this.attributes[4] += 0.25;
-                        x = (this.attributes[4] * Math.sin(angle) / stretchFactor + boss.x) - this.x + boss.xSpeedNormalized;
-                        y = (this.attributes[4] * Math.cos(angle) / stretchFactor + boss.y) - this.y + boss.ySpeedNormalized;
-                        this.attributes[5] = Math.sqrt((this.x - boss.x) ** 2 + (this.y - boss.y) ** 2);
+                        this.trajectoryAttributes[2] += shiftAngle;
+                        this.trajectoryAttributes[3] += shiftAngle;
+                        this.trajectoryAttributes[4] += 0.25;
+                        x = (this.trajectoryAttributes[4] * Math.sin(angle) / stretchFactor + boss.x) - this.logicX + boss.xSpeedNormalized;
+                        y = (this.trajectoryAttributes[4] * Math.cos(angle) / stretchFactor + boss.y) - this.logicY + boss.ySpeedNormalized;
+                        this.trajectoryAttributes[5] = Math.sqrt((this.x - boss.x) ** 2 + (this.y - boss.y) ** 2);
 
                     } else if (this.framesAlive >= 180 && this.framesAlive <= 420) {
 
-                        let i = this.attributes[0];
-                        let bulletAmount = this.attributes[1];
+                        let i = this.trajectoryAttributes[0];
+                        let bulletAmount = this.trajectoryAttributes[1];
 
                         if (i % (bulletAmount / 5) >= (bulletAmount / 5) / 2) {
-                            this.attributes[6] = amplitude / (bulletAmount / 5) * (i % (bulletAmount / 5) / 2)
+                            this.trajectoryAttributes[6] = amplitude / (bulletAmount / 5) * (i % (bulletAmount / 5) / 2)
                         } else {
-                            this.attributes[6] = amplitude / (bulletAmount / 5) * (((bulletAmount / 5) / 2) - (i % (bulletAmount / 5) / 2))
+                            this.trajectoryAttributes[6] = amplitude / (bulletAmount / 5) * (((bulletAmount / 5) / 2) - (i % (bulletAmount / 5) / 2))
                         }
 
-                        x = Math.sin(angle) / stretchFactor * this.attributes[6];
-                        y = Math.cos(angle) / stretchFactor * this.attributes[6];
+                        x = Math.sin(angle) / stretchFactor * this.trajectoryAttributes[6];
+                        y = Math.cos(angle) / stretchFactor * this.trajectoryAttributes[6];
 
                     } else {
-                        // if (this.attributes[7] <= 5) {
-                        //     this.attributes[7] += 0.005;
-                        // }
 
-                        x = (Math.sin(angle) / stretchFactor);
-                        y = (Math.cos(angle) / stretchFactor) + this.attributes[7];
+                        if (this.trajectoryAttributes[7] <= 5) {
+                            this.trajectoryAttributes[7] += 0.001;
+                        }
 
-                        if (y >= 2) {
-                            y = 2;
+                        if (this.trajectoryAttributes[0] % 2 == 0) {
+                            x = (Math.sin(angle + this.trajectoryAttributes[7]) / stretchFactor);
+                            y = (Math.cos(angle + this.trajectoryAttributes[7]) / stretchFactor);
+                        } else {
+                            x = (Math.sin(angle - this.trajectoryAttributes[7]) / stretchFactor);
+                            y = (Math.cos(angle - this.trajectoryAttributes[7]) / stretchFactor);
                         }
 
                     }
-
                     return [x, y];
                 }
             },
@@ -352,38 +353,8 @@ export const ninabil = {
         },
         "enrage": {
             "use": function () {
-                let bulletAmount = 50;
-                let lifetime = 10
-                for (let i = 0; i < bulletAmount; i++) {
-                    let attributes = [i, bulletAmount, 0, lifetime * FPS]
-                    let bullet = new Bullet(boss.x, boss.y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
-                    allBullets.push(bullet);
-                }
-
-                function trajectory() {
-                    let currentBulletID = this.attributes[0];
-                    let totalBullets = this.attributes[1];
-                    let shiftMovement = this.attributes[2] / this.attributes[3];
-                    let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                    let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                    this.attributes[2]++;
-                    return [x, y];
-                }
-            },
-            "bulletVisuals": {
-                "radius": 7,
-                "color": "white"
-            },
-            "frequency": 0.2, //in seconds
-
-            "abilityName": "Passive",
-            "description": "This is a description for a Passive Ability.",
-            "iconUrl": "img/passive.png",
-        },
-        "enrage": {
-            "use": function () {
                 sounds["bossShotSound"].play();
-                let bulletAmount = 80;
+                let bulletAmount = 90;
                 let lifetime = 25;
 
                 if ((bulletAmount % 5) != 0) {
@@ -403,15 +374,14 @@ export const ninabil = {
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
                         x = Math.sin(angle) / stretchFactor + boss.x,
                         y = Math.cos(angle) / stretchFactor + boss.y,
-                        attributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0],
-                        bullet = new Bullet(x, y, null, BULLET_ORIGIN.BOSS, null, trajectory, lifetime, attributes);
+                        trajectoryAttributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0, 0],
+                        bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
                     allBullets.push(bullet);
                 }
 
-                // console.log("==================================")
                 function trajectory() {
-                    let angle = this.attributes[2],
-                        lastVertex = this.attributes[3],
+                    let angle = this.trajectoryAttributes[2],
+                        lastVertex = this.trajectoryAttributes[3],
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
                         x = 0,
                         y = 0;
@@ -419,34 +389,42 @@ export const ninabil = {
                     if (this.framesAlive <= 180) {
 
                         let shiftAngle = 1 * Math.PI / 180;
-                        this.attributes[2] += shiftAngle;
-                        this.attributes[3] += shiftAngle;
-                        this.attributes[4] += 0.25;
-                        x = (this.attributes[4] * Math.sin(angle) / stretchFactor + boss.x) - this.x + boss.xSpeedNormalized;
-                        y = (this.attributes[4] * Math.cos(angle) / stretchFactor + boss.y) - this.y + boss.ySpeedNormalized;
-                        this.attributes[5] = Math.sqrt((this.x - boss.x) ** 2 + (this.y - boss.y) ** 2);
+                        this.trajectoryAttributes[2] += shiftAngle;
+                        this.trajectoryAttributes[3] += shiftAngle;
+                        this.trajectoryAttributes[4] += 0.25;
+                        x = (this.trajectoryAttributes[4] * Math.sin(angle) / stretchFactor + boss.x) - this.logicX + boss.xSpeedNormalized;
+                        y = (this.trajectoryAttributes[4] * Math.cos(angle) / stretchFactor + boss.y) - this.logicY + boss.ySpeedNormalized;
+                        this.trajectoryAttributes[5] = Math.sqrt((this.x - boss.x) ** 2 + (this.y - boss.y) ** 2);
 
                     } else if (this.framesAlive >= 180 && this.framesAlive <= 300) {
 
-                        let i = this.attributes[0];
-                        let bulletAmount = this.attributes[1];
+                        let i = this.trajectoryAttributes[0];
+                        let bulletAmount = this.trajectoryAttributes[1];
 
                         if (i % (bulletAmount / 5) >= (bulletAmount / 5) / 2) {
-                            this.attributes[6] = amplitude / (bulletAmount / 5) * (i % (bulletAmount / 5) / 2)
+                            this.trajectoryAttributes[6] = amplitude / (bulletAmount / 5) * (i % (bulletAmount / 5) / 2)
                         } else {
-                            this.attributes[6] = amplitude / (bulletAmount / 5) * (((bulletAmount / 5) / 2) - (i % (bulletAmount / 5) / 2))
+                            this.trajectoryAttributes[6] = amplitude / (bulletAmount / 5) * (((bulletAmount / 5) / 2) - (i % (bulletAmount / 5) / 2))
                         }
 
-                        x = Math.sin(angle) / stretchFactor * this.attributes[6];
-                        y = Math.cos(angle) / stretchFactor * this.attributes[6];
+                        x = Math.sin(angle) / stretchFactor * this.trajectoryAttributes[6];
+                        y = Math.cos(angle) / stretchFactor * this.trajectoryAttributes[6];
 
                     } else {
-                        if (this.attributes[7] <= 5) {
-                            this.attributes[7] += 0.008;
+                        if (this.trajectoryAttributes[8] <= 5) {
+                            this.trajectoryAttributes[8] += 0.009;
+                        }
+                        if (this.trajectoryAttributes[7] <= 5) {
+                            this.trajectoryAttributes[7] += 0.001;
                         }
 
-                        x = (Math.sin(angle) / stretchFactor);
-                        y = (Math.cos(angle) / stretchFactor) + this.attributes[7];
+                        if (this.trajectoryAttributes[0] % 2 == 0) {
+                            x = (Math.sin(angle + this.trajectoryAttributes[7]) / stretchFactor);
+                            y = (Math.cos(angle + this.trajectoryAttributes[7]) / stretchFactor) + this.trajectoryAttributes[8];
+                        } else {
+                            x = (Math.sin(angle - this.trajectoryAttributes[7]) / stretchFactor);
+                            y = (Math.cos(angle - this.trajectoryAttributes[7]) / stretchFactor) + this.trajectoryAttributes[8];
+                        }
 
                         if (y >= 2) {
                             y = 2;
@@ -461,7 +439,7 @@ export const ninabil = {
                 "radius": 10,
                 "color": "white"
             },
-            "frequency": 0.1, //in seconds
+            "frequency": 1, //in seconds
 
             "abilityName": "Passive",
             "description": "This is a description for a Passive Ability.",

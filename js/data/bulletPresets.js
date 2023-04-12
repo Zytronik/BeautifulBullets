@@ -47,20 +47,24 @@ export function createBulletTexture(textureProperties) {
         .lineStyle({ width: bInnerBWidth, color: bInnerColor, alignment: 0 })
         .beginFill(textureProperties.mainColor)
         .drawCircle(0, 0, radius - (bOuterWidth - bInnerBWidth));
-    const { width, height } = bulletGraphics;
-    const renderTexture = PIXI.RenderTexture.create({
-        width,
-        height,
+
+    const renderTexture1 = PIXI.RenderTexture.create({
+        width: bulletGraphics.width,
+        height: bulletGraphics.height,
     });
-    //TODO probably the wrong app
     player1Canvas.bulletApp.renderer.render(bulletGraphics, {
-        renderTexture,
-        transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
+        renderTexture: renderTexture1,
+        transform: new PIXI.Matrix(1, 0, 0, 1, bulletGraphics.width / 2, bulletGraphics.height / 2)
+    });
+    const renderTexture2 = PIXI.RenderTexture.create({
+        width: bulletGraphics.width,
+        height: bulletGraphics.height,
     });
     player2Canvas.bulletApp.renderer.render(bulletGraphics, {
-        renderTexture,
-        transform: new PIXI.Matrix(1, 0, 0, 1, width / 2, height / 2)
+        renderTexture: renderTexture2,
+        transform: new PIXI.Matrix(1, 0, 0, 1, bulletGraphics.width / 2, bulletGraphics.height / 2)
     });
+
     bulletGraphics.destroy(true);
-    return renderTexture;
+    return [renderTexture1, renderTexture2];
 }

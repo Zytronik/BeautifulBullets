@@ -59,11 +59,14 @@ export class GameCanvas {
         this.#drawChallenger();
         this.#drawBulletsAndTrails();
     }
-    addBullet(bullet) {
-        this.bulletApp.stage.addChild(bullet);
+    addBullet(bulletSprite) {
+        this.bulletApp.stage.addChild(bulletSprite);
     }
     removeBullet(bullet) {
-        this.bulletApp.stage.removeChild(bullet);
+        this.bulletApp.stage.removeChild(bullet.sprite1)
+        this.bulletApp.stage.removeChild(bullet.sprite2)
+        // bullet.sprite1.destroy(true);
+        // bullet.sprite2.destroy(true);
     }
     #initSprites(){
         for(const index in spriteLoader.loadedTexturesArray){
@@ -116,8 +119,10 @@ export class GameCanvas {
         this.bulletApp.render();
     }
     #updateBulletPosition(bullet) {
-        bullet.position.x = CANVAS_UNIT * (bullet.logicX -  bullet.radius);
-        bullet.position.y = CANVAS_UNIT * (bullet.logicY -  bullet.radius);      
+        bullet.sprite1.position.x = CANVAS_UNIT * (bullet.logicX -  bullet.radius);
+        bullet.sprite1.position.y = CANVAS_UNIT * (bullet.logicY -  bullet.radius);    
+        bullet.sprite2.position.x = CANVAS_UNIT * (bullet.logicX -  bullet.radius);
+        bullet.sprite2.position.y = CANVAS_UNIT * (bullet.logicY -  bullet.radius);      
     }
 }
 
