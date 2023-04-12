@@ -289,7 +289,6 @@ export const ninabil = {
                         y = boss.y - Math.cos(angle) / stretchFactor,
                         trajectoryAttributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0],
                         bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
-                        // console.log(x, y, boss.x, boss.y)
                     allBullets.push(bullet);
                 }
 
