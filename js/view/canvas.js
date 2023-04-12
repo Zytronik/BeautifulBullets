@@ -65,17 +65,21 @@ export class GameCanvas {
     removeBullet(bullet) {
         this.bulletApp.stage.removeChild(bullet.sprite1)
         this.bulletApp.stage.removeChild(bullet.sprite2)
-        // bullet.sprite1.destroy(true);
-        // bullet.sprite2.destroy(true);
     }
     #initSprites(){
-        for(const index in spriteLoader.loadedTexturesArray){
-            console.log(spriteLoader.loadedTexturesArray[index]);
-        }
-        this.#drawChallenger();
         this.characterApp.stage.addChild(this.challengerSprite);
-        this.#drawBoss();
         this.characterApp.stage.addChild(this.bossSprite);
+        for(const index in spriteLoader.loadedTexturesArray){
+            this.challengerSprite.texture = spriteLoader.loadedTexturesArray[index]
+            let challengerAspectRatio = this.challengerSprite.texture.width / this.challengerSprite.texture.height;
+            let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
+            let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
+            this.challengerSprite.anchor.set(0.5);
+            this.challengerSprite.width = challengerWidth;
+            this.challengerSprite.height = challengerHeight;
+            this.characterApp.render();
+        }
+        return new 
     }
     #drawChallenger() {
         let challengerSprites = spriteLoader.getCurrentChallengerTexture();
