@@ -33,7 +33,7 @@ export class SpriteLoader {
             this.loadedSprites[character][player] = this.loadedSprites[character][player] || {};
             this.loadedSprites[character][player][state] = this.loadedSprites[character][player][state] || {};
             this.loadedSprites[character][player][state]["urls"] = this.loadedSprites[character][player][state]["urls"] || [];
-            this.loadedSprites[character][player][state]["urls"].push(PIXI.Sprite.from(e.target));
+            this.loadedSprites[character][player][state]["urls"].push(PIXI.Texture.from(e.target));
             this.loadedSprites[character][player][state]["framerate"] = framerate;
             onComplete();
         }

@@ -20,22 +20,14 @@ export class GameCanvas {
         });
         this.canvasHeight;
         this.canvasWidth;
+
+        this.challengerSprite = new PIXI.Sprite();
+        this.bossSprite = new PIXI.Sprite();
         
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
         this.resizeCanvas();
-        /* this.#preloadImgs(); */
     }
-   /*  #preloadImgs() {
-        PIXI.Assets.add('challengerSprite', challenger.sprite.src);
-        PIXI.Assets.add('bossSprite', boss.sprite.src);
-        const spritePromise = PIXI.Assets.load(['challengerSprite', 'bossSprite']);
-        spritePromise.then((textures) => {
-            challengerSprite = PIXI.Sprite.from(textures.challengerSprite);
-            bossSprite = PIXI.Sprite.from(textures.bossSprite);
-            this.updateCanvas();
-        });
-    } */
     #setContainerSize(){
         this.container.style.width = this.container.clientHeight * 2 / 3+"px";
     }
@@ -65,7 +57,7 @@ export class GameCanvas {
         this.#drawBoss();
         this.#drawChallenger();
         this.#drawBulletsAndTrails();
-    } 
+    }
     addBullet(bullet) {
         this.bulletApp.stage.addChild(bullet);
     }
@@ -73,17 +65,17 @@ export class GameCanvas {
         this.bulletApp.stage.removeChild(bullet);
     }
     #drawChallenger() {
-        //can potentially be stored
         let challengerSprites = spriteLoader.getCurrentChallengerSprite();
-        let challengerSprite = challengerSprites.urls[0];
-        let challengerAspectRatio = challengerSprite.width / challengerSprite.height;
+        this.challengerSprite.texture = challengerSprites.urls[0];
+
+        let challengerAspectRatio = this.challengerSprite.texture.width / this.challengerSprite.texture.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
         let challengerHeight = CANVAS_UNIT * challenger.spriteScaling;
-        challengerSprite.anchor.set(0.5);
-        challengerSprite.x = CANVAS_UNIT * challenger.x;
-        challengerSprite.y = CANVAS_UNIT * challenger.y;
-        challengerSprite.width = challengerWidth;
-        challengerSprite.height = challengerHeight;
+        this.challengerSprite.anchor.set(0.5);
+        this.challengerSprite.x = CANVAS_UNIT * challenger.x;
+        this.challengerSprite.y = CANVAS_UNIT * challenger.y;
+        this.challengerSprite.width = challengerWidth;
+        this.challengerSprite.height = challengerHeight;
         if (INPUTS_CHALLENGER.shift) {
             const challengerShiftGraphic = new PIXI.Graphics();
             challengerShiftGraphic.lineStyle(0);
@@ -92,21 +84,21 @@ export class GameCanvas {
             challengerShiftGraphic.endFill();
             this.characterApp.stage.addChild(challengerShiftGraphic);
         }
-        this.characterApp.stage.addChild(challengerSprite);
+        this.characterApp.stage.addChild(this.challengerSprite);
     }
     #drawBoss() {
-        //can potentially be stored
         let bossSprites = spriteLoader.getCurrentBossSprite();
-        let bossSprite = bossSprites.urls[0];
-        let bossAspectRatio = bossSprite.width / bossSprite.height;
+        this.bossSprite.texture = bossSprites.urls[0];
+        
+        let bossAspectRatio = this.bossSprite.texture.width / this.bossSprite.texture.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
-        bossSprite.anchor.set(0.5);
-        bossSprite.x = CANVAS_UNIT * boss.x;
-        bossSprite.y = CANVAS_UNIT * boss.y;
-        bossSprite.width = bossWidth;
-        bossSprite.height = bossHeight;
-        this.characterApp.stage.addChild(bossSprite);
+        this.bossSprite.anchor.set(0.5);
+        this.bossSprite.x = CANVAS_UNIT * boss.x;
+        this.bossSprite.y = CANVAS_UNIT * boss.y;
+        this.bossSprite.width = bossWidth;
+        this.bossSprite.height = bossHeight;
+        this.characterApp.stage.addChild(this.bossSprite);
     }
     #drawBulletsAndTrails() {
         allBullets.forEach(bullet => {
