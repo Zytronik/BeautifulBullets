@@ -3,6 +3,7 @@ import { challenger, boss, spriteLoader } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
+import { SpriteAnimator } from "./spriteAnimator.js";
 
 export let CANVAS_UNIT;
 export class GameCanvas {
@@ -23,6 +24,9 @@ export class GameCanvas {
 
         this.challengerSprite = new PIXI.Sprite();
         this.bossSprite = new PIXI.Sprite();
+
+        this.bossSpriteAnimator = new SpriteAnimator(boss.sprites);
+        this.challengerSpriteAnimator = new SpriteAnimator(challenger.sprites);
         
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
@@ -77,8 +81,7 @@ export class GameCanvas {
         }
     }
     #drawChallenger() {
-        let challengerSprites = spriteLoader.getCurrentChallengerTexture();
-        this.challengerSprite.texture = challengerSprites.textures[0];
+        this.challengerSprite.texture = this.challengerSpriteAnimator.getNextFrame(challenger.getCurrentSpriteState());
 
         let challengerAspectRatio = this.challengerSprite.texture.width / this.challengerSprite.texture.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
@@ -99,8 +102,7 @@ export class GameCanvas {
         
     }
     #drawBoss() {
-        let bossSprites = spriteLoader.getCurrentBossTexture();
-        this.bossSprite.texture = bossSprites.textures[0];
+        this.bossSprite.texture = this.bossSpriteAnimator.getNextFrame(boss.getCurrentSpriteState());
         
         let bossAspectRatio = this.bossSprite.texture.width / this.bossSprite.texture.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;

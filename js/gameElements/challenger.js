@@ -4,6 +4,7 @@ import { allBullets, Bullet } from "./bullet.js";
 import { boss, bulletTexture, isGameStateEnraged, spriteLoader } from "../main.js";
 import { sounds } from "../sound/sound.js";
 import { EXAMPLE_BULLET_PROPERTIES_CHALLENGER } from "../data/bulletPresets.js";
+import { SPRITE_STATES } from "../view/spriteLoader.js";
 
 export class Challenger {
     constructor(challengerData) {
@@ -11,8 +12,7 @@ export class Challenger {
         this.y = BOARD_HEIGHT * 5 / 6;
 
         this.sprites = spriteLoader.getChallengerTextures();
-        /* this.sprite = new Image();
-        this.sprite.src = challengerData.spriteUrl; */
+        /* this.spriteState = SPRITE_STATES.IDLE; */
         this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;
         this.hitboxColor = challengerData.hitboxColor;
@@ -185,5 +185,14 @@ export class Challenger {
             this.iFramesCounter++;
             this.isInvincible = (this.iFramesCounter < CHALLENGER_I_FRAMES);
         }
+    }
+    getCurrentSpriteState(){
+        if(INPUTS_CHALLENGER.left === true && INPUTS_CHALLENGER.right === false){
+            return SPRITE_STATES.LEFT;
+        }
+        if(INPUTS_CHALLENGER.right === true && INPUTS_CHALLENGER.left === false){
+            return SPRITE_STATES.RIGHT;
+        }
+        return SPRITE_STATES.IDLE;
     }
 }
