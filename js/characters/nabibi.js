@@ -5,7 +5,7 @@ import { sounds } from "../sound/sound.js";
 import { EXAMPLE_BULLET_PROPERTIES } from "../data/bulletPresets.js";
 
 export const nabibi = {
-    "name": "Nabil",
+    "name": "Nabil de Tester",
     "spriteUrl": "./img/nabil.jpg",
 
     // C H A L L E N G E R
