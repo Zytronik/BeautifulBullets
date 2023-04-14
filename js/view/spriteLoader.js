@@ -1,6 +1,12 @@
 import { match, boss, challenger } from "../main.js"; 
 import { INPUTS_CHALLENGER, INPUTS_BOSS} from "../settings/inputSettings.js";
 
+export let SPRITE_STATES = {
+    IDLE: "idle",
+    RIGHT: "right",
+    LEFT: "left",
+}
+
 export class SpriteLoader {
     constructor(character1, character2){
         this.character1 = character1;
@@ -63,30 +69,6 @@ export class SpriteLoader {
         }else{
             return this.loadedTextures["character1"]["boss"];
         }
-    }
-    #getCurrentChallengerState(){
-        if(INPUTS_CHALLENGER.left === true && INPUTS_CHALLENGER.right === false){
-            return "left";
-        }
-        if(INPUTS_CHALLENGER.right === true && INPUTS_CHALLENGER.left === false){
-            return "right";
-        }
-        return "idle";
-    }
-    #getCurrentBossState(){
-        if(INPUTS_BOSS.left === true && INPUTS_BOSS.right === false){
-            return "left";
-        }
-        if(INPUTS_BOSS.right === true && INPUTS_BOSS.left === false){
-            return "right";
-        }
-        return "idle";
-    }
-    getCurrentChallengerTexture(){
-        return challenger.sprites[this.#getCurrentChallengerState()];
-    }
-    getCurrentBossTexture(){
-        return boss.sprites[this.#getCurrentBossState()];
     }
     #countAllUrls(){
         let unloadedTextures = [];

@@ -1,6 +1,7 @@
 import { isGameStateEnraged, spriteLoader } from "../main.js";
 import { BOARD_WIDTH, BOARD_HEIGHT, FPS } from "../settings/gameSettings.js";
 import { INPUTS_BOSS } from "../settings/inputSettings.js";
+import { SPRITE_STATES } from "../view/spriteLoader.js";
 
 export class Boss {
     constructor(bossData) {
@@ -16,8 +17,7 @@ export class Boss {
         this.yBarrier = BOARD_HEIGHT * 2 / 7;
 
         this.sprites = spriteLoader.getBossTextures();
-        /* this.sprite = new Image();
-        this.sprite.src = bossData.spriteUrl; */
+        /* this.spriteState = SPRITE_STATES.IDLE; */
         this.spriteScaling = bossData.spriteScaling;
         this.radius = bossData.stats.radius;
 
@@ -177,5 +177,14 @@ export class Boss {
                 this.enrageCoolDown = 0;
             }
         }
+    }
+    getCurrentSpriteState(){
+        if(INPUTS_BOSS.left === true && INPUTS_BOSS.right === false){
+            return SPRITE_STATES.LEFT;
+        }
+        if(INPUTS_BOSS.right === true && INPUTS_BOSS.left === false){
+            return SPRITE_STATES.RIGHT;
+        }
+        return SPRITE_STATES.IDLE;
     }
 }

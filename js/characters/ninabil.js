@@ -7,7 +7,7 @@ import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
 
 export const ninabil = {
     "name": "Ninja Boy",
-    "spriteUrl": "./img/nabil/nabil.png",
+    "spriteUrl": "./img/ninabil/portrait.png",
 
     // C H A L L E N G E R
     "challenger": {
@@ -16,27 +16,24 @@ export const ninabil = {
         "sprites": {
             "idle": {
                 "urls": [
-                    "./img/nabil/nabil.png",
-                    "./img/nabil/nabil2.png",
-                    "./img/nabil/nabil3.png",
-                    "./img/nabil/nabil4.png",
+                    "./img/ninabil/challenger.png",
                 ],
                 "framerate": 50,
             },
             "left": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/ninabil/challenger_left.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/ninabil/challenger_right.png"
                 ],
                 "framerate": 20,
             }
         },
-        "spriteScaling": 30,
+        "spriteScaling": 95,
         "radius": 5,
         "hitboxColor": "red",
         "bulletVisuals": {
@@ -81,25 +78,25 @@ export const ninabil = {
         "sprites": {
             "idle": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/ninabil/boss.png"
                 ],
                 "framerate": 20,
             },
             "left": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/ninabil/boss_left.png"
                 ],
                 "framerate": 20,
             },
             "right": {
                 "urls": [
-                    "./img/nabil/nabil.png"
+                    "./img/ninabil/boss_right.png"
                 ],
                 "framerate": 20,
             }
         },
-        "spriteScaling": 30,
-        "healthBarSpriteUrl": "./img/nabil/nabil.png",
+        "spriteScaling": 110,
+        "healthBarSpriteUrl": "./img/ninabil/portrait.png",
         "healthBarName": "Nabil",
 
         // S T A T S 
