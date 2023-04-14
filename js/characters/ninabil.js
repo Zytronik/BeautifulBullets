@@ -117,7 +117,7 @@ export const ninabil = {
                     let lifetime = 6;
                     let mouseCoords = convertMouseCoordinatesToCanvasCoordinates();
                     let amplitude = 0.001 * Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) + 0.75;
-                    let length = Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) / 5;
+                    let length = Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) / 3;
                     for (let i = 0; i < bulletAmount; i++) {
                         let trajectoryAttributes = [i, mouseCoords[0], mouseCoords[1], amplitude, boss.x, boss.y, length, 0, 0]
                         let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
@@ -169,8 +169,8 @@ export const ninabil = {
                 "duration": 0, //in seconds
                 "arrived": false,
 
-                "abilityName": "Ability 1",
-                "description": "This is a description DEAL WITH IT",
+                "abilityName": "Shuriken",
+                "description": "Those Shurikens will annihalate your targets, if you can aim it",
                 "iconUrl": "img/bg.png",
             },
             "ability2": {
@@ -279,7 +279,7 @@ export const ninabil = {
         "passive": {
             "use": function () {
                 sounds["bossShotSound"].play();
-                let bulletAmount = 65;
+                let bulletAmount = 100;
                 let lifetime = 25;
 
                 if ((bulletAmount % 5) != 0) {
@@ -308,6 +308,7 @@ export const ninabil = {
                     let angle = this.trajectoryAttributes[2],
                         lastVertex = this.trajectoryAttributes[3],
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
+                        speedMultiplier = 1.4,
                         x = 0,
                         y = 0;
 
@@ -342,11 +343,11 @@ export const ninabil = {
                         }
 
                         if (this.trajectoryAttributes[0] % 2 == 0) {
-                            x = (Math.sin(angle + this.trajectoryAttributes[7]) / stretchFactor);
-                            y = (Math.cos(angle + this.trajectoryAttributes[7]) / stretchFactor);
+                            x = (Math.sin(angle + this.trajectoryAttributes[7]) / stretchFactor) * speedMultiplier;
+                            y = (Math.cos(angle + this.trajectoryAttributes[7]) / stretchFactor) * speedMultiplier;
                         } else {
-                            x = (Math.sin(angle - this.trajectoryAttributes[7]) / stretchFactor);
-                            y = (Math.cos(angle - this.trajectoryAttributes[7]) / stretchFactor);
+                            x = (Math.sin(angle - this.trajectoryAttributes[7]) / stretchFactor) * speedMultiplier;
+                            y = (Math.cos(angle - this.trajectoryAttributes[7]) / stretchFactor) * speedMultiplier;
                         }
 
                     }
@@ -357,7 +358,7 @@ export const ninabil = {
                 "radius": 7,
                 "color": "white"
             },
-            "frequency": 2, //in seconds
+            "frequency": 1.75, //in seconds
 
             "abilityName": "Passive",
             "description": "This is a description for a Passive Ability.",
@@ -366,7 +367,7 @@ export const ninabil = {
         "enrage": {
             "use": function () {
                 sounds["bossShotSound"].play();
-                let bulletAmount = 90;
+                let bulletAmount = 70;
                 let lifetime = 25;
 
                 if ((bulletAmount % 5) != 0) {
@@ -438,8 +439,8 @@ export const ninabil = {
                             y = (Math.cos(angle - this.trajectoryAttributes[7]) / stretchFactor) + this.trajectoryAttributes[8];
                         }
 
-                        if (y >= 2) {
-                            y = 2;
+                        if (y >= 1.8) {
+                            y = 1.8;
                         }
 
                     }
@@ -451,7 +452,7 @@ export const ninabil = {
                 "radius": 10,
                 "color": "white"
             },
-            "frequency": 1, //in seconds
+            "frequency": 1.2, //in seconds
 
             "abilityName": "Passive",
             "description": "This is a description for a Passive Ability.",
