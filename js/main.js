@@ -200,7 +200,7 @@ export function lowerBossHealth() {
 
 export function setTime() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
-        match.elapsedTimeInFrames = 115 * FPS;
+        match.elapsedTimeInFrames = 120 * FPS;
         console.log("Timer set to " + match.elapsedTimeInFrames / FPS + " Seconds");
     }
 }
