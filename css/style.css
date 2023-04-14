@@ -182,6 +182,16 @@ article.game .bulletCanvas {
 	z-index: 1;
 }
 
+article.game .backgroundCanvas {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 0;
+}
+
 article.game {
 	display: flex;
 	flex-direction: row;
@@ -238,9 +248,9 @@ article.game .player {
 article.game .player .canvas {
 	height: 100%;
 	position: relative;
-	background-image: url("../img/bg.png");
+	/* background-image: url("../img/bg.png");
 	background-repeat: repeat;
-	background-size: 10%;
+	background-size: 10%; */
 	overflow: hidden;
 }
 
@@ -279,7 +289,7 @@ article.game .player .canvas > canvas {
 
 article.game .player .canvas::after {
 	content: "";
-	background-color: rgba(0, 0, 0, 0.8);
+	background-color: rgba(0, 0, 0, 0.7);
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -778,7 +788,7 @@ article.game .boss-abilities .ability-wrapper .overlay {
 }
 
 article.game .boss-abilities .ability-wrapper .overlay > div {
-	background-color: red;
+	background-color: #c91c5d;
 	height: 0%;
 	bottom: 0;
 	position: absolute;
@@ -789,13 +799,15 @@ article.game .boss-abilities .ability-wrapper > img {
 	object-fit: contain;
 	width:100%;
 	background-color: white;
+	border-radius: 10px;
 }
 
 article.game .challenger-abilitie {
-	width: 20px;
+	border-radius: 10px;
+	width: 24px;
 	height: 80%;
 	position: absolute;
-	left: -20px;
+	left: -34px;
 	background-color: white;
 	bottom: 0;
 	transition: all 1000ms;
@@ -814,11 +826,13 @@ article.game .challenger-abilitie .grace-bar {
 article.game .challenger-abilitie .grace-bar>div {
 	width: 100%;
 	height: 0%;
-	background-color: blue;
+	background-color: #c91c5d;
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	right: 0;
+	border-bottom-left-radius: 10px;
+	border-bottom-right-radius: 10px;
 }
 
 article.game .challenger-abilitie .grace-bar>span {
@@ -844,7 +858,7 @@ article.game .boss-healthbar {
 	left: 50%;
 	top: 0;
 	transform: translate(-50%, -50%);
-	width: 75%;
+	width: 80%;
 	z-index: 3;
 	height: 50px;
 	transition: all 1000ms;
@@ -879,13 +893,15 @@ article.game .boss-healthbar .boss-desc img {
 }
 
 article.game .boss-healthbar .life-bar {
-	height: 25px;
+	height: 30px;
 	border: 1px solid white;
 	top: 50%;
-	left: 45px;
+	left: 50px;
 	position: absolute;
-	width: calc(100% - 50px);
+	width: calc(100% - 55px);
 	transform: translateY(-50%);
+	border-radius: 10px;
+	background-color: rgba(0,0,0,0.9);
 }
 
 article.game .boss-healthbar .life-bar>div {
@@ -897,6 +913,8 @@ article.game .boss-healthbar .life-bar>div {
 	left: 0;
 	bottom: 0;
 	right: 0;
+	border-top-left-radius: 10px;
+	border-bottom-left-radius: 10px;
 }
 
 article.game .challenger-healthbar {

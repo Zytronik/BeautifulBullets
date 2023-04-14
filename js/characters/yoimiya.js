@@ -49,7 +49,7 @@ export const yoimiya = {
             "bulletDamage": 4.1,
             "moveSpeed": 9,
         },
-        "shiftSpeed": 1.2,
+        "shiftSpeed": 2.1,
         "bulletSpeed": 1.3,
 
         // S P E C I A L
@@ -103,7 +103,7 @@ export const yoimiya = {
         "stats": {
             "radius": 10,
             "moveSpeed": 6,
-            "maxHealth": 4000,
+            "maxHealth": 3500,
         },
 
         // A B I L I T I E S
