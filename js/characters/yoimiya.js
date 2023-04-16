@@ -111,108 +111,15 @@ export const yoimiya = {
         "abilities": {
             "ability1": {
                 "use": function () {
-                    let bulletAmount = 2,
-                        lifetime = 10;
-                    for (let i = 0; i < bulletAmount; i++) {
-                        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
-                            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
-                            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
-                        allBullets.push(bullet);
-                    }
-
-                    function trajectory() {
-                        let x = 0,
-                            y = 1,
-                            bulletNumber = this.trajectoryAttributes[0],
-                            bulletAmount = this.trajectoryAttributes[1],
-                            shiftCounter = this.trajectoryAttributes[2],
-                            lifetime = this.trajectoryAttributes[3],
-                            bossX = this.trajectoryAttributes[4],
-                            bossY = this.trajectoryAttributes[5],
-                            shiftMovement = shiftCounter / lifetime;
-
-                        if (this.framesAlive <= 30) {
-                            x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
-                            y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
-                            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
-                                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
-                                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
-                            this.trajectoryAttributes[4] = lengthX / length;
-                            this.trajectoryAttributes[5] = lengthY / length;
-                        } else {
-                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
-                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
-                            this.trajectoryAttributes[2] += 0.7;
-                        }
-                        return [x, y];
-                    }
+                    new DualChakram();
                 },
                 "deactivate": function () {
 
                 },
-                "bulletVisuals": {
-                    "radius": 5,
-                    "color": "red"
-                },
-                "coolDown": 3, //in seconds
+                "coolDown": 1, //in seconds
                 "duration": 0, //in seconds
                 "abilityName": "Blazing Chakram",
-                "description": "An aimed shot of bullets with the form of a spinning Chakram",
-                "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
-
-                //optional attributes for ability
-            },
-            "ability2": {
-                "use": function () {
-                    let bulletAmount = 2,
-                        lifetime = 10;
-                    for (let i = 0; i < bulletAmount; i++) {
-                        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
-                            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
-                            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
-                        allBullets.push(bullet);
-                    }
-
-                    function trajectory() {
-                        let x = 0,
-                            y = 1,
-                            bulletNumber = this.trajectoryAttributes[0],
-                            bulletAmount = this.trajectoryAttributes[1],
-                            shiftCounter = this.trajectoryAttributes[2],
-                            lifetime = this.trajectoryAttributes[3],
-                            bossX = this.trajectoryAttributes[4],
-                            bossY = this.trajectoryAttributes[5],
-                            shiftMovement = shiftCounter / lifetime;
-
-                        if (this.framesAlive <= 30) {
-                            x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
-                            y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
-                            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
-                                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
-                                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
-                            this.trajectoryAttributes[4] = lengthX / length;
-                            this.trajectoryAttributes[5] = lengthY / length;
-                        } else {
-                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
-                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
-                            this.trajectoryAttributes[2] += 0.7;
-                        }
-                        return [x, y];
-                    }
-                },
-                "deactivate": function () {
-
-                },
-                "bulletVisuals": {
-                    "radius": 5,
-                    "color": "red"
-                },
-                "coolDown": 3, //in seconds
-                "duration": 0, //in seconds
-                "abilityName": "Blazing Chakram",
-                "description": "An aimed shot of bullets with the form of a spinning Chakram",
+                "description": "Throw two Chakrams burned by Blaze.",
                 "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
 
                 //optional attributes for ability
@@ -224,73 +131,11 @@ export const yoimiya = {
                 "deactivate": function () {
 
                 },
-                "bulletTexture": {
-
-                },
-                "bulletProperties": {
-
-                },
-                "coolDown": 10, //in seconds
+                "coolDown": 1, //in seconds
                 "duration": 0, //in seconds
                 "abilityName": "The Fire of Grenades",
-                "description": "Throws a fireworks grenade that explodes after being shot.",
+                "description": "A fire that explodes after being hit by a Chakram.",
                 "iconUrl": "img/yoimiya/Firework.png",
-            },
-            "ability2": {
-                "use": function () {
-                    let bulletAmount = 8,
-                        lifetime = 20;
-                    for (let i = 0; i < bulletAmount; i++) {
-                        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
-                            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
-                            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
-                        this.mybullets.push(bullet)
-                        allBullets.push(bullet);
-                    }
-
-                    function trajectory() {
-                        let x = 0,
-                            y = 1,
-                            bulletNumber = this.trajectoryAttributes[0],
-                            bulletAmount = this.trajectoryAttributes[1],
-                            shiftCounter = this.trajectoryAttributes[2],
-                            lifetime = this.trajectoryAttributes[3],
-                            bossX = this.trajectoryAttributes[4],
-                            bossY = this.trajectoryAttributes[5],
-                            shiftMovement = shiftCounter / lifetime;
-
-                        if (this.framesAlive <= 60) {
-                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
-                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
-                            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
-                                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
-                                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
-                            this.trajectoryAttributes[4] = lengthX / length;
-                            this.trajectoryAttributes[5] = lengthY / length;
-                        } else {
-                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
-                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
-                            this.trajectoryAttributes[2] += 0.6;
-                        }
-                        return [x, y];
-                    }
-                },
-                "deactivate": function () {
-
-                },
-                "bulletVisuals": {
-                    "radius": 5,
-                    "color": "red"
-                },
-                "coolDown": 0.5, //in seconds
-                "duration": 0, //in seconds
-                "abilityName": "Blazing Chakram",
-                "description": "An aimed shot of bullets with the form of a spinning Chakram",
-                "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
-
-                //optional attributes for ability
-                "mybullets": [],
             },
             "ability3": {
                 "use": function () {
@@ -298,18 +143,18 @@ export const yoimiya = {
                     if (boss.canBeControlled) {
 
                         coords = convertMouseCoordinatesToCanvasCoordinates();
-                            let x = coords[0],
-                                y = coords[1];
-                            if (x < 0) {
-                                coords[0] = 0;
-                            } else if (x > BOARD_WIDTH) {
-                                coords[0] = BOARD_WIDTH;
-                            }
-                            if (y < 0) {
-                                coords[1] = 0;
-                            } else if (y > BOARD_HEIGHT) {
-                                coords[1] = BOARD_HEIGHT;
-                            }
+                        let x = coords[0],
+                            y = coords[1];
+                        if (x < 0) {
+                            coords[0] = 0;
+                        } else if (x > BOARD_WIDTH) {
+                            coords[0] = BOARD_WIDTH;
+                        }
+                        if (y < 0) {
+                            coords[1] = 0;
+                        } else if (y > BOARD_HEIGHT) {
+                            coords[1] = BOARD_HEIGHT;
+                        }
 
                         this.originalBossCoords.push(boss.x, boss.y);
                         this.path.push(coords[0], coords[1]);
@@ -403,10 +248,6 @@ export const yoimiya = {
                     this.originalBossCoords = [];
                     boss.canBeControlled = true;
                 },
-                "bulletVisuals": {
-                    "radius": 5,
-                    "color": "red"
-                },
                 "coolDown": 5, //in seconds
                 "duration": 4, //in seconds
                 "abilityName": "Path of Destruction",
@@ -427,27 +268,50 @@ export const yoimiya = {
                     bool = false;
                 sounds["bossShotSound"].play();
                 for (let i = 0; i < bulletAmount; i++) {
-                    let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
-                        spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                        attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03],
-                        bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
-                    allBullets.push(bullet);
+                    let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
+                    let spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
+                    let attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03];
+                    let bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
+                }
+
+                let colorSet = getRandomColorSet();
+                function getBulletTexture() {
+                    return createBulletTexture({
+                        radius: 8,
+                        mainColor: colorSet.pastel,
+                        outerBorderColor: colorSet.dark,
+                        outerBorderWidth: 2,
+                        innerBorderColor: colorSet.full,
+                        innerborderWidth: 3,
+                    });
+                }
+    
+                function getBulletProperties() {
+                    let bulletProperty = {
+                        origin: BULLET_ORIGIN.BOSS,
+                        tag: BULLET_TAG.NONE,
+                        showTrail: true,
+                        trailColor: "#75757575",
+                        trailEndWidth: 4,
+                        trailLength: 4,
+                    }
+                    return bulletProperty;
                 }
 
                 function trajectory() {
-                    let currentBulletID = this.trajectoryAttributes[0],
-                        totalBullets = this.trajectoryAttributes[1],
-                        shiftCounter = this.trajectoryAttributes[2],
-                        lifetime = this.trajectoryAttributes[3],
-                        bool = this.trajectoryAttributes[4],
-                        bossX = this.trajectoryAttributes[5],
-                        bossY = this.trajectoryAttributes[6],
-                        bulletPosX = this.trajectoryAttributes[7],
-                        bulletPosY = this.trajectoryAttributes[8],
-                        accelerator = this.trajectoryAttributes[9],
-                        shiftMovement = shiftCounter / lifetime,
-                        x = 0,
-                        y = 0;
+                    let currentBulletID = this.trajectoryAttributes[0];
+                    let totalBullets = this.trajectoryAttributes[1];
+                    let shiftCounter = this.trajectoryAttributes[2];
+                    let lifetime = this.trajectoryAttributes[3];
+                    let bool = this.trajectoryAttributes[4];
+                    let bossX = this.trajectoryAttributes[5];
+                    let bossY = this.trajectoryAttributes[6];
+                    let bulletPosX = this.trajectoryAttributes[7];
+                    let bulletPosY = this.trajectoryAttributes[8];
+                    let accelerator = this.trajectoryAttributes[9];
+                    let shiftMovement = shiftCounter / lifetime;
+                    let x = 0;
+                    let y = 0;
 
                     if (Math.random() <= 0.997 && bool == false) {
                         x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
@@ -470,10 +334,6 @@ export const yoimiya = {
                     }
                     return [x, y];
                 }
-            },
-            "bulletVisuals": {
-                "radius": 5,
-                "color": "orange"
             },
             "frequency": 2, //in seconds
 
@@ -530,10 +390,6 @@ export const yoimiya = {
                     return [x, y];
                 }
             },
-            "bulletVisuals": {
-                "radius": 10,
-                "color": "red"
-            },
             "frequency": 1.3, //trigger once every [] seconds
 
             "abilityName": "Catherine Wheel (Passive)",
@@ -544,111 +400,84 @@ export const yoimiya = {
 }
 
 
-
-/*
-
-            "ability1": {
-                "use": function () {
-                    if (!this.secondCast) {
-                        let bulletAmount = 30,
-                            lifetime = 20,
-                            random1 = Math.random();
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let attributes = [i, bulletAmount, random1, 0, Math.random() * 15 + 1, bulletAmount],
-                                customBulletVisuals = { radius: 10, color: "yellow" },
-                                bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectoryBeforeSecondCast, attributes, lifetime);
-                            this.mybullets.push(bullet);
-                            allBullets.push(bullet);
-                        }
-                        for (let i = 0; i < Math.round(bulletAmount / 1.5); i++) {
-                            let attributes = [i, Math.round(bulletAmount / 1.5), random1, 0, Math.random() * 15 + 1, bulletAmount],
-                                customBulletVisuals = { radius: 10, color: "yellow" },
-                                bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectoryBeforeSecondCast, attributes, lifetime);
-                            this.mybullets.push(bullet);
-                            allBullets.push(bullet);
-                        }
-
-                        this.secondCast = !this.secondCast;
-                    }
-                    else if (this.secondCast) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectoryAfterSecondCast;
-                            bullet.radius = 4;
-                            bullet.color = "rgb(" + (Math.random() * 100 + 155) + ", 0, 0)";
-                        })
-                        this.secondCast = !this.secondCast;
-                        this.mybullets = []
-                    }
-
-                    function trajectoryBeforeSecondCast() {
-                        let randomNumber1 = this.trajectoryAttributes[2],
-                            x = randomNumber1 * 5 - 2.5,
-                            y = 1;
-                        return [x, y];
-                    }
-
-                    function trajectoryAfterSecondCast() {
-                        let x = 0,
-                            y = 0,
-                            bulletNumber = this.trajectoryAttributes[0],
-                            bulletAmount1 = this.trajectoryAttributes[1],
-                            accelerator = this.trajectoryAttributes[3],
-                            randomNumber2 = this.trajectoryAttributes[4],
-                            bulletAmount2 = this.trajectoryAttributes[5];
-
-                        if (bulletAmount1 == bulletAmount2) {
-                            x = Math.sin((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2,
-                                y = Math.cos((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2 + accelerator;
-                        } else {
-                            x = Math.sin((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2 * 0.5,
-                                y = Math.cos((2 * Math.PI) / bulletAmount1 * bulletNumber) * randomNumber2 * 0.5 + accelerator;
-                        }
-                        if (y >= 2) {
-                            y = 2;
-                        }
-                        if (accelerator <= 5) {
-                            this.trajectoryAttributes[3] += 0.01;
-                        }
-                        this.trajectoryAttributes[4] = randomNumber2 ** 0.96;
-                        return [x, y];
-                    }
-                },
-                "deactivate": function () {
-
-                },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
-                "coolDown": 1, //in seconds
-                "duration": 0, //in seconds
-                "abilityName": "Fireworks",
-                "description": "One Bullet explodes into a lot of Bullets, what did you expect?",
-                "iconUrl": "img/yoimiya/Firework.png",
-
-                //optional attributes for ability
-                "secondCast": false,
-                "mybullets": [],
-            },
-*/
-
 function getRandomColorSet() {
-    let redFull = ["#ff0000", "#ff4000", "#ff0040"], 
-        redPastel = ["#ffbbbb", "#ffcbbb", "#ffbbcb", "#ffe0e0"], 
+    let redFull = ["#ff0000", "#ff4000", "#ff0040"],
+        redPastel = ["#ffbbbb", "#ffcbbb", "#ffbbcb", "#ffe0e0"],
         redDark = ["#770000", "#773000", "#770030", "#330000"];
 
     let colors = [[redFull, redPastel, redDark]];
-    
+
     let randomColor = colors[Math.floor(Math.random() * colors.length)];
     let randomFull = randomColor[0][Math.floor(Math.random() * randomColor[0].length)];
     let randomPastel = randomColor[1][Math.floor(Math.random() * randomColor[1].length)];
     let randomDark = randomColor[2][Math.floor(Math.random() * randomColor[2].length)];
-    return {full: randomFull, pastel: randomPastel, dark: randomDark};
+    return { full: randomFull, pastel: randomPastel, dark: randomDark };
 }
 
-class Shot {
+let loadTextureOnFirstCall = true;
+let chakramTexture;
+class DualChakram {
     constructor() {
+        if (loadTextureOnFirstCall) {
+            chakramTexture = createBulletTexture(this.#getTexture());
+        }
 
+        let bulletAmount = 2
+        let lifetime = 10;
+        for (let i = 0; i < bulletAmount; i++) {
+            let x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
+            let y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
+            let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,];
+            new Bullet(x, y, chakramTexture, this.#getProperties(), this.#getTrajectory(), attributes, lifetime);
+        }
+    }
+    #getTexture() {
+        return {
+            radius: 16,
+            mainColor: "#ff7b0000",
+            outerBorderColor: "#e8ded2ee",
+            outerBorderWidth: 4,
+            innerBorderColor: "#ff7b00",
+            innerborderWidth: 5,
+        }
+    }
+    #getProperties() {
+        return {
+            origin: BULLET_ORIGIN.BOSS,
+            tag: BULLET_TAG.REGULAR_SHOT,
+            showTrail: true,
+            trailColor: "#d0c0acee",
+            trailEndWidth: 4,
+            trailLength: 4,
+        }
+    }
+    #getTrajectory() {
+        return function () {
+            let x = 0,
+                y = 1,
+                patternID = this.trajectoryAttributes[0],
+                bulletAmount = this.trajectoryAttributes[1],
+                rotationCounter = this.trajectoryAttributes[2],
+                lifetime = this.trajectoryAttributes[3],
+                bossX = this.trajectoryAttributes[4],
+                bossY = this.trajectoryAttributes[5],
+                rotationTranslation = rotationCounter / lifetime;
+
+            if (this.framesAlive <= 30) {
+                x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * patternID + Math.PI) + boss.xSpeedNormalized;
+                y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * patternID + Math.PI) + boss.ySpeedNormalized;
+                let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
+                    lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
+                    length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
+                this.trajectoryAttributes[4] = lengthX / length;
+                this.trajectoryAttributes[5] = lengthY / length;
+            } else {
+                x = Math.sin(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossX * 3;
+                y = Math.cos(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossY * 3;
+                this.trajectoryAttributes[2] += 0.7;
+            }
+            return [x, y];
+        }
     }
 }
 
@@ -657,11 +486,11 @@ class Grenade extends Bullet {
         let colorSet = getRandomColorSet();
         let grenadeTexture = {
             radius: 17,
-            mainColor: colorSet.full,            
+            mainColor: colorSet.full,
             outerBorderColor: colorSet.pastel,
             outerBorderWidth: 3,
             innerBorderColor: colorSet.dark,
-            innerborderWidth: 5,                    
+            innerborderWidth: 5,
         }
 
         let grenadeProperty = {
@@ -672,97 +501,103 @@ class Grenade extends Bullet {
             trailEndWidth: 4,
             trailLength: 4,
         }
-        
+
         let random = (Math.random() - 0.5);
         function trajectory() {
-            console.log(this.framesAlive)
-            let x = random * this.framesAlive/3;
-            let y = 2;
+            let x = random * this.framesAlive / 2;
+            let y = 1 * this.framesAlive / 10;
             return [x, y];
         }
-
         super(boss.x, boss.y, createBulletTexture(grenadeTexture), grenadeProperty, trajectory)
-        let health = 1
+        this.explosionBulletAmount = 30;
+        this.explosionBulletLifetime = 10;
+        let hitBoxHealth = 1
         let tag = BULLET_TAG.REGULAR_SHOT;
         let origin = BULLET_ORIGIN.BOSS;
-        this.hitBox = new HitableCircle(super.x, super.y, super.radius, health, tag, origin, this.#getOnDestroy, [this]);
+        this.hitBox = new HitableCircle(
+            super.x, super.y, super.getRadius(),
+            hitBoxHealth, super.getLifetimeInFrame(),
+            tag, origin,
+            this.#getOnDestroy(), [this, this.explosionBulletAmount, this.explosionBulletLifetime]);
     }
-    nextPos(){
+    nextPos() {
         let next = super.nextPos()
         this.hitBox.x = next.xPos;
         this.hitBox.y = next.yPos;
     }
-    #getBulletProperties() {
-        let bulletProperty = {
-            origin: BULLET_ORIGIN.BOSS,
-            tag: BULLET_TAG.NONE,
-            showTrail: true,
-            trailColor: "#75757575",
-            trailEndWidth: 4,
-            trailLength: 4,
-        }
-        return bulletProperty;
-    }
-    #getBulletTexture() {
-        let colorSet = this.getRandomColorSet();
-        let bulletTexture = {
-            radius: 10,
-            mainColor: colorSet.full,            
-            outerBorderColor: colorSet.pastel,
-            outerBorderWidth: 2,
-            innerBorderColor: colorSet.dark,
-            innerborderWidth: 5,                    
-        }
-    }
-    #getBulletTrajectory() {
-        return function trajectory() {
-            
-        }
-    }
     #getOnDestroy() {
         return function onDestroy() {
-            this.onDestroyAttributes.super.framesAlive = this.onDestroyAttributes.super.lifetime;
-        };
-    }
-}
+            this.onDestroyAttributes[0].framesAlive = this.onDestroyAttributes[0].lifetimeInFrames;
+            let explosionBulletAmount = this.onDestroyAttributes[1];
+            let outerBulletsCount = explosionBulletAmount / 1.5;
+            let innerBulletsCount = explosionBulletAmount - outerBulletsCount;
+            let isOuterBullet = true;
+            let circleDistortionFactor = Math.random() * 15 + 1;
+            let initialGravity = 0;
+            let colorSet = getRandomColorSet();
+            let lifetime = this.onDestroyAttributes[2];
+            for (let patternID = 0; patternID < outerBulletsCount; patternID++) {
+                circleDistortionFactor = Math.random() * 15 + 1;
+                let trajectoryAttributes = [patternID, outerBulletsCount, isOuterBullet, circleDistortionFactor, initialGravity];
+                let bullet = new Bullet(this.x, this.y, getBulletTexture(colorSet), getBulletProperties(), bulletTrajectory, trajectoryAttributes, lifetime);
+                console.log(this.x, this.y)
+                console.log(bullet)
+            }
+            isOuterBullet = false;
+            for (let patternID = 0; patternID < innerBulletsCount; patternID++) {
+                circleDistortionFactor = Math.random() * 15 + 1;
+                let trajectoryAttributes = [patternID, innerBulletsCount, isOuterBullet, circleDistortionFactor, initialGravity];
+                new Bullet(this.x, this.y, getBulletTexture(colorSet), getBulletProperties(), bulletTrajectory, trajectoryAttributes, lifetime);
+            }
+            function getBulletTexture(colorset) {
+                return createBulletTexture({
+                    radius: 8,
+                    mainColor: colorSet.pastel,
+                    outerBorderColor: colorSet.dark,
+                    outerBorderWidth: 2,
+                    innerBorderColor: colorSet.full,
+                    innerborderWidth: 3,
+                });
+            }
 
-/*
-function () {
-    let bulletAmount = 2,
-        lifetime = 10;
-    for (let i = 0; i < bulletAmount; i++) {
-        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
-            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
-            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
-        allBullets.push(bullet);
-    }
+            function getBulletProperties() {
+                let bulletProperty = {
+                    origin: BULLET_ORIGIN.BOSS,
+                    tag: BULLET_TAG.NONE,
+                    showTrail: true,
+                    trailColor: "#75757575",
+                    trailEndWidth: 4,
+                    trailLength: 4,
+                }
+                return bulletProperty;
+            }
 
-    function trajectory() {
-        let x = 0,
-            y = 1,
-            bulletNumber = this.trajectoryAttributes[0],
-            bulletAmount = this.trajectoryAttributes[1],
-            shiftCounter = this.trajectoryAttributes[2],
-            lifetime = this.trajectoryAttributes[3],
-            bossX = this.trajectoryAttributes[4],
-            bossY = this.trajectoryAttributes[5],
-            shiftMovement = shiftCounter / lifetime;
+            function bulletTrajectory() {
+                let x = 0;
+                let y = 0;
+                let patternID = this.trajectoryAttributes[0];
+                let bulletCount = this.trajectoryAttributes[1];
+                let isOuterBullet = this.trajectoryAttributes[2];
+                let circleDistortionFactor = this.trajectoryAttributes[3];
+                let gravity = this.trajectoryAttributes[4];
 
-        if (this.framesAlive <= 30) {
-            x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
-            y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
-            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
-                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
-                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
-            this.trajectoryAttributes[4] = lengthX / length;
-            this.trajectoryAttributes[5] = lengthY / length;
-        } else {
-            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
-            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
-            this.trajectoryAttributes[2] += 0.7;
+                if (isOuterBullet) {
+                    x = Math.sin((2 * Math.PI) / bulletCount * patternID) * circleDistortionFactor;
+                    y = Math.cos((2 * Math.PI) / bulletCount * patternID) * circleDistortionFactor + gravity;
+                } else {
+                    x = Math.sin((2 * Math.PI) / bulletCount * patternID) * circleDistortionFactor * 0.5;
+                    y = Math.cos((2 * Math.PI) / bulletCount * patternID) * circleDistortionFactor * 0.5 + gravity;
+                }
+                if (y >= 2) {
+                    y = 2;
+                }
+                if (gravity <= 5) {
+                    this.trajectoryAttributes[4] += 0.01;
+                }
+                this.trajectoryAttributes[3] = circleDistortionFactor ** 0.96;
+                return [x, y];
+            }
+
         }
-        return [x, y];
     }
 }
-*/

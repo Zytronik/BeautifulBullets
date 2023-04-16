@@ -12,7 +12,7 @@ export class Bullet {
         this.bulletProperties = bulletProperties;
         this.trajectoryFunction = trajectoryFunction;
         this.trajectoryAttributes = trajectoryAttributes;
-        this.lifetime = lifetimeInSeconds * FPS;
+        this.lifetimeInFrames = lifetimeInSeconds * FPS;
         this.framesAlive = 0;
         this.trailHistory = []
         player1Canvas.addBullet(this.sprite1);
@@ -31,13 +31,19 @@ export class Bullet {
         return {xPos: this.logicX, yPos: this.logicY}
     }
     hasBulletFaded() {
-        return (this.framesAlive >= this.lifetime) || this.#isBulletOutOfFrame();
+        return (this.framesAlive >= this.lifetimeInFrames) || this.#isBulletOutOfFrame();
     }
     #isBulletOutOfFrame() {
         let border = this.radius * 3;
         let outsideX = this.logicX <= -border || this.logicX >= BOARD_WIDTH + border;
         let outsideY = this.logicY <= -border || this.logicY >= BOARD_HEIGHT + border;
         return outsideX || outsideY;
+    }
+    getRadius() {
+        return this.radius;
+    }
+    getLifetimeInFrame() {
+        return this.lifetimeInFrames;
     }
 }
 

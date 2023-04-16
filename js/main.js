@@ -260,6 +260,7 @@ function hitDetectionBoss() {
 
 function hitDetectionObjectsRound() {
     allHitableCircles.forEach(function (hitable, i) {
+        hitable.tick();
         const hitableX = hitable.x;
         const hitableX2 = hitable.x * hitable.x;
         const hitableY = hitable.y;
@@ -276,9 +277,8 @@ function hitDetectionObjectsRound() {
                     allBullets.splice(j, 1);
                     player1Canvas.removeBullet(bullet);
                     player2Canvas.removeBullet(bullet);
-                    hitableDestroyed = hitable.takeDamageAndCheckDestroyed();
-                    if (hitableDestroyed) {
-                        allHitableCircles.splice(i, 1);
+                    if (!hitableDestroyed) {
+                        hitableDestroyed = hitable.takeDamageAndCheckDestroyed();
                     }
                 }
             }

@@ -1,13 +1,15 @@
+import { BOARD_HEIGHT, BOARD_WIDTH } from "../settings/gameSettings.js";
 
 export let allHitableCircles = [];
 export class HitableCircle {
-    constructor(x, y, radius, health, hittableByTags, hittableByOrigins, onhit, onDestroy, onDestroyAttributes = []) {
+    constructor(x, y, radius, health, lifetimeInFrames, hittableByTags, hittableByOrigins, onDestroy, onDestroyAttributes) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.health = health;
         this.currentHealth = health;
-        this.onhit = onhit;
+        this.lifetimeInFrames = lifetimeInFrames;
+        this.framesAlive = 0;
         this.onDestroy = onDestroy;
         this.onDestroyAttributes = onDestroyAttributes;
         
@@ -26,12 +28,24 @@ export class HitableCircle {
 
         allHitableCircles.push(this);
     }
+    tick(){
+        this.framesAlive++;
+        if((this.framesAlive >= this.lifetimeInFrames) || this.#isHitboxOutOfFrame()){
+            allHitableCircles.splice(allHitableCircles.indexOf(this), 1);
+        }
+    }
     takeDamageAndCheckDestroyed() {
         this.currentHealth--;
-        this.onhit();
         if (this.currentHealth <= 0) {
             this.onDestroy();
+            allHitableCircles.splice(allHitableCircles.indexOf(this), 1);
             return true;
         }
+    }
+    #isHitboxOutOfFrame() {
+        let border = this.radius * 2;
+        let outsideX = this.x <= -border || this.x >= BOARD_WIDTH + border;
+        let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT + border;
+        return outsideX || outsideY;
     }
 }

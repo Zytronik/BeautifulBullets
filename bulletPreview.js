@@ -9,12 +9,12 @@ const app = new PIXI.Application({
 document.body.appendChild(app.view);
 
 export const textureProperties = {
-  radius: 17,
-  mainColor: "f71313",
-  outerBorderColor: "fc8888",
-  outerBorderWidth: "3",
-  innerBorderColor: "7f1616",
-  innerborderWidth: "5",
+  radius: 5,
+  mainColor: "#edc163",
+  outerBorderColor: "#8e6101",
+  outerBorderWidth: 1,
+  innerBorderColor: "#e7a71e",
+  innerborderWidth: 2,
 }
 
 let radius = textureProperties.radius;
