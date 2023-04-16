@@ -263,29 +263,17 @@ export const yoimiya = {
         },
         "passive": {
             "use": function () {
-                let bulletAmount = 45,
-                    lifetime = 20,
-                    bool = false;
+                let bulletAmount = 45;
+                let lifetime = 20;
+                let bool = false;
                 sounds["bossShotSound"].play();
                 for (let i = 0; i < bulletAmount; i++) {
                     let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
                     let spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
                     let attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03];
-                    let bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
+                    new Bullet(spawnBulletX, spawnBulletY, new CatherineWheelTextureFactory().getTexture(), getBulletProperties(), trajectory, attributes, lifetime);
                 }
 
-                let colorSet = getRandomColorSet();
-                function getBulletTexture() {
-                    return createBulletTexture({
-                        radius: 8,
-                        mainColor: colorSet.pastel,
-                        outerBorderColor: colorSet.dark,
-                        outerBorderWidth: 2,
-                        innerBorderColor: colorSet.full,
-                        innerborderWidth: 3,
-                    });
-                }
-    
                 function getBulletProperties() {
                     let bulletProperty = {
                         origin: BULLET_ORIGIN.BOSS,
@@ -401,11 +389,17 @@ export const yoimiya = {
 
 
 function getRandomColorSet() {
-    let redFull = ["#ff0000", "#ff4000", "#ff0040"],
-        redPastel = ["#ffbbbb", "#ffcbbb", "#ffbbcb", "#ffe0e0"],
-        redDark = ["#770000", "#773000", "#770030", "#330000"];
+    let redFull = ["#ff0000", "#ff4000", "#ff0040"];
+    let redPastel = ["#ffbbbb", "#ffcbbb", "#ffbbcb", "#ffe0e0"];
+    let redDark = ["#770000", "#773000", "#770030", "#330000"];
+
+    
+    let blueFull = ["#00fff2", "#009dff", "#00ffd9"];
+    let bluePastel = ["#b3fffb", "#abdfff", "#a9fff2"];
+    let blueDark = ["#007771", "#00436d", "#007664", "#330000"];
 
     let colors = [[redFull, redPastel, redDark]];
+    colors.push([blueFull, bluePastel, blueDark]);
 
     let randomColor = colors[Math.floor(Math.random() * colors.length)];
     let randomFull = randomColor[0][Math.floor(Math.random() * randomColor[0].length)];
@@ -414,11 +408,11 @@ function getRandomColorSet() {
     return { full: randomFull, pastel: randomPastel, dark: randomDark };
 }
 
-let loadTextureOnFirstCall = true;
+let loadDualChakramTextureOnFirstCall = true;
 let chakramTexture;
 class DualChakram {
     constructor() {
-        if (loadTextureOnFirstCall) {
+        if (loadDualChakramTextureOnFirstCall) {
             chakramTexture = createBulletTexture(this.#getTexture());
         }
 
@@ -539,9 +533,7 @@ class Grenade extends Bullet {
             for (let patternID = 0; patternID < outerBulletsCount; patternID++) {
                 circleDistortionFactor = Math.random() * 15 + 1;
                 let trajectoryAttributes = [patternID, outerBulletsCount, isOuterBullet, circleDistortionFactor, initialGravity];
-                let bullet = new Bullet(this.x, this.y, getBulletTexture(colorSet), getBulletProperties(), bulletTrajectory, trajectoryAttributes, lifetime);
-                console.log(this.x, this.y)
-                console.log(bullet)
+                new Bullet(this.x, this.y, getBulletTexture(colorSet), getBulletProperties(), bulletTrajectory, trajectoryAttributes, lifetime);
             }
             isOuterBullet = false;
             for (let patternID = 0; patternID < innerBulletsCount; patternID++) {
@@ -599,5 +591,25 @@ class Grenade extends Bullet {
             }
 
         }
+    }
+}
+
+let loadCatherineWheelTextureOnFirstCall = true;
+let catherineWheelTexture;
+class CatherineWheelTextureFactory {
+    constructor() {
+        if (loadCatherineWheelTextureOnFirstCall) {
+            catherineWheelTexture = createBulletTexture({
+                radius: 5,
+                mainColor: "#edc163",
+                outerBorderColor: "#8e6101",
+                outerBorderWidth: 1,
+                innerBorderColor: "#e7a71e",
+                innerborderWidth: 2,
+            });
+        }
+    }
+    getTexture() {
+        return catherineWheelTexture;
     }
 }
