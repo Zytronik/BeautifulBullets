@@ -5,6 +5,7 @@ import { boss, bulletTexture, isGameStateEnraged, spriteLoader } from "../main.j
 import { sounds } from "../sound/sound.js";
 import { EXAMPLE_BULLET_PROPERTIES_CHALLENGER } from "../data/bulletPresets.js";
 import { SPRITE_STATES } from "../view/spriteLoader.js";
+import { SpriteAnimator } from "../view/spriteAnimator.js";
 
 export class Challenger {
     constructor(challengerData) {
@@ -12,6 +13,7 @@ export class Challenger {
         this.y = BOARD_HEIGHT * 5 / 6;
 
         this.sprites = spriteLoader.getChallengerTextures();
+        this.spriteAnimator = new SpriteAnimator(this.sprites);
         /* this.spriteState = SPRITE_STATES.IDLE; */
         this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;

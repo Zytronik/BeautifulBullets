@@ -50,7 +50,7 @@ export const yoimiya = {
             "bulletDamage": 4.1,
             "moveSpeed": 9,
         },
-        "shiftSpeed": 1.2,
+        "shiftSpeed": 2.1,
         "bulletSpeed": 1.3,
 
         // S P E C I A L
@@ -104,12 +104,120 @@ export const yoimiya = {
         "stats": {
             "radius": 10,
             "moveSpeed": 6,
-            "maxHealth": 4000,
+            "maxHealth": 3500,
         },
 
         // A B I L I T I E S
         "abilities": {
             "ability1": {
+                "use": function () {
+                    let bulletAmount = 2,
+                        lifetime = 10;
+                    for (let i = 0; i < bulletAmount; i++) {
+                        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
+                            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
+                            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
+                            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
+                        allBullets.push(bullet);
+                    }
+
+                    function trajectory() {
+                        let x = 0,
+                            y = 1,
+                            bulletNumber = this.trajectoryAttributes[0],
+                            bulletAmount = this.trajectoryAttributes[1],
+                            shiftCounter = this.trajectoryAttributes[2],
+                            lifetime = this.trajectoryAttributes[3],
+                            bossX = this.trajectoryAttributes[4],
+                            bossY = this.trajectoryAttributes[5],
+                            shiftMovement = shiftCounter / lifetime;
+
+                        if (this.framesAlive <= 30) {
+                            x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
+                            y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
+                            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
+                                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
+                                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
+                            this.trajectoryAttributes[4] = lengthX / length;
+                            this.trajectoryAttributes[5] = lengthY / length;
+                        } else {
+                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
+                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
+                            this.trajectoryAttributes[2] += 0.7;
+                        }
+                        return [x, y];
+                    }
+                },
+                "deactivate": function () {
+
+                },
+                "bulletVisuals": {
+                    "radius": 5,
+                    "color": "red"
+                },
+                "coolDown": 3, //in seconds
+                "duration": 0, //in seconds
+                "abilityName": "Blazing Chakram",
+                "description": "An aimed shot of bullets with the form of a spinning Chakram",
+                "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
+
+                //optional attributes for ability
+            },
+            "ability2": {
+                "use": function () {
+                    let bulletAmount = 2,
+                        lifetime = 10;
+                    for (let i = 0; i < bulletAmount; i++) {
+                        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
+                            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
+                            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
+                            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
+                        allBullets.push(bullet);
+                    }
+
+                    function trajectory() {
+                        let x = 0,
+                            y = 1,
+                            bulletNumber = this.trajectoryAttributes[0],
+                            bulletAmount = this.trajectoryAttributes[1],
+                            shiftCounter = this.trajectoryAttributes[2],
+                            lifetime = this.trajectoryAttributes[3],
+                            bossX = this.trajectoryAttributes[4],
+                            bossY = this.trajectoryAttributes[5],
+                            shiftMovement = shiftCounter / lifetime;
+
+                        if (this.framesAlive <= 30) {
+                            x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
+                            y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
+                            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
+                                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
+                                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
+                            this.trajectoryAttributes[4] = lengthX / length;
+                            this.trajectoryAttributes[5] = lengthY / length;
+                        } else {
+                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
+                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
+                            this.trajectoryAttributes[2] += 0.7;
+                        }
+                        return [x, y];
+                    }
+                },
+                "deactivate": function () {
+
+                },
+                "bulletVisuals": {
+                    "radius": 5,
+                    "color": "red"
+                },
+                "coolDown": 3, //in seconds
+                "duration": 0, //in seconds
+                "abilityName": "Blazing Chakram",
+                "description": "An aimed shot of bullets with the form of a spinning Chakram",
+                "iconUrl": "img/yoimiya/Blazing_Chakram.svg",
+
+                //optional attributes for ability
+            },
+            "ability2": {
                 "use": function () {
                     new Grenade();
                 },
@@ -122,7 +230,7 @@ export const yoimiya = {
                 "bulletProperties": {
 
                 },
-                "coolDown": 3, //in seconds
+                "coolDown": 10, //in seconds
                 "duration": 0, //in seconds
                 "abilityName": "The Fire of Grenades",
                 "description": "Throws a fireworks grenade that explodes after being shot.",
@@ -130,7 +238,43 @@ export const yoimiya = {
             },
             "ability2": {
                 "use": function () {
-                    new Grenade();
+                    let bulletAmount = 8,
+                        lifetime = 20;
+                    for (let i = 0; i < bulletAmount; i++) {
+                        let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,],
+                            x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
+                            y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
+                            bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
+                        this.mybullets.push(bullet)
+                        allBullets.push(bullet);
+                    }
+
+                    function trajectory() {
+                        let x = 0,
+                            y = 1,
+                            bulletNumber = this.trajectoryAttributes[0],
+                            bulletAmount = this.trajectoryAttributes[1],
+                            shiftCounter = this.trajectoryAttributes[2],
+                            lifetime = this.trajectoryAttributes[3],
+                            bossX = this.trajectoryAttributes[4],
+                            bossY = this.trajectoryAttributes[5],
+                            shiftMovement = shiftCounter / lifetime;
+
+                        if (this.framesAlive <= 60) {
+                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.xSpeedNormalized;
+                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + Math.PI) + boss.ySpeedNormalized;
+                            let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
+                                lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
+                                length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
+                            this.trajectoryAttributes[4] = lengthX / length;
+                            this.trajectoryAttributes[5] = lengthY / length;
+                        } else {
+                            x = Math.sin(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossX * 3;
+                            y = Math.cos(Math.PI * 2 / bulletAmount * bulletNumber + shiftMovement + Math.PI / 2) + bossY * 3;
+                            this.trajectoryAttributes[2] += 0.6;
+                        }
+                        return [x, y];
+                    }
                 },
                 "deactivate": function () {
 
@@ -150,24 +294,10 @@ export const yoimiya = {
             },
             "ability3": {
                 "use": function () {
-                    let coords = convertMouseCoordinatesToCanvasCoordinates();
-                    if (!this.hasDuration) {
-                        if (!this.secondCast) {
-                            let x = coords[0],
-                                y = coords[1];
-                            if (x < 0) {
-                                coords[0] = 0;
-                            } else if (x > BOARD_WIDTH) {
-                                coords[0] = BOARD_WIDTH;
-                            }
-                            if (y < 0) {
-                                coords[1] = 0;
-                            } else if (y > boss.yBarrier) {
-                                coords[1] = boss.yBarrier;
-                            }
-                            this.secondCast = true;
+                    let coords;
+                    if (boss.canBeControlled) {
 
-                        } else {
+                        coords = convertMouseCoordinatesToCanvasCoordinates();
                             let x = coords[0],
                                 y = coords[1];
                             if (x < 0) {
@@ -180,94 +310,80 @@ export const yoimiya = {
                             } else if (y > BOARD_HEIGHT) {
                                 coords[1] = BOARD_HEIGHT;
                             }
-                            this.secondCast = false;
-                            this.hasDuration = true;
-                            this.originalBossCoords.push(boss.x, boss.y);
-                        }
-                        this.path.push(coords);
-                    } else {
-                        let firstSegment = 1 * FPS, // in seconds
-                            thirdSegment = 1.5 * FPS, // in seconds
-                            secondSegment = boss.ability3Duration - firstSegment - thirdSegment, // rest of duration
-                            firstMouseX = this.path[0][0],
-                            firstMouseY = this.path[0][1],
-                            secondMouseX = this.path[1][0],
-                            secondMouseY = this.path[1][1],
-                            bossOriginalX = this.originalBossCoords[0],
-                            bossOriginalY = this.originalBossCoords[1];
-                        boss.canBeControlled = false;
 
-                        if (boss.ability3ActiveFor <= firstSegment) {
+                        this.originalBossCoords.push(boss.x, boss.y);
+                        this.path.push(coords[0], coords[1]);
+                    }
+                    let firstSegment = (this.duration - 1) * FPS,
+                        secondSegment = (this.duration * FPS - firstSegment),
+                        bossOriginalX = this.originalBossCoords[0],
+                        bossOriginalY = this.originalBossCoords[1];
+                    boss.canBeControlled = false;
 
-                            let x = (firstMouseX - bossOriginalX) / firstSegment,
-                                y = (firstMouseY - bossOriginalY) / firstSegment;
-                            boss.x += x;
-                            boss.y += y;
-                            boss.xSpeedNormalized = x;
-                            boss.ySpeedNormalized = y;
+                    if (boss.ability3ActiveFor <= firstSegment) {
 
-                        } else if (boss.ability3ActiveFor >= firstSegment && boss.ability3ActiveFor <= secondSegment + firstSegment) {
+                        let x = (this.path[0] - bossOriginalX) / firstSegment,
+                            y = (this.path[1] - bossOriginalY) / firstSegment;
+                        boss.x += x;
+                        boss.y += y;
+                        boss.xSpeedNormalized = x;
+                        boss.ySpeedNormalized = y;
 
-                            let x = (secondMouseX - firstMouseX) / secondSegment,
-                                y = (secondMouseY - firstMouseY) / secondSegment;
-                            boss.x += x;
-                            boss.y += y;
-                            boss.xSpeedNormalized = x;
-                            boss.ySpeedNormalized = y;
-
-                            if (Math.random() <= 0.15) {
-                                let angle = Math.atan2((secondMouseY - firstMouseY), (secondMouseX - firstMouseX));
-                                for (let i = 0; i <= 1; i++) {
-                                    let lifetime = 15,
-                                        length = Math.sqrt((secondMouseX - firstMouseX) ** 2 + (secondMouseY - firstMouseY) ** 2),
-                                        random = Math.random() * 1 + 0.5,
-                                        attributes = [i, firstMouseX, firstMouseY, secondMouseX, secondMouseY, length, angle, random, 0],
-                                        bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
-                                    allBullets.push(bullet);
-                                }
+                        if (Math.random() <= 0.15) {
+                            let angle = Math.atan2((this.path[1] - bossOriginalY), (this.path[0] - bossOriginalX));
+                            for (let i = 0; i <= 1; i++) {
+                                let lifetime = 15,
+                                    length = Math.sqrt((this.path[0] - bossOriginalX) ** 2 + (this.path[1] - bossOriginalY) ** 2),
+                                    random = Math.random() * 1 + 0.5,
+                                    attributes = [i, length, angle, random, 0, this.path, this.originalBossCoords],
+                                    bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
+                                allBullets.push(bullet);
                             }
-                        } else if (boss.ability3ActiveFor >= secondSegment + firstSegment && boss.ability3ActiveFor <= boss.ability3Duration) {
-
-                            let x = (bossOriginalX - secondMouseX) / thirdSegment,
-                                y = (bossOriginalY - secondMouseY) / thirdSegment;
-                            boss.x += x;
-                            boss.y += y;
-                            boss.xSpeedNormalized = x;
-                            boss.ySpeedNormalized = y;
                         }
+
+                    } else {
+
+                        let x = -(this.path[0] - bossOriginalX) / secondSegment,
+                            y = -(this.path[1] - bossOriginalY) / secondSegment;
+                        boss.x += x;
+                        boss.y += y;
+                        boss.xSpeedNormalized = x;
+                        boss.ySpeedNormalized = y;
+
                     }
 
                     function trajectory() {
                         let bulletNumber = this.trajectoryAttributes[0],
-                            firstMouseX = this.trajectoryAttributes[1],
-                            firstMouseY = this.trajectoryAttributes[2],
-                            secondMouseX = this.trajectoryAttributes[3],
-                            secondMouseY = this.trajectoryAttributes[4],
-                            length = this.trajectoryAttributes[5],
-                            angle = this.trajectoryAttributes[6],
-                            random = this.trajectoryAttributes[7],
-                            accelerator = this.trajectoryAttributes[8],
+                            length = this.trajectoryAttributes[1],
+                            angle = this.trajectoryAttributes[2],
+                            random = this.trajectoryAttributes[3],
+                            accelerator = this.trajectoryAttributes[4],
+                            mouseX = this.trajectoryAttributes[5][0],
+                            mouseY = this.trajectoryAttributes[5][1],
+                            bossOriginalX = this.trajectoryAttributes[6][0],
+                            bossOriginalY = this.trajectoryAttributes[6][1],
                             multiplier = 2,
                             divider = 4,
                             x = 0,
                             y = 0;
+
                         if (angle >= Math.PI / 2 || (angle >= -Math.PI / 2 && angle <= 0)) {
                             // /v /^
                             if (bulletNumber % 2 == 1) {
-                                y = -(secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
-                                    x = (secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                y = -(mouseX - bossOriginalX) / length * multiplier * random + accelerator;
+                                x = (mouseY - bossOriginalY) / length * multiplier * random / divider;
                             } else {
-                                y = (secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
-                                    x = -(secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                y = (mouseX - bossOriginalX) / length * multiplier * random + accelerator;
+                                x = -(mouseY - bossOriginalY) / length * multiplier * random / divider;
                             }
                         } else {
                             // \v \^
                             if (bulletNumber % 2 == 1) {
-                                y = (secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
-                                    x = -(secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                y = (mouseX - bossOriginalX) / length * multiplier * random + accelerator;
+                                x = -(mouseY - bossOriginalY) / length * multiplier * random / divider;
                             } else {
-                                y = -(secondMouseX - firstMouseX) / length * multiplier * random + accelerator,
-                                    x = (secondMouseY - firstMouseY) / length * multiplier * random / divider;
+                                y = -(mouseX - bossOriginalX) / length * multiplier * random + accelerator;
+                                x = (mouseY - bossOriginalY) / length * multiplier * random / divider;
                             }
                         }
 
@@ -283,26 +399,16 @@ export const yoimiya = {
                     }
                 },
                 "deactivate": function () {
-                    if (this.secondCast) {
-                        let cd = 0.5, // in seconds
-                            duration = 8 // in seconds
-                        boss.ability3CoolDownRequired = cd * FPS;
-                        boss.ability3Duration = duration * FPS + 1;
-                    } else {
-                        this.path = [];
-                        this.originalBossCoords = [];
-                        this.hasDuration = false;
-                        boss.ability3CoolDownRequired = this.coolDown * FPS;
-                        boss.ability3Duration = 0;
-                        boss.canBeControlled = true;
-                    }
+                    this.path = [];
+                    this.originalBossCoords = [];
+                    boss.canBeControlled = true;
                 },
                 "bulletVisuals": {
                     "radius": 5,
                     "color": "red"
                 },
                 "coolDown": 5, //in seconds
-                "duration": 0, //in seconds
+                "duration": 4, //in seconds
                 "abilityName": "Path of Destruction",
                 "description": "Mark two points in your playfield and watch your enemies stumble",
                 "iconUrl": "img/yoimiya/Path_of_Destruction.png",
@@ -316,14 +422,14 @@ export const yoimiya = {
         },
         "passive": {
             "use": function () {
-                let bulletAmount = 40,
+                let bulletAmount = 45,
                     lifetime = 20,
                     bool = false;
                 sounds["bossShotSound"].play();
                 for (let i = 0; i < bulletAmount; i++) {
                     let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
                         spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                        attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0],
+                        attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03],
                         bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                     allBullets.push(bullet);
                 }
@@ -350,12 +456,13 @@ export const yoimiya = {
                         this.trajectoryAttributes[8] = this.logicY;
                         this.trajectoryAttributes[2] += 0.4;
                     } else {
-                        x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
-                        if (y >= 1.5) {
-                            y = 1.5;
-                        } else {
-                            y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
+                        x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) / accelerator;
+                        y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
+
+                        if (y >= 1.75) {
+                            y = 1.75;
                         }
+
                         this.trajectoryAttributes[4] = true;
                         if (accelerator <= 6) {
                             this.trajectoryAttributes[9] += 0.03
@@ -376,14 +483,14 @@ export const yoimiya = {
         },
         "enrage": {
             "use": function () {
-                let bulletAmount = 75,
+                let bulletAmount = 55,
                     lifetime = 20,
                     bool = false;
 
                 for (let i = 0; i < bulletAmount; i++) {
                     let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100,
                         spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100,
-                        attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0],
+                        attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03],
                         bullet = new Bullet(spawnBulletX, spawnBulletY, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, attributes, lifetime);
                     allBullets.push(bullet);
                 }
@@ -403,18 +510,17 @@ export const yoimiya = {
                         x = 0,
                         y = 0;
 
-                    if (Math.random() <= 0.995 && bool == false) {
+                    if (Math.random() <= 0.996 && bool == false) {
                         x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                         y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
                         this.trajectoryAttributes[7] = this.logicX;
                         this.trajectoryAttributes[8] = this.logicY;
                         this.trajectoryAttributes[2] += 0.4;
                     } else {
-                        x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI);
-                        if (y >= 1.5) {
-                            y = 1.5;
-                        } else {
-                            y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
+                        x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) / accelerator;
+                        y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
+                        if (y >= 2) {
+                            y = 2;
                         }
                         this.trajectoryAttributes[4] = true;
                         if (accelerator <= 6) {
@@ -428,7 +534,7 @@ export const yoimiya = {
                 "radius": 10,
                 "color": "red"
             },
-            "frequency": 0.3, //trigger once every [] seconds
+            "frequency": 1.3, //trigger once every [] seconds
 
             "abilityName": "Catherine Wheel (Passive)",
             "description": "Around your Boss-Character spawns a halo of bullets that occasionally sprinkle outwards and fall down",

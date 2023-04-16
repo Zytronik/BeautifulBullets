@@ -2,7 +2,7 @@ import { frontend_showPage, PAGES } from "./view/frontend.js";
 import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
-import { playGameStartCutscene, prepareGameStartCutscene } from "./view/cutScenes.js";
+import { playGameStartCutscene } from "./view/cutScenes.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -136,7 +136,6 @@ function characterSelectionToGameStartCutscene() {
         playGameStartCutscene();
         frontend_setupGameUI();
     });
-    prepareGameStartCutscene()
 }
 
 function gameStartCutsceneToGameplayRegular() {
