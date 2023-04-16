@@ -3,7 +3,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../settings/gameSettings.js";
 
 export let allBullets = [];
 export class Bullet {
-    constructor(x, y, texture, bulletProperties, trajectoryFunction, trajectoryAttributes = [], lifetimeInSeconds = 10) {
+    constructor(x, y, texture, bulletProperties, trajectoryFunction, trajectoryAttributes = [], lifetimeInSeconds = 5) {
         this.sprite1 = new PIXI.Sprite(texture[0])
         this.sprite2 = new PIXI.Sprite(texture[1])
         this.logicX = x;
@@ -17,6 +17,7 @@ export class Bullet {
         this.trailHistory = []
         player1Canvas.addBullet(this.sprite1);
         player2Canvas.addBullet(this.sprite2);
+        allBullets.push(this);
     }
     nextPos() {
         this.trailHistory.unshift({ x: this.logicX, y: this.logicY });
@@ -27,6 +28,7 @@ export class Bullet {
         this.logicX += xyShift[0];
         this.logicY += xyShift[1];
         this.framesAlive++;
+        return {xPos: this.logicX, yPos: this.logicY}
     }
     hasBulletFaded() {
         return (this.framesAlive >= this.lifetime) || this.#isBulletOutOfFrame();
