@@ -1,16 +1,15 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
-import { challenger, boss, spriteLoader } from "../main.js";
+import { challenger, boss, spriteLoader, isGameStateEnraged } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets } from "../gameElements/bullet.js";
-import { SpriteAnimator } from "./spriteAnimator.js";
 
 export let CANVAS_UNIT;
 export class GameCanvas {
     constructor(container) {
         this.container = container;
         this.#setContainerSize();
-        this.characterApp = new PIXI.Application({ 
+        this.characterApp = new PIXI.Application({
             resizeTo: container,
             backgroundAlpha: 0,
         });
@@ -19,22 +18,35 @@ export class GameCanvas {
             resizeTo: container,
             backgroundAlpha: 0,
         });
+        this.backgroundApp = new PIXI.Application({
+            /* background: '#1099bb', */
+            resizeTo: container,
+        });
         this.canvasHeight;
         this.canvasWidth;
 
         this.challengerSprite = new PIXI.Sprite();
         this.bossSprite = new PIXI.Sprite();
 
-        this.bossSpriteAnimator = new SpriteAnimator(boss.sprites);
-        this.challengerSpriteAnimator = new SpriteAnimator(challenger.sprites);
-        
+        this.challengerShiftGraphic = new PIXI.Graphics();
+
+        this.bgCloudsArray = [];
+        this.bgNumberOfClouds = 0;
+        this.bgTextures;
+        this.bg1;
+        this.bg2;
+        this.bgFilter;
+        this.bgCounter = 1600;
+        this.bgSpeedFactor = 1;
+
         this.#createCharacterCanvas();
         this.#createBulletCanvas();
+        this.#createBackgroundCanvas();
         this.resizeCanvas();
         this.#initSprites();
     }
-    #setContainerSize(){
-        this.container.style.width = this.container.clientHeight * 2 / 3+"px";
+    #setContainerSize() {
+        this.container.style.width = this.container.clientHeight * 2 / 3 + "px";
     }
     #createCharacterCanvas() {
         this.container.appendChild(this.characterApp.view);
@@ -44,6 +56,64 @@ export class GameCanvas {
     #createBulletCanvas() {
         this.container.appendChild(this.bulletApp.view);
         this.bulletApp.view.classList.add("bulletCanvas");
+    }
+    #createBackgroundCanvas() {
+        this.container.appendChild(this.backgroundApp.view);
+        this.backgroundApp.view.classList.add("backgroundCanvas");
+
+        PIXI.Assets.add('background', 'img/bg/bg.jpg');
+        PIXI.Assets.add('cloud1', 'img/bg/cloud1.png');
+        PIXI.Assets.add('cloud2', 'img/bg/cloud2.png');
+        PIXI.Assets.add('cloud3', 'img/bg/cloud3.png');
+        PIXI.Assets.add('cloud4', 'img/bg/cloud4.png');
+        PIXI.Assets.add('cloud5', 'img/bg/cloud5.png');
+
+        const texturesPromise = PIXI.Assets.load(['background', 'cloud1', 'cloud2', 'cloud3', 'cloud4', 'cloud5']);
+        texturesPromise.then((textures) => {
+            this.bgTextures = textures;
+            this.bgNumberOfClouds = Object.keys(this.bgTextures).length - 1;
+        
+            this.bg1 = PIXI.Sprite.from(textures.background);
+            this.bg2 = PIXI.Sprite.from(textures.background);
+            let aspectRatio = this.bg1.width / this.bg1.height;
+        
+            this.bg1.height = this.backgroundApp.screen.height;
+            this.bg1.width = this.backgroundApp.screen.height * aspectRatio;
+        
+            this.bg2.height = this.bg1.height;
+            this.bg2.width = this.bg1.width;
+        
+            this.bg1.x = 0;
+            this.bg1.y = 0;
+            this.bg2.x = 0;
+            this.bg2.y = this.bg1.y - this.bg1.height;
+        
+            this.backgroundApp.stage.addChild(this.bg1);
+            this.backgroundApp.stage.addChild(this.bg2);
+        
+            this.bgFilter = new PIXI.Filter(null,
+                "precision mediump float;" +
+        
+                "varying vec2 vTextureCoord;" +
+                "varying vec4 vColor;" +
+        
+                "uniform sampler2D uSampler;" +
+                "uniform float customUniformY;" +
+                "uniform float customUniformX;" +
+        
+                "void main(void)" +
+                "{" +
+                "vec2 uvs = vTextureCoord.xy;" +
+                "vec4 fg = texture2D(uSampler, vTextureCoord);" +
+                "fg.r = -uvs.y + sin(customUniformY);" +
+                "gl_FragColor = fg;" +
+                "}", {
+                customUniformY: 0.0,
+                customUniformX: 0.0
+            });
+        
+            this.backgroundApp.stage.filters = [this.bgFilter];
+        });
     }
     resizeCanvas() {
         //TODO Omar resize gaht glaub nonig
@@ -59,6 +129,7 @@ export class GameCanvas {
         CANVAS_UNIT = this.canvasWidth / BOARD_WIDTH; */
     }
     updateCanvas() {
+        this.#drawBackground();
         this.#drawBoss();
         this.#drawChallenger();
         this.#drawBulletsAndTrails();
@@ -70,18 +141,60 @@ export class GameCanvas {
         this.bulletApp.stage.removeChild(bullet.sprite1)
         this.bulletApp.stage.removeChild(bullet.sprite2)
     }
-    #initSprites(){
+    #initSprites() {
         this.characterApp.stage.addChild(this.challengerSprite);
         this.characterApp.stage.addChild(this.bossSprite);
         this.challengerSprite.y = 100000;
         this.bossSprite.y = -100000;
-        for(const index in spriteLoader.loadedTexturesArray){
+        for (const index in spriteLoader.loadedTexturesArray) {
             this.challengerSprite.texture = spriteLoader.loadedTexturesArray[index]
             this.characterApp.render();
         }
     }
+    #drawBackground() {
+        if(isGameStateEnraged){
+            this.bgSpeedFactor = 2.5;
+        }
+        if(this.bg1 == undefined && this.bg2 == undefined){
+            return false;
+        }
+        if (this.bg1.y < this.backgroundApp.screen.height) {
+            this.bg1.y = this.bg1.y + 0.8 * this.bgSpeedFactor;
+            this.bg2.y = this.bg1.y - this.bg1.height;
+        } else {
+            let temp = this.bg2;
+            this.bg2 = this.bg1;
+            this.bg1 = temp;
+        }
+
+        this.bgFilter.uniforms.customUniformY += Math.random() * 0.01 * this.bgSpeedFactor;
+        this.bgFilter.uniforms.customUniformX += Math.random() * 0.01 * this.bgSpeedFactor;
+
+        if (this.bgCounter >= Math.floor(Math.random() * 1400) + 1000) {
+            this.bgCounter = 0;
+            let randomCloudIndex = Math.floor(Math.random() * this.bgNumberOfClouds) + 1;
+            let cloud = new PIXI.Sprite;
+            cloud.texture = Object.values(this.bgTextures)[randomCloudIndex];
+            let aspectRatioCloud = cloud.height / cloud.width;
+            let width = Math.random() * this.backgroundApp.screen.width / 1.2 + this.backgroundApp.screen.width / 3;
+            cloud.height = width * aspectRatioCloud;
+            cloud.width = width;
+            cloud.x = 0 - cloud.width / 2 + Math.random() * this.backgroundApp.screen.width;
+            cloud.y = 0 - cloud.height;
+            this.bgCloudsArray.push(cloud);
+            this.backgroundApp.stage.addChild(cloud);
+        }
+
+        this.bgCloudsArray.forEach((c) => {
+            c.y = c.y + Math.random() * 0.5 * this.bgSpeedFactor + 0.1 * this.bgSpeedFactor;
+            if (c.y > this.backgroundApp.screen.height) {
+                this.bgCloudsArray.splice(getIndexInArray(this.bgCloudsArray, c), 1);
+            }
+        });
+        this.bgCounter++;
+    }
     #drawChallenger() {
-        this.challengerSprite.texture = this.challengerSpriteAnimator.getNextFrame(challenger.getCurrentSpriteState());
+        this.challengerSprite.texture = challenger.spriteAnimator.getNextFrame(challenger.getCurrentSpriteState());
 
         let challengerAspectRatio = this.challengerSprite.texture.width / this.challengerSprite.texture.height;
         let challengerWidth = CANVAS_UNIT * challenger.spriteScaling * challengerAspectRatio;
@@ -91,19 +204,19 @@ export class GameCanvas {
         this.challengerSprite.y = CANVAS_UNIT * challenger.y;
         this.challengerSprite.width = challengerWidth;
         this.challengerSprite.height = challengerHeight;
+        this.challengerShiftGraphic.clear();
         if (INPUTS_CHALLENGER.shift) {
-            const challengerShiftGraphic = new PIXI.Graphics();
-            challengerShiftGraphic.lineStyle(0);
-            challengerShiftGraphic.beginFill(challenger.hitboxColor, 1);
-            challengerShiftGraphic.drawCircle(CANVAS_UNIT * challenger.x, CANVAS_UNIT * challenger.y, CANVAS_UNIT * challenger.radius);
-            challengerShiftGraphic.endFill();
-            this.characterApp.stage.addChild(challengerShiftGraphic);
+            this.challengerShiftGraphic.lineStyle(0);
+            this.challengerShiftGraphic.beginFill(challenger.hitboxColor, 1);
+            this.challengerShiftGraphic.drawCircle(CANVAS_UNIT * challenger.x, CANVAS_UNIT * challenger.y, CANVAS_UNIT * challenger.radius);
+            this.challengerShiftGraphic.endFill();
+            this.characterApp.stage.addChild(this.challengerShiftGraphic);
         }
-        
+
     }
     #drawBoss() {
-        this.bossSprite.texture = this.bossSpriteAnimator.getNextFrame(boss.getCurrentSpriteState());
-        
+        this.bossSprite.texture = boss.spriteAnimator.getNextFrame(boss.getCurrentSpriteState());
+
         let bossAspectRatio = this.bossSprite.texture.width / this.bossSprite.texture.height;
         let bossWidth = CANVAS_UNIT * boss.spriteScaling * bossAspectRatio;
         let bossHeight = CANVAS_UNIT * boss.spriteScaling;
@@ -120,10 +233,10 @@ export class GameCanvas {
         this.bulletApp.render();
     }
     #updateBulletPosition(bullet) {
-        bullet.sprite1.position.x = CANVAS_UNIT * (bullet.logicX -  bullet.radius);
-        bullet.sprite1.position.y = CANVAS_UNIT * (bullet.logicY -  bullet.radius);    
-        bullet.sprite2.position.x = CANVAS_UNIT * (bullet.logicX -  bullet.radius);
-        bullet.sprite2.position.y = CANVAS_UNIT * (bullet.logicY -  bullet.radius);      
+        bullet.sprite1.position.x = CANVAS_UNIT * (bullet.logicX - bullet.radius);
+        bullet.sprite1.position.y = CANVAS_UNIT * (bullet.logicY - bullet.radius);
+        bullet.sprite2.position.x = CANVAS_UNIT * (bullet.logicX - bullet.radius);
+        bullet.sprite2.position.y = CANVAS_UNIT * (bullet.logicY - bullet.radius);
     }
 }
 
@@ -138,4 +251,18 @@ export function convertMouseCoordinatesToCanvasCoordinates() {
         mouseY = (mouseCoordinates[1] - canvasTop) / CANVAS_UNIT;
     }
     return [mouseX, mouseY];
+}
+
+function getBoundsID(obj) {
+    return obj._boundsID;
+}
+
+function getIndexInArray(array, obj) {
+    let r = false;
+    array.forEach((c, i) => {
+        if (getBoundsID(c) === getBoundsID(obj)) {
+            r = i;
+        }
+    });
+    return r;
 }

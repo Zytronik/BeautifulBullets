@@ -9,6 +9,7 @@ import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
 import { allBullets } from "./gameElements/bullet.js";
 import { BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./data/bulletPresets.js";
 import {SpriteLoader} from "./view/spriteLoader.js";
+import { allHitableCircles } from "./gameElements/hitableObjects.js";
 
 export let challenger;
 export let boss;
@@ -38,11 +39,9 @@ export function main_loadGame([character1, character2], onLoad) {
         loadOnFirstCall = false;
         spriteLoader = new SpriteLoader(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
         match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
-        challenger = new Challenger(match.player1Character.challenger);
-        boss = new Boss(match.player2Character.boss);
         spriteLoader.preloadAllTextures(()=>{
-            challenger.sprites = spriteLoader.getChallengerTextures();
-            boss.sprites = spriteLoader.getBossTextures();
+            challenger = new Challenger(match.player1Character.challenger);
+            boss = new Boss(match.player2Character.boss);
             player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
             player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
             bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);
@@ -119,6 +118,7 @@ function gameLogic() {
     });
     hitDetectionChallenger();
     hitDetectionBoss();
+    hitDetectionObjectsRound();
     match.updateTime();
     updateGameUI();
 }
@@ -255,5 +255,33 @@ function hitDetectionBoss() {
                 }
             }
         }
+    });
+}
+
+function hitDetectionObjectsRound() {
+    allHitableCircles.forEach(function (hitable, i) {
+        hitable.tick();
+        const hitableX = hitable.x;
+        const hitableX2 = hitable.x * hitable.x;
+        const hitableY = hitable.y;
+        const hitableY2 = hitable.y * hitable.y;
+        let hitableDestroyed = false;
+        allBullets.forEach(function (bullet, j) {
+            let canBeHitByTag =  hitable.hitableByTags.includes(bullet.bulletProperties.tag);
+            let canBeHitByOrigin =  hitable.hitableByOrigin.includes(bullet.bulletProperties.origin);
+            if (!hitableDestroyed && canBeHitByTag && canBeHitByOrigin) {
+                let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * hitableX) + hitableX2;
+                let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * hitableY) + hitableY2;
+                let hitRange = (hitable.radius + bullet.radius) * (hitable.radius + bullet.radius);
+                if (xDiffSquared + yDiffSquared < hitRange) {
+                    allBullets.splice(j, 1);
+                    player1Canvas.removeBullet(bullet);
+                    player2Canvas.removeBullet(bullet);
+                    if (!hitableDestroyed) {
+                        hitableDestroyed = hitable.takeDamageAndCheckDestroyed();
+                    }
+                }
+            }
+        });
     });
 }

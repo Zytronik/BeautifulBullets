@@ -9,6 +9,6 @@ export const BULLET_SPAWN_PROTECTION_FRAMES = 60;
 
 export const DEFAULT_MATCH_SETTINGS = {
     timeLimitInFrames: 120 * FPS,
-    firstTo: 1,
+    firstTo: 3,
     matchDecider: MATCH_DECIDING_FACTORS.DAMAGE_DEALT,
 }

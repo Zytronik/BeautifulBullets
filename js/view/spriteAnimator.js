@@ -1,21 +1,19 @@
-import { SPRITE_STATES } from "./spriteLoader.js";
-
 export class SpriteAnimator {
-    constructor(spriteArray){
+    constructor(spriteArray = []){
         this.currentFrame = 0;
-        this.prevState = SPRITE_STATES.IDLE;
+        this.prevState;
         this.spriteArray = spriteArray;
-        this.stateSpirtes = spriteArray[this.prevState]["textures"]
+        this.stateSprites;
         this.spriteIndex = 0;
-        this.framerate = spriteArray[this.prevState]["framerate"];
+        this.framerate;
     }
     getNextFrame(state){
         if(state !== this.prevState){
             this.framerate = this.spriteArray[state]["framerate"];
-            this.stateSpirtes = this.spriteArray[state]["textures"];
+            this.stateSprites = this.spriteArray[state]["textures"];
         }
         if(this.currentFrame >= this.framerate){
-            if(this.spriteIndex >= this.stateSpirtes.length - 1){
+            if(this.spriteIndex >= this.stateSprites.length - 1){
                 this.spriteIndex = 0;
             }else{
                 this.spriteIndex++;
@@ -25,6 +23,6 @@ export class SpriteAnimator {
             this.currentFrame++;
         }
         this.prevState = state;
-        return this.stateSpirtes[this.spriteIndex];
+        return this.stateSprites[this.spriteIndex];
     }
 }

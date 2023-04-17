@@ -52,7 +52,7 @@ export class SpriteLoader {
     }
     getChallengerTextures(){
         if(!this.loadedTextures || Object.keys(this.loadedTextures).length === 0){
-            return this.loadedTextures;
+            return [];
         }
         if(match.challenger === 1){
             return this.loadedTextures["character1"]["challenger"];
@@ -62,7 +62,7 @@ export class SpriteLoader {
     }
     getBossTextures(){
         if(!this.loadedTextures || Object.keys(this.loadedTextures).length === 0){
-            return this.loadedTextures;
+            return [];
         }
         if(match.boss === 2){
             return this.loadedTextures["character2"]["boss"];

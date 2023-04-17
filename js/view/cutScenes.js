@@ -2,13 +2,6 @@ import { FPS, BOARD_HEIGHT, BOARD_WIDTH } from "../settings/gameSettings.js";
 import { playCountDown, showCutSceneBars} from "./gamePage.js";
 import { boss, challenger, player1Canvas, player2Canvas } from "../main.js"; 
 
-export function prepareGameStartCutscene() {
-    boss.y = -BOARD_HEIGHT / 6;
-    boss.x = BOARD_WIDTH / 2;
-    challenger.x = BOARD_WIDTH / 2;
-    challenger.y = BOARD_HEIGHT * 7 / 6;
-}
-
 export function playGameStartCutscene(){
     if (!playingCutScene) {
         boss.y = -BOARD_HEIGHT / 6;

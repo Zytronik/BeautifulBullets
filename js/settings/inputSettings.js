@@ -77,6 +77,7 @@ export let CHEAT_BUTTONS = {
     e: "KeyE",
     c: "KeyC",
     b: "KeyB",
+    g: "KeyG",
     shiftLeft: "ShiftLeft",
 }
 
@@ -150,6 +151,9 @@ document.addEventListener("keydown", (event) => {
     }
     if (INPUTS_CHEATS.h && INPUTS_CHEATS.a && INPUTS_CHEATS.c && INPUTS_CHEATS.k && INPUTS_CHEATS.hb && INPUTS_CHEATS.ab && INPUTS_CHEATS.cb) {
         INPUTS_CHEATS.kb = true;
+        cheats();
+    }
+    if (INPUTS_CHEATS.shiftLeft && INPUTS_CHEATS.g) {
         cheats();
     }
     if (INPUTS_CHEATS.shiftLeft && INPUTS_CHEATS.c && INPUTS_CHEATS.h) {
