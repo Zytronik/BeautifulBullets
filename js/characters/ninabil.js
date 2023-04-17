@@ -1,6 +1,6 @@
 import { boss, bulletTexture } from "../main.js";
 import { allBullets, Bullet } from "../gameElements/bullet.js";
-import { FPS } from "../settings/gameSettings.js";
+import { FPS, BOARD_WIDTH } from "../settings/gameSettings.js";
 import { sounds } from "../sound/sound.js";
 import { EXAMPLE_BULLET_PROPERTIES } from "../data/bulletPresets.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
@@ -127,7 +127,7 @@ export const ninabil = {
                         let lengthY = this.trajectoryAttributes[2] - this.trajectoryAttributes[5];
                         let length = this.trajectoryAttributes[6];
                         let amplitude = this.trajectoryAttributes[3];
-                        let angle = Math.PI / 2 +  Math.atan2(lengthY, lengthX);
+                        let angle = Math.PI / 2 + Math.atan2(lengthY, lengthX);
                         let x = 0;
                         let y = 0;
                         let stretchFactor = amplitude * Math.cos(Math.PI / length * this.framesAlive);
@@ -150,9 +150,9 @@ export const ninabil = {
                         }
                         return [x, y];
                     }
-                    
+
                     function trajectory2() {
-                        return[this.trajectoryAttributes[7], this.trajectoryAttributes[8]];
+                        return [this.trajectoryAttributes[7], this.trajectoryAttributes[8]];
                     }
                 },
                 "deactivate": function () {
@@ -223,53 +223,76 @@ export const ninabil = {
             },
             "ability3": {
                 "use": function () {
-                    if (this.fancyStuff) {
-                        let bulletAmount = 70;
-                        let lifetime = 10
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let trajectoryAttributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, trajectoryAttributes, lifetime);
-                            this.mybullets.push(bullet)
-                            allBullets.push(bullet);
+                    let coords;
+                    let dashDistance = 200;
+                    
+                    if (boss.canBeControlled) {
+                        coords = convertMouseCoordinatesToCanvasCoordinates();
+
+                        if (Math.sqrt((coords[0] - boss.x) ** 2 + (coords[1] - boss.y) ** 2) > dashDistance) {
+                            let angle = Math.atan2(coords[1] - boss.y, coords[0] - boss.x) + Math.PI;
+                            // console.log(angle * 180 / Math.PI)
+                            coords[0] = Math.sin(angle) * dashDistance + boss.x;
+                            coords[1] = Math.cos(angle) * dashDistance + boss.y;
                         }
-                        this.fancyStuff = !this.fancyStuff;
-                    }
-                    else if (!this.fancyStuff) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectory2;
-                        })
-                        this.fancyStuff = !this.fancyStuff;
-                        this.mybullets = []
+
+                        let x = coords[0],
+                            y = coords[1];
+
+                        if (x < 0) {
+                            coords[0] = 0;
+                        } else if (x > BOARD_WIDTH) {
+                            coords[0] = BOARD_WIDTH;
+                        }
+                        if (y < 0) {
+                            coords[1] = 0;
+                        } else if (y > boss.yBarrier) {
+                            coords[1] = boss.yBarrier;
+                        }
+                        this.originalBossCoords.push(boss.x, boss.y);
+                        this.path.push(coords[0], coords[1]);
                     }
 
-                    function trajectory1() {
-                        let currentBulletID = this.trajectoryAttributes[0];
-                        let totalBullets = this.trajectoryAttributes[1];
-                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.trajectoryAttributes[2]++;
-                        return [x, y];
-                    }
+                    let dash = this.duration * FPS;
+                    let bossOriginalX = this.originalBossCoords[0];
+                    let bossOriginalY = this.originalBossCoords[1];
+                    let mouseX = this.path[0];
+                    let mouseY = this.path[1];
+                    boss.canBeControlled = false;
+                    let xDirection = mouseX - bossOriginalX,
+                        yDirection = mouseY - bossOriginalY,
+                        length = Math.sqrt(xDirection ** 2 + yDirection ** 2);
+                    let unifiedX = xDirection / length;
+                    let unifiedY = yDirection / length;
+                    let power = 10;
 
-                    function trajectory2() {
-                        return [0, 6];
-                    }
+                    let i = dash / (length ** (1 / power));
+
+                    let stretchFactor = (((dash - (boss.ability3ActiveFor + 1)) / i) ** power) - (((dash - boss.ability3ActiveFor) / i) ** power);
+
+                    let x = -stretchFactor * unifiedX;
+                    let y = -stretchFactor * unifiedY;
+
+                    boss.x += x;
+                    boss.y += y;
                 },
                 "deactivate": function () {
-
+                    this.path = [];
+                    this.originalBossCoords = [];
+                    boss.canBeControlled = true;
                 },
                 "bulletVisuals": {
                     "radius": 4,
                     "color": "white"
                 },
                 "coolDown": 2, //in seconds
-                "duration": 0, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
+                "duration": 1.5, //in seconds
 
-                "abilityName": "Ability 3",
-                "description": "This is a description DEAL WITH IT",
+                "originalBossCoords": [],
+                "path": [],
+
+                "abilityName": "Dash",
+                "description": "Relocate yourself with this dash",
                 "iconUrl": "img/bg.png",
             },
         },
