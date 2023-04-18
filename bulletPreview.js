@@ -7,11 +7,22 @@ const app = new PIXI.Application({
   resolution: window.devicePixelRatio
 });
 document.body.appendChild(app.view);
+app.stage = new PIXI.layers.Stage();
+const layer = new PIXI.layers.Layer();
+layer.useRenderTexture = true;
+layer.useDoubleBuffer = true;
+const trailSprite = new PIXI.Sprite(layer.getRenderTexture());
+trailSprite.alpha = 0.5;
+layer.addChild(trailSprite);
+app.stage.addChild(layer);
+const showLayer = new PIXI.Sprite(layer.getRenderTexture());
+app.stage.addChild(showLayer);
+
 
 export const textureProperties = {
   radius: 5,
   mainColor: "#edc163",
-  outerBorderColor: "#8e6101",
+  outerBorderColor: "#e7a71e",
   outerBorderWidth: 1,
   innerBorderColor: "#e7a71e",
   innerborderWidth: 2,
@@ -65,8 +76,7 @@ for (let i = 0; i < 10000; i++) {
   shape.position.y = app.screen.height * Math.random();
 }
 
-const container = new PIXI.Container();
-app.stage.addChild(...shapes);
+layer.addChild(...shapes);
 
 const text = new PIXI.Text("", {
   fill: "white",

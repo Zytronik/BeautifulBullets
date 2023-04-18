@@ -45,7 +45,7 @@ export const nabibi = {
 
         // S T A T S 
         "stats": {
-            "health": 2,
+            "health": -2,
             "homing": 1.3,
             "fireRate": 12, // Bullets per Second
             "bulletDamage": 2.8,
