@@ -1,8 +1,7 @@
-import { boss, bulletTexture } from "../main.js";
-import { allBullets, Bullet } from "../gameElements/bullet.js";
-import { FPS } from "../settings/gameSettings.js";
-import { sounds } from "../sound/sound.js";
-import { EXAMPLE_BULLET_PROPERTIES } from "../data/bulletPresets.js";
+import { boss, bulletTexture } from "../../main.js";
+import { allBullets, Bullet } from "../../gameElements/bullet.js";
+import { FPS } from "../../settings/gameSettings.js";
+import { sounds } from "../../sound/sound.js";
 
 export const nabibi = {
     "name": "Nabil de Tester",

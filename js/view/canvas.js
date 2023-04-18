@@ -2,28 +2,29 @@ import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
 import { challenger, boss, spriteLoader, isGameStateEnraged } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
-import { allBullets } from "../gameElements/bullet.js";
+import { allBullets, BULLET_TRAIL_ALPHAS } from "../gameElements/bullet.js";
 
 export let CANVAS_UNIT;
 export class GameCanvas {
     constructor(container) {
         this.container = container;
         this.#setContainerSize();
+
         this.characterApp = new PIXI.Application({
             resizeTo: container,
             backgroundAlpha: 0,
         });
         this.characterContainer = new PIXI.Container();
+
         this.bulletApp = new PIXI.Application({
             resizeTo: container,
             backgroundAlpha: 0,
         });
-        this.alphaLayersMap = new Map();
-        this.bulletTrailLayer;
-        this.backgroundApp = new PIXI.Application({
-            /* background: '#1099bb', */
-            resizeTo: container,
-        });
+        this.#createBulletCanvas();
+        this.bulletTrailLayersMap = new Map();
+        this.#initializeBulletTrailLayers();
+
+
         this.canvasHeight;
         this.canvasWidth;
 
@@ -32,6 +33,10 @@ export class GameCanvas {
 
         this.challengerShiftGraphic = new PIXI.Graphics();
 
+        this.backgroundApp = new PIXI.Application({
+            /* background: '#1099bb', */
+            resizeTo: container,
+        });
         this.bgCloudsArray = [];
         this.bgNumberOfClouds = 0;
         this.bgTextures;
@@ -42,7 +47,6 @@ export class GameCanvas {
         this.bgSpeedFactor = 1;
 
         this.#createCharacterCanvas();
-        this.#createBulletCanvas();
         this.#createBackgroundCanvas();
         this.resizeCanvas();
         this.#initSprites();
@@ -56,20 +60,24 @@ export class GameCanvas {
         this.characterApp.view.classList.add("characterCanvas");
     }
     #createBulletCanvas() {
-        //bullet trails: https://pixijs.io/examples/#/plugin-layers/trail.js
-        this.bulletApp.stage = new PIXI.layers.Stage();
-        this.bulletTrailLayer = new PIXI.layers.Layer();
-        this.bulletTrailLayer.useRenderTexture = true;
-        this.bulletTrailLayer.useDoubleBuffer = true;
-        const trailSprite = new PIXI.Sprite(this.bulletTrailLayer.getRenderTexture());
-        trailSprite.alpha = 0.9;
-        this.bulletTrailLayer.addChild(trailSprite);
-        this.bulletApp.stage.addChild(this.bulletTrailLayer);
-        const showLayer = new PIXI.Sprite(this.bulletTrailLayer.getRenderTexture());
-        this.bulletApp.stage.addChild(showLayer);
-
         this.container.appendChild(this.bulletApp.view);
         this.bulletApp.view.classList.add("bulletCanvas");
+    }
+    #initializeBulletTrailLayers(){
+        this.bulletApp.stage = new PIXI.layers.Stage();
+        for (let alpha in BULLET_TRAIL_ALPHAS) {
+            //bullet trails: https://pixijs.io/examples/#/plugin-layers/trail.js
+            const layer = new PIXI.layers.Layer();
+            layer.useRenderTexture = true;
+            layer.useDoubleBuffer = true;
+            const trailSprite = new PIXI.Sprite(layer.getRenderTexture());
+            trailSprite.alpha = BULLET_TRAIL_ALPHAS[alpha];
+            layer.addChild(trailSprite);
+            this.bulletApp.stage.addChild(layer);
+            const showLayer = new PIXI.Sprite(layer.getRenderTexture());
+            this.bulletApp.stage.addChild(showLayer);
+            this.bulletTrailLayersMap.set(BULLET_TRAIL_ALPHAS[alpha], layer);
+        }
     }
     #createBackgroundCanvas() {
         this.container.appendChild(this.backgroundApp.view);
@@ -148,12 +156,13 @@ export class GameCanvas {
         this.#drawChallenger();
         this.#drawBullets();
     }
-    addBullet(bulletSprite) {
-        this.bulletTrailLayer.addChild(bulletSprite);
+    addBullet(bulletSprite, alphaLayer) {
+        this.bulletTrailLayersMap.get(alphaLayer).addChild(bulletSprite);
     }
     removeBullet(bullet) {
-        this.bulletTrailLayer.removeChild(bullet.sprite1)
-        this.bulletTrailLayer.removeChild(bullet.sprite2)
+        let layer = this.bulletTrailLayersMap.get(bullet.alphaLayer);
+        layer.removeChild(bullet.sprite1);
+        layer.removeChild(bullet.sprite2);
     }
     #initSprites() {
         this.characterApp.stage.addChild(this.challengerSprite);

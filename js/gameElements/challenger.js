@@ -1,9 +1,8 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
-import { allBullets, Bullet } from "./bullet.js";
-import { boss, bulletTexture, isGameStateEnraged, spriteLoader } from "../main.js";
+import { allBullets, Bullet, BULLET_ORIGIN, BULLET_TAG, BULLET_TRAIL_ALPHAS, createBulletTexture } from "./bullet.js";
+import { boss, isGameStateEnraged, spriteLoader } from "../main.js";
 import { sounds } from "../sound/sound.js";
-import { EXAMPLE_BULLET_PROPERTIES_CHALLENGER } from "../data/bulletPresets.js";
 import { SPRITE_STATES } from "../view/spriteLoader.js";
 import { SpriteAnimator } from "../view/spriteAnimator.js";
 
@@ -18,7 +17,8 @@ export class Challenger {
         this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;
         this.hitboxColor = challengerData.hitboxColor;
-        this.bulletVisuals = challengerData.bulletVisuals;
+        this.bulletTexture;
+        this.bulletTextureProperties = challengerData.bulletTextureProperties;
 
         this.maxHealth = challengerData.stats.health;
         this.currentHealth = this.maxHealth;
@@ -116,11 +116,18 @@ export class Challenger {
         }
     }
     #shootBullets() {
+        if (this.bulletTexture === undefined) {
+            this.bulletTexture = createBulletTexture(this.bulletTextureProperties);
+        }
+
         if (this.fireRateTracker >= this.fireRateInFrames) {
             for (let i = 0; i < this.bullets; i++) {
                 sounds["challengerShotSound"].play();
+                let bulletOrigin = BULLET_ORIGIN.CHALLENGER;
+                let bulletTag = BULLET_TAG.NONE;
+                let trailAlpha = BULLET_TRAIL_ALPHAS.ZERO;
                 let attributes = [this.homing, 0, 0, i, this.bullets];
-                let bullet = new Bullet(this.x, this.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES_CHALLENGER, trajectory, attributes, 5);
+                let bullet = new Bullet(this.x, this.y, this.bulletTexture, bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, 5);
                 allBullets.push(bullet);
                 this.fireRateTracker = 0;
             }

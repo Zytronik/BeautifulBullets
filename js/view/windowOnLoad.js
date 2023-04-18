@@ -1,9 +1,9 @@
 import { isGameStateEnraged } from "../main.js";
 import { goToState, GAMESTATE } from "../gameStateManager.js";
-import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2, getHighestStats } from "./characterSelectionPage.js";
-import { setupConfigPage } from "./configPage.js";
+import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2, getHighestStats } from "./page/characterSelectionPage.js";
+import { setupConfigPage } from "./page/configPage.js";
 import { sounds, loadSounds } from "../sound/sound.js";
-import { updateBossCursor } from "./gamePage.js";
+import { updateBossCursor } from "./page/gamePage.js";
 
 export let highestStats;
 

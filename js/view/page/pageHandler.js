@@ -5,7 +5,7 @@ export const PAGES = {
     GAMEPLAY: "game",
 }
 
-export function frontend_showPage(PAGE) {
+export function view_showPage(PAGE) {
     var pages = document.querySelectorAll("main > article");
     Array.prototype.forEach.call(pages, function (page) {
         page.classList.add("hidePage");

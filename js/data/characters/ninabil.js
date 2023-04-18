@@ -1,9 +1,8 @@
-import { boss, bulletTexture } from "../main.js";
-import { allBullets, Bullet } from "../gameElements/bullet.js";
-import { FPS, BOARD_WIDTH } from "../settings/gameSettings.js";
-import { sounds } from "../sound/sound.js";
-import { EXAMPLE_BULLET_PROPERTIES } from "../data/bulletPresets.js";
-import { convertMouseCoordinatesToCanvasCoordinates } from "../view/canvas.js";
+import { boss, bulletTexture } from "../../main.js";
+import { allBullets, Bullet } from "../../gameElements/bullet.js";
+import { FPS, BOARD_WIDTH } from "../../settings/gameSettings.js";
+import { sounds } from "../../sound/sound.js";
+import { convertMouseCoordinatesToCanvasCoordinates } from "../../view/canvas.js";
 
 export const ninabil = {
     "name": "Ninja Boy",

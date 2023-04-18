@@ -16,8 +16,8 @@ export class Bullet {
         this.trajectoryAttributes = trajectoryAttributes;
         this.lifetimeInFrames = lifetimeInSeconds * FPS;
         this.framesAlive = 0;
-        player1Canvas.addBullet(this.sprite1);
-        player2Canvas.addBullet(this.sprite2);
+        player1Canvas.addBullet(this.sprite1, this.alphaLayer);
+        player2Canvas.addBullet(this.sprite2, this.alphaLayer);
         allBullets.push(this);
     }
     nextPos() {
@@ -69,9 +69,13 @@ export function getBulletsByTag(TAG) {
 export const BULLET_TRAIL_ALPHAS = {
     ZERO: 0,
     POINT3: 0.3,
+    POINT4: 0.4,
     POINT5: 0.5,
+    POINT6: 0.6,
     POINT7: 0.7,
+    POINT8: 0.8,
     POINT9: 0.9,
+    POINT95: 0.95,
     POINT97: 0.97,
 }
 

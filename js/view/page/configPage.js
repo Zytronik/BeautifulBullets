@@ -1,4 +1,4 @@
-import {CHALLENGER_BUTTONS, BOSS_BUTTONS,updateSetting} from "../settings/inputSettings.js";
+import {CHALLENGER_BUTTONS, BOSS_BUTTONS,updateSetting} from "../../settings/inputSettings.js";
 
 let CHALLENGER_SETTINGS = {
     left: "Move Left",

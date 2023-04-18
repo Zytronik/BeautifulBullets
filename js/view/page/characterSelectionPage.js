@@ -1,7 +1,7 @@
-import { CHARACTER_DATA } from "../data/characters.js";
-import { goToState, GAMESTATE } from "../gameStateManager.js";
-import { highestStats } from "./windowOnLoad.js";
-import { sounds } from "../sound/sound.js";
+import { CHARACTER_DATA } from "../../data/characters.js";
+import { goToState, GAMESTATE } from "../../gameStateManager.js";
+import { highestStats } from "../windowOnLoad.js";
+import { sounds } from "../../sound/sound.js";
 
 let rdyUpd = [false, false];
 export let player1SelectedCharacter;
