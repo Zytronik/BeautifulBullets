@@ -44,13 +44,13 @@ export const ninabil = {
         // S T A T S 
         "stats": {
             "health": 2,
-            "homing": 1.3,
-            "fireRate": 12, // Bullets per Second
-            "bulletDamage": 2.8,
-            "moveSpeed": 8,
+            "homing": 1.1,
+            "fireRate": 6, // Bullets per Second
+            "bulletDamage": 5.7,
+            "moveSpeed": 9,
         },
-        "bulletSpeed": 1,
-        "shiftSpeed": 1,
+        "bulletSpeed": 1.5,
+        "shiftSpeed": 2.1,
 
         // S P E C I A L
         "special": {
@@ -101,14 +101,51 @@ export const ninabil = {
 
         // S T A T S 
         "stats": {
-            "radius": 70,
-            "moveSpeed": 3,
-            "maxHealth": 1000,
+            "radius": 40,
+            "moveSpeed": 2.5,
+            "maxHealth": 800,
         },
 
         // A B I L I T I E S
         "abilities": {
             "ability1": {
+                "use": function () {
+                    if (boss.ability2ActiveFor % (this.duration * FPS / 3) < 1) {
+                        let lifetime = 10;
+                        let coords = convertMouseCoordinatesToCanvasCoordinates();
+                        let trajectoryAttributes = [coords, boss.x, boss.y]
+                        let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
+                        allBullets.push(bullet);
+                    }
+
+                    function trajectory() {
+                        let mouseX = this.trajectoryAttributes[0][0];
+                        let mouseY = this.trajectoryAttributes[0][1];
+                        let bossX = this.trajectoryAttributes[1];
+                        let bossY = this.trajectoryAttributes[2];
+                        let length = Math.sqrt((mouseX - bossX) ** 2 + (mouseY - bossY) ** 2);
+                        let bulletSpeed = 3.5;
+                        let x = (mouseX - bossX) / length * bulletSpeed;
+                        let y = (mouseY - bossY) / length * bulletSpeed;
+                        return [x, y];
+                    }
+                },
+                "deactivate": function () {
+
+                },
+                "bulletVisuals": {
+                    "radius": 4,
+                    "color": "white"
+                },
+                "coolDown": 2, //in seconds
+                "duration": 0.8, //in seconds
+                "path": [],
+
+                "abilityName": "Aimed straight shot",
+                "description": "This is a description DEAL WITH IT",
+                "iconUrl": "img/bg.png",
+            },
+            "ability2": {
                 "use": function () {
                     let bulletAmount = 2;
                     let lifetime = 6;
@@ -170,74 +207,22 @@ export const ninabil = {
                 "description": "Those Shurikens will annihalate your targets, if you can aim it",
                 "iconUrl": "img/bg.png",
             },
-            "ability2": {
-                "use": function () {
-                    if (this.fancyStuff) {
-                        let bulletAmount = 70;
-                        let lifetime = 10
-                        for (let i = 0; i < bulletAmount; i++) {
-                            let trajectoryAttributes = [i, bulletAmount, 0, lifetime * FPS]
-                            let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory1, trajectoryAttributes, lifetime);
-                            this.mybullets.push(bullet)
-                            allBullets.push(bullet);
-                        }
-                        this.fancyStuff = !this.fancyStuff;
-                    }
-                    else if (!this.fancyStuff) {
-                        this.mybullets.forEach(bullet => {
-                            bullet.trajectoryFunction = trajectory2;
-                        })
-                        this.fancyStuff = !this.fancyStuff;
-                        this.mybullets = []
-                    }
-
-                    function trajectory1() {
-                        let currentBulletID = this.trajectoryAttributes[0];
-                        let totalBullets = this.trajectoryAttributes[1];
-                        let shiftMovement = this.trajectoryAttributes[2] / this.trajectoryAttributes[3];
-                        let x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        let y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement) * 2;
-                        this.trajectoryAttributes[2]++;
-                        return [x, y];
-                    }
-
-                    function trajectory2() {
-                        return [0, 6];
-                    }
-                },
-                "deactivate": function () {
-
-                },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
-                "coolDown": 2, //in seconds
-                "duration": 0, //in seconds
-                "fancyStuff": true,
-                "mybullets": [],
-
-                "abilityName": "Ability 2",
-                "description": "This is a description DEAL WITH IT",
-                "iconUrl": "img/bg.png",
-            },
             "ability3": {
                 "use": function () {
                     let coords;
                     let dashDistance = 200;
-                    
+
                     if (boss.canBeControlled) {
                         coords = convertMouseCoordinatesToCanvasCoordinates();
-
-                        if (Math.sqrt((coords[0] - boss.x) ** 2 + (coords[1] - boss.y) ** 2) > dashDistance) {
-                            let angle = Math.atan2(coords[1] - boss.y, coords[0] - boss.x) + Math.PI;
-                            // console.log(angle * 180 / Math.PI)
-                            coords[0] = Math.sin(angle) * dashDistance + boss.x;
-                            coords[1] = Math.cos(angle) * dashDistance + boss.y;
+                        let length = Math.sqrt((coords[0] - boss.x) ** 2 + (coords[1] - boss.y) ** 2);
+                        if (length > dashDistance) {
+                            let angle = Math.atan2(coords[1] - boss.y, coords[0] - boss.x) + 3 * Math.PI / 2;
+                            coords[0] = Math.sin(-angle) * dashDistance + boss.x;
+                            coords[1] = Math.cos(-angle) * dashDistance + boss.y;
                         }
 
-                        let x = coords[0],
-                            y = coords[1];
+                        let x = coords[0];
+                        let y = coords[1];
 
                         if (x < 0) {
                             coords[0] = 0;
@@ -264,7 +249,7 @@ export const ninabil = {
                         length = Math.sqrt(xDirection ** 2 + yDirection ** 2);
                     let unifiedX = xDirection / length;
                     let unifiedY = yDirection / length;
-                    let power = 10;
+                    let power = 6;
 
                     let i = dash / (length ** (1 / power));
 
@@ -286,7 +271,7 @@ export const ninabil = {
                     "color": "white"
                 },
                 "coolDown": 2, //in seconds
-                "duration": 1.5, //in seconds
+                "duration": 0.3, //in seconds
 
                 "originalBossCoords": [],
                 "path": [],

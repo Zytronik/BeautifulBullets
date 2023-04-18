@@ -45,21 +45,23 @@ export const yoimiya = {
         // S T A T S 
         "stats": {
             "health": 3,
-            "homing": 1.1,
+            "homing": 1.3,
             "fireRate": 12, // Bullets per Second
-            "bulletDamage": 4.1,
-            "moveSpeed": 9,
+            "bulletDamage": 2.3,
+            "moveSpeed": 7,
         },
-        "shiftSpeed": 2.1,
+        "shiftSpeed": 1.5,
         "bulletSpeed": 1.3,
 
         // S P E C I A L
         "special": {
             "use": function () {
                 challenger.bullets = 4;
+                challenger.bulletDamage = 1.4;
             },
             "deactivate": function () {
                 challenger.bullets = 1;
+                challenger.bulletDamage = this.stats.bulletDamage;
             },
             "chargeRequired": 25,
             "graceChargeSpeed": 30, // Charge per second in grace
@@ -102,9 +104,9 @@ export const yoimiya = {
 
         // S T A T S 
         "stats": {
-            "radius": 10,
-            "moveSpeed": 6,
-            "maxHealth": 3500,
+            "radius": 70,
+            "moveSpeed": 2,
+            "maxHealth": 1100,
         },
 
         // A B I L I T I E S
