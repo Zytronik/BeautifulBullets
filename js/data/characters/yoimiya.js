@@ -35,7 +35,14 @@ export const yoimiya = {
         },
         "spriteScaling": 110,
         "radius": 8,
-        "hitboxColor": "black",
+        "hitboxTextureProperties": {
+            radius: 9,
+            mainColor: "#ed6363",
+            outerBorderColor: "#f98b54",
+            outerBorderWidth: 3,
+            innerBorderColor: "#ff7300",
+            innerborderWidth: 3,
+        },
         "bulletTextureProperties": {
             radius: 5,
             mainColor: "#edc163",
@@ -180,6 +187,7 @@ export const yoimiya = {
                         boss.ySpeedNormalized = y;
 
                         if (Math.random() <= 0.15) {
+                            sounds["firecracker"].play();
                             let angle = Math.atan2((this.path[1] - bossOriginalY), (this.path[0] - bossOriginalX));
                             for (let i = 0; i <= 1; i++) {
                                 let lifetime = 15;
@@ -277,14 +285,14 @@ export const yoimiya = {
                 let bulletOrigin = BULLET_ORIGIN.BOSS;
                 let bulletTag = BULLET_TAG.NONE;
                 let trailAlpha = BULLET_TRAIL_ALPHAS.POINT9;
-                sounds["bossShotSound"].play();
+                // sounds["bossShotSound"].play();
                 for (let i = 0; i < bulletAmount; i++) {
                     let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
                     let spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
                     let attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03];
                     new Bullet(spawnBulletX, spawnBulletY, new CatherineWheelTextureFactory().getTexture(), bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, lifetime);
                 }
-
+                
                 function trajectory() {
                     let currentBulletID = this.trajectoryAttributes[0];
                     let totalBullets = this.trajectoryAttributes[1];
@@ -299,7 +307,7 @@ export const yoimiya = {
                     let shiftMovement = shiftCounter / lifetime;
                     let x = 0;
                     let y = 0;
-
+                    
                     if (Math.random() <= 0.997 && bool == false) {
                         x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                         y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
@@ -307,6 +315,10 @@ export const yoimiya = {
                         this.trajectoryAttributes[8] = this.logicY;
                         this.trajectoryAttributes[2] += 0.4;
                     } else {
+                        if (!this.soundBool) {
+                            sounds["pop"].play();
+                            this.soundBool = true;
+                        }
                         x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) / accelerator;
                         y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
 
@@ -323,6 +335,7 @@ export const yoimiya = {
                 }
             },
             "frequency": 2, //in seconds
+            "soundBool": false,
 
             "abilityName": "Catherine Wheel (Passive)",
             "description": "Around your Boss-Character spawns a halo of bullets that occasionally sprinkle outwards and fall down",
@@ -476,8 +489,8 @@ class DualChakram {
                 this.trajectoryAttributes[4] = lengthX / length;
                 this.trajectoryAttributes[5] = lengthY / length;
             } else {
-                x = Math.sin(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossX * 3;
-                y = Math.cos(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossY * 3;
+                x = Math.sin(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossX * 5;
+                y = Math.cos(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossY * 5;
                 this.trajectoryAttributes[2] += 0.7;
             }
             return [x, y];
@@ -500,16 +513,19 @@ class Grenade extends Bullet {
         let bulletOrigin = BULLET_ORIGIN.BOSS;
         let bulletTag = BULLET_TAG.NONE;
         let trailAlpha = BULLET_TRAIL_ALPHAS.POINT3;
-        let random = (Math.random() - 0.5);
+        let random1 = (Math.random() * 2 - 1);
+        let random2 = (Math.random() * 1.5 + 1);
         function trajectory() {
-            let x = random * this.framesAlive / 2;
-            let y = 1 * this.framesAlive / 10;
+            let x = random1;
+            let y = random2;
             return [x, y];
         }
+
+        sounds["fireworkFuse"].play();
         super(boss.x, boss.y, texturePair, bulletOrigin, bulletTag, trailAlpha, trajectory)
 
         this.explosionBulletAmount = 30;
-        this.explosionBulletLifetime = 10;
+        this.explosionBulletLifetime = 15;
         let hitBoxHealth = 1
         let hitableByTag = BULLET_TAG.REGULAR_SHOT;
         let hitableByOrigin = BULLET_ORIGIN.BOSS;
@@ -526,6 +542,8 @@ class Grenade extends Bullet {
     }
     #getOnDestroy() {
         return function onDestroy() {
+            sounds["fireworkFuse"].stop();
+            sounds["fireworkBoom"].play();
             this.onDestroyAttributes[0].framesAlive = this.onDestroyAttributes[0].lifetimeInFrames;
             let explosionBulletAmount = this.onDestroyAttributes[1];
             let outerBulletsCount = explosionBulletAmount / 1.5;

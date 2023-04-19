@@ -24,14 +24,11 @@ export class GameCanvas {
         this.bulletTrailLayersMap = new Map();
         this.#initializeBulletTrailLayers();
 
-
         this.canvasHeight;
         this.canvasWidth;
 
         this.challengerSprite = new PIXI.Sprite();
         this.bossSprite = new PIXI.Sprite();
-
-        this.challengerShiftGraphic = new PIXI.Graphics();
 
         this.backgroundApp = new PIXI.Application({
             /* background: '#1099bb', */
@@ -63,7 +60,7 @@ export class GameCanvas {
         this.container.appendChild(this.bulletApp.view);
         this.bulletApp.view.classList.add("bulletCanvas");
     }
-    #initializeBulletTrailLayers(){
+    #initializeBulletTrailLayers() {
         this.bulletApp.stage = new PIXI.layers.Stage();
         for (let alpha in BULLET_TRAIL_ALPHAS) {
             //bullet trails: https://pixijs.io/examples/#/plugin-layers/trail.js
@@ -227,13 +224,18 @@ export class GameCanvas {
         this.challengerSprite.y = CANVAS_UNIT * challenger.y;
         this.challengerSprite.width = challengerWidth;
         this.challengerSprite.height = challengerHeight;
-        this.challengerShiftGraphic.clear();
-        if (INPUTS_CHALLENGER.shift) {
-            this.challengerShiftGraphic.lineStyle(0);
-            this.challengerShiftGraphic.beginFill(challenger.hitboxColor, 1);
-            this.challengerShiftGraphic.drawCircle(CANVAS_UNIT * challenger.x, CANVAS_UNIT * challenger.y, CANVAS_UNIT * challenger.radius);
-            this.challengerShiftGraphic.endFill();
-            this.characterApp.stage.addChild(this.challengerShiftGraphic);
+        if (challenger.hitboxTexture != undefined) {
+            challenger.hitboxTexture[0].x = -100;
+            challenger.hitboxTexture[0].y = -100;
+            challenger.hitboxTexture[1].x = -100;
+            challenger.hitboxTexture[1].y = -100;
+            if (INPUTS_CHALLENGER.shift) {
+                challenger.hitboxTexture[0].x = this.challengerSprite.x;
+                challenger.hitboxTexture[0].y = this.challengerSprite.y;
+                challenger.hitboxTexture[1].x = this.challengerSprite.x;
+                challenger.hitboxTexture[1].y = this.challengerSprite.y;
+                console.log(challenger.hitboxTexture[0].x, this.challengerSprite.x)
+            }
         }
 
     }

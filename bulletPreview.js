@@ -20,12 +20,12 @@ app.stage.addChild(showLayer);
 
 
 export const textureProperties = {
-  radius: 5,
-  mainColor: "#f68349",
-  outerBorderColor: "#FCD370",
-  outerBorderWidth: 2,
-  innerBorderColor: "#c14621",
-  innerborderWidth: 1,
+  radius: 9,
+  mainColor: "#ed6363",
+  outerBorderColor: "#f98b54",
+  outerBorderWidth: 3,
+  innerBorderColor: "#ff7300",
+  innerborderWidth: 3,
 }
 
 let radius = textureProperties.radius;

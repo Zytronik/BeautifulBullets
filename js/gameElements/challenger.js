@@ -16,7 +16,8 @@ export class Challenger {
         /* this.spriteState = SPRITE_STATES.IDLE; */
         this.spriteScaling = challengerData.spriteScaling;
         this.radius = challengerData.radius;
-        this.hitboxColor = challengerData.hitboxColor;
+        this.hitboxTexture;
+        this.hitboxTextureProperties = challengerData.hitboxTextureProperties;
         this.bulletTexture;
         this.bulletTextureProperties = challengerData.bulletTextureProperties;
 
@@ -89,6 +90,12 @@ export class Challenger {
         this.timeInGraceInFrames = 0;
     }
     #move() {
+        if (this.hitboxTexture === undefined) {
+            this.hitboxTexture = createBulletTexture(this.hitboxTextureProperties);
+            // this.hitboxTexture.x = -100
+            // this.hitboxTexture.y = -100
+        }
+
         let xSpeed = 0;
         xSpeed = INPUTS_CHALLENGER.right ? xSpeed + 1 : xSpeed;
         xSpeed = INPUTS_CHALLENGER.left ? xSpeed - 1 : xSpeed;
