@@ -1,5 +1,5 @@
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js"
-import { challenger, boss, spriteLoader, isGameStateEnraged } from "../main.js";
+import { challenger, boss, spriteLoader, isGameStateEnraged, player1Canvas, player2Canvas } from "../main.js";
 import { BOARD_WIDTH } from "../settings/gameSettings.js";
 import { mouseCoordinates } from "./windowOnLoad.js";
 import { allBullets, BULLET_TRAIL_ALPHAS } from "../gameElements/bullet.js";
@@ -225,19 +225,19 @@ export class GameCanvas {
         this.challengerSprite.width = challengerWidth;
         this.challengerSprite.height = challengerHeight;
         if (challenger.hitboxTexture != undefined) {
-            challenger.hitboxTexture[0].x = -100;
-            challenger.hitboxTexture[0].y = -100;
-            challenger.hitboxTexture[1].x = -100;
-            challenger.hitboxTexture[1].y = -100;
+            challenger.hitboxTexture[0].position.x = -100;
+            challenger.hitboxTexture[0].position.y = -100;
+            challenger.hitboxTexture[1].position.x = -100;
+            challenger.hitboxTexture[1].position.y = -100;
             if (INPUTS_CHALLENGER.shift) {
-                challenger.hitboxTexture[0].x = this.challengerSprite.x;
-                challenger.hitboxTexture[0].y = this.challengerSprite.y;
-                challenger.hitboxTexture[1].x = this.challengerSprite.x;
-                challenger.hitboxTexture[1].y = this.challengerSprite.y;
-                console.log(challenger.hitboxTexture[0].x, this.challengerSprite.x)
+                let radius = challenger.hitboxTexture[0].width / 2
+                challenger.hitboxTexture[0].position.x = CANVAS_UNIT * challenger.x - radius;
+                challenger.hitboxTexture[0].position.y = CANVAS_UNIT * challenger.y - radius;
+                challenger.hitboxTexture[1].position.x = CANVAS_UNIT * challenger.x - radius;
+                challenger.hitboxTexture[1].position.y = CANVAS_UNIT * challenger.y - radius;
             }
         }
-
+        this.characterApp.render();
     }
     #drawBoss() {
         this.bossSprite.texture = boss.spriteAnimator.getNextFrame(boss.getCurrentSpriteState());
