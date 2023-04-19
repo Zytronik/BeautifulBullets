@@ -23,12 +23,18 @@ export function loadSounds(){
         volume: 0.2
     });
     sounds["firecracker"] = new Howl({
-        src: ['sounds/firecracker.mp3']
+        src: ['sounds/firecracker.mp3'],
+        volume: 0.5
     });
     sounds["fireworkFuse"] = new Howl({
-        src: ['sounds/fireworkFuse.mp3']
+        src: ['sounds/fireworkFuse.mp3'],
+        volume: 0.6
     });
     sounds["soundtrack"] = new Howl({
-        src: ['sounds/soundtrack.wav']
+        src: ['sounds/soundtrack.mp3'],
+        volume: 1
+    });
+    sounds["chakramWoosh"] = new Howl({
+        src: ['sounds/chakramWoosh.mp3']
     });
 }

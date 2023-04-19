@@ -249,7 +249,7 @@ export const yoimiya = {
                         }
 
                         if (accelerator <= 5) {
-                            this.trajectoryAttributes[8] += 0.006;
+                            this.trajectoryAttributes[4] += 0.006;
                         }
 
                         let maxSpeed = 3;
@@ -292,7 +292,7 @@ export const yoimiya = {
                     let attributes = [i, bulletAmount, 0, lifetime, bool, boss.x, boss.y, spawnBulletX, spawnBulletY, 0.03];
                     new Bullet(spawnBulletX, spawnBulletY, new CatherineWheelTextureFactory().getTexture(), bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, lifetime);
                 }
-                
+
                 function trajectory() {
                     let currentBulletID = this.trajectoryAttributes[0];
                     let totalBullets = this.trajectoryAttributes[1];
@@ -307,7 +307,7 @@ export const yoimiya = {
                     let shiftMovement = shiftCounter / lifetime;
                     let x = 0;
                     let y = 0;
-                    
+
                     if (Math.random() <= 0.997 && bool == false) {
                         x = Math.sin(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.xSpeedNormalized;
                         y = Math.cos(Math.PI * 2 / (totalBullets) * currentBulletID + shiftMovement + Math.PI / 2) * 2 + boss.ySpeedNormalized;
@@ -349,7 +349,6 @@ export const yoimiya = {
                 let bulletOrigin = BULLET_ORIGIN.BOSS;
                 let bulletTag = BULLET_TAG.NONE;
                 let trailAlpha = BULLET_TRAIL_ALPHAS.POINT9;
-                sounds["bossShotSound"].play();
                 for (let i = 0; i < bulletAmount; i++) {
                     let spawnBulletX = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
                     let spawnBulletY = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
@@ -379,6 +378,10 @@ export const yoimiya = {
                         this.trajectoryAttributes[8] = this.logicY;
                         this.trajectoryAttributes[2] += 0.4;
                     } else {
+                        if (!this.soundBool) {
+                            sounds["pop"].play();
+                            this.soundBool = true;
+                        }
                         x = Math.cos(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) / accelerator;
                         y = Math.sin(Math.atan2(bossY - bulletPosY, bossX - bulletPosX) + Math.PI) * 2 + accelerator;
 
@@ -395,6 +398,7 @@ export const yoimiya = {
                 }
             },
             "frequency": 1.3, //trigger once every [] seconds
+            "soundBool": false,
 
             "abilityName": "Catherine Wheel (Passive)",
             "description": "Around your Boss-Character spawns a halo of bullets that occasionally sprinkle outwards and fall down",
@@ -449,14 +453,15 @@ class DualChakram {
         let bulletTag = BULLET_TAG.REGULAR_SHOT;
         let trailAlpha = BULLET_TRAIL_ALPHAS.POINT3;
 
-        let bulletAmount = 2
+        let bulletAmount = 2;
         let lifetime = 10;
         for (let i = 0; i < bulletAmount; i++) {
-            let x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 100;
-            let y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 100;
+            let x = boss.x + Math.sin(Math.PI * 2 / bulletAmount * i) * 15;
+            let y = boss.y + Math.cos(Math.PI * 2 / bulletAmount * i) * 15;
             let attributes = [i, bulletAmount, 0, lifetime, boss.x, boss.y,];
             new Bullet(x, y, chakramTexture, bulletOrigin, bulletTag, trailAlpha, this.#getTrajectory(), attributes, lifetime);
         }
+        sounds["chakramWoosh"].play();
     }
     #getTexture() {
         return {
@@ -480,19 +485,18 @@ class DualChakram {
                 bossY = this.trajectoryAttributes[5],
                 rotationTranslation = rotationCounter / lifetime;
 
-            if (this.framesAlive <= 30) {
-                x = 2.7 * Math.sin(Math.PI * 2 / bulletAmount * patternID + Math.PI) + boss.xSpeedNormalized;
-                y = 2.7 * Math.cos(Math.PI * 2 / bulletAmount * patternID + Math.PI) + boss.ySpeedNormalized;
+            if (this.framesAlive <= 1) {
                 let lengthX = convertMouseCoordinatesToCanvasCoordinates()[0] - boss.x,
                     lengthY = convertMouseCoordinatesToCanvasCoordinates()[1] - boss.y,
                     length = Math.sqrt(lengthX ** 2 + lengthY ** 2);
                 this.trajectoryAttributes[4] = lengthX / length;
                 this.trajectoryAttributes[5] = lengthY / length;
             } else {
-                x = Math.sin(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossX * 5;
-                y = Math.cos(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossY * 5;
+                x = Math.sin(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossX * 4;
+                y = Math.cos(Math.PI * 2 / bulletAmount * patternID + rotationTranslation + Math.PI / 2) + bossY * 4;
                 this.trajectoryAttributes[2] += 0.7;
             }
+            console.log(x, y)
             return [x, y];
         }
     }
