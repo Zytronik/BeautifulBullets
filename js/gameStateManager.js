@@ -1,4 +1,4 @@
-import { view_showPage, PAGES } from "./view/page/pageHandler.js";
+import { view_showPage, PAGES, view_mainScreenTransition } from "./view/page/pageHandler.js";
 import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/page/gamePage.js";
 import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/page/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
@@ -90,7 +90,7 @@ function mainMenuToCharacterSelection() {
             - reset ready buttons
     */
     frontend_resetRdyUps();
-    frontend_mainScreenTransition();
+    view_mainScreenTransition();
 }
 
 function settingsToMainMenu() {

@@ -13,9 +13,9 @@ export function view_showPage(PAGE) {
     document.querySelector("article." + PAGE).classList.remove("hidePage");
 }
 
-export function frontend_mainScreenTransition(){
+export function view_mainScreenTransition(){
     setTimeout(() => {
-        frontend_showPage(PAGES.CHARACTER_SELECTION);
+        view_showPage(PAGES.CHARACTER_SELECTION);
     }, 400);
     document.querySelector("article.titleScreen .whiteOverlay").animate(
         { opacity: [document.querySelector("article.titleScreen .whiteOverlay").style.opacity, 1] },
