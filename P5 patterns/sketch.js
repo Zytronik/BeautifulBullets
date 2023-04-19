@@ -4,6 +4,7 @@ let pointsPos = [];
 let trajectory = [];
 let points = 50;
 let counter = 0.2;
+let mover = 150;
 let switcherino = true;
 let translation;
 let boolTrans = true;
@@ -14,8 +15,8 @@ function setup() {
   background(220, 10);
   angleMode(DEGREES);
   pattern1();
-  setInterval(consLog,250);
-  setInterval(pattern1,500)
+  setInterval(consLog,1000);
+  setInterval(pattern1,2000)
 }
 
 function draw() {
@@ -23,20 +24,23 @@ function draw() {
   circle(bossPosX+translation, bossPosY, 30);
   // circle(mouseX, mouseY, 30);
   // pattern2();
-  pattern3();
+  // pattern3();
+  pattern4();
   
   colorMode(RGB);
   // noLoop();
 }
 
 function pattern1() {
-  let borderWidth = 150;
+
   strokeWeight(5)
   for(let i = 0; i < points; i++) {
     // pointsPos.push([(width-borderWidth*2)/points*i+borderWidth, sin(180/points*i)*20+100])
-    pointsPos.push([bossPosX+translation, bossPosY]);
+    pointsPos.push([bossPosX, bossPosY]);
+    // pointsPos.push([bossPosX+translation, bossPosY]);
     // pointsPos.push([mouseX, mouseY]);
-    trajectory.push([sin(360/(points+1)*i), cos(360/(points+1)*i), i, switcherino]);
+    // trajectory.push([sin(360/(points+1)*i), cos(360/(points+1)*i), i, switcherino]);
+    trajectory.push([1,1, i, switcherino]);
     // trajectory[i][0] = sin(360/(pointsPos.length)%50*i-90);
     // trajectory[i][1] = cos(360/(pointsPos.length)%50*i-90);
     // point((width-borderWidth*2)/points*i+borderWidth, sin(180/points*i)*20+100);
@@ -44,9 +48,12 @@ function pattern1() {
   }
   if(switcherino == true) {
     switcherino = false;
+    mover = -mover;
   } else {
     switcherino = true;
+    mover = -mover;
   }
+
 
   // let steps = 10;
   // if (boolTrans == true) {
@@ -124,7 +131,34 @@ function pattern3() {
 }
 
 function pattern4() {
-  
+  let border = 50;
+  strokeWeight(5)
+  counter += 0.1;
+  // console.log(pointsPos);
+  for(let i = 0; i <= pointsPos.length-1; i++) {
+    // console.log(pointsPos[i][0])
+    point(pointsPos[i][0]+trajectory[i][0], pointsPos[i][1]+trajectory[i][1]);
+    if (pointsPos[i][0] <= -border || pointsPos[i][0] >= width+border || pointsPos[i][1] <= -border || pointsPos[i][1] >= height+border) {
+      pointsPos.splice(i, 1);
+      trajectory.splice(i, 1)
+    } else {
+      pointsPos[i][0] = pointsPos[i][0]+trajectory[i][0];
+      pointsPos[i][1] = pointsPos[i][1]+trajectory[i][1];      
+    }
+    // console.log(trajectory.length, i);
+
+    // if(trajectory[i][3] == true) {
+      trajectory[i][0] = sin(trajectory[i][2]*3600/points+counter*5)
+      trajectory[i][1] = trajectory[i][2]/30+1
+      //cos(360/points*trajectory[i][2])/sqrt(sqrt(trajectory[i][2]))
+    // } else {
+    //   trajectory[i][0] = -1
+    //   trajectory[i][1] = -1
+
+    // }
+    // trajectory[i][0] = sin(360/pointsPos.length*i+i)
+  }
+  counter%0.1;
 }
 
 function consLog() {
