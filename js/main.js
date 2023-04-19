@@ -155,7 +155,11 @@ export function main_challengerDeath() {
 
 export function main_handleGoBackButton() {
     if (currentGameState === GAMESTATE.SETTINGS) {
-        goToState(GAMESTATE.MAIN_MENU);
+        if (document.querySelector("article.config .choosingKey").classList.contains("active")) {
+            document.querySelector("article.config .choosingKey").classList.remove("active");
+        }else{
+            goToState(GAMESTATE.MAIN_MENU);
+        }
     }
 
     if (currentGameState === GAMESTATE.CHARACTER_SELECTION) {

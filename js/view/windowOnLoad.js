@@ -20,11 +20,11 @@ window.onload = function () {
 
 //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
 function prepareFrontendButtons() {
-    /* document.querySelector("#play").addEventListener("click", function (e) {
-        e.preventDefault();
-        sounds["clickSound"].play();
-        goToState(GAMESTATE.CHARACTER_SELECTION);
-    }); */ 
+    document.querySelector("article.titleScreen > section, article.titleScreen > .whiteOverlay").addEventListener('mousedown', ()=>{
+        if(currentGameState == GAMESTATE.MAIN_MENU){
+            goToState(GAMESTATE.CHARACTER_SELECTION);
+        }
+    });
     document.body.addEventListener('keypress', ()=>{
         if(currentGameState == GAMESTATE.MAIN_MENU){
             goToState(GAMESTATE.CHARACTER_SELECTION);

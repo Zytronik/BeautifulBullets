@@ -54,7 +54,7 @@ export const yoimiya = {
 
         // S T A T S 
         "stats": {
-            "health": -3,
+            "health": 3,
             "homing": 1.3,
             "fireRate": 12, // Bullets per Second
             "bulletDamage": 2.3,
