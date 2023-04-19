@@ -1,5 +1,5 @@
-import { boss, bulletTexture } from "../../main.js";
-import { allBullets, Bullet } from "../../gameElements/bullet.js";
+import { boss } from "../../main.js";
+import { Bullet, BULLET_ORIGIN, BULLET_TAG, BULLET_TRAIL_ALPHAS, createBulletTexture } from "../../gameElements/bullet.js";
 import { FPS, BOARD_WIDTH } from "../../settings/gameSettings.js";
 import { sounds } from "../../sound/sound.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../../view/canvas.js";
@@ -34,10 +34,21 @@ export const ninabil = {
         },
         "spriteScaling": 95,
         "radius": 5,
-        "hitboxColor": "red",
-        "bulletVisuals": {
-            "radius": 5,
-            "color": "white"
+        "hitboxTextureProperties": {
+            radius: 9,
+            mainColor: "#ed6363",
+            outerBorderColor: "#f95454",
+            outerBorderWidth: 3,
+            innerBorderColor: "#ff0000",
+            innerborderWidth: 3,
+        },
+        "bulletTextureProperties": {
+            radius: 8,
+            mainColor: "#ffffff",
+            outerBorderColor: "#c5d0e766",
+            outerBorderWidth: 3,
+            innerBorderColor: "#7f7ca8",
+            innerborderWidth: 3,
         },
 
         // S T A T S 
@@ -48,13 +59,13 @@ export const ninabil = {
             "bulletDamage": 5.7,
             "moveSpeed": 9,
         },
-        "bulletSpeed": 1.5,
         "shiftSpeed": 2.1,
+        "bulletSpeed": 1.5,
 
         // S P E C I A L
         "special": {
             "use": function () {
-                allBullets.length = 0;
+                destroyBulletsAt(challenger.x, challenger.y, 20000)
             },
             "deactivate": function () {
 
@@ -65,7 +76,7 @@ export const ninabil = {
             "duration": 0,
             "coolDown": 1,
 
-            "abilityName": "Blankbomb",
+            "abilityName": "The White Bomb",
             "description": "Destroys all bullets on the screen.",
             "iconUrl": "img/special.png",
         },
@@ -112,9 +123,12 @@ export const ninabil = {
                     if (boss.ability2ActiveFor % (this.duration * FPS / 3) < 1) {
                         let lifetime = 10;
                         let coords = convertMouseCoordinatesToCanvasCoordinates();
-                        let trajectoryAttributes = [coords, boss.x, boss.y]
-                        let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
-                        allBullets.push(bullet);
+                        let attributes = [coords, boss.x, boss.y]
+                        let bulletTexture = new NinjaAbility1TextureFactory().getTexture();
+                        let bulletOrigin = BULLET_ORIGIN.BOSS;
+                        let bulletTag = BULLET_TAG.REGULAR_SHOT;
+                        let trailAlpha = BULLET_TRAIL_ALPHAS.POINT8;
+                        new Bullet(boss.x, boss.y, bulletTexture, bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, lifetime);
                     }
 
                     function trajectory() {
@@ -132,16 +146,11 @@ export const ninabil = {
                 "deactivate": function () {
 
                 },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
                 "coolDown": 3, //in seconds
                 "duration": 0.8, //in seconds
                 "path": [],
-
-                "abilityName": "Aimed straight shot",
-                "description": "This is a description DEAL WITH IT",
+                "abilityName": "More SHURIKEN",
+                "description": "Those Shurikens will annihalate your targets, if you can aim it!",
                 "iconUrl": "img/bg.png",
             },
             "ability2": {
@@ -152,9 +161,12 @@ export const ninabil = {
                     let amplitude = 0.001 * Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) + 0.75;
                     let length = Math.sqrt((boss.x - mouseCoords[0]) ** 2 + (boss.y - mouseCoords[1]) ** 2) / 3;
                     for (let i = 0; i < bulletAmount; i++) {
-                        let trajectoryAttributes = [i, mouseCoords[0], mouseCoords[1], amplitude, boss.x, boss.y, length, 0, 0]
-                        let bullet = new Bullet(boss.x, boss.y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
-                        allBullets.push(bullet);
+                        let attributes = [i, mouseCoords[0], mouseCoords[1], amplitude, boss.x, boss.y, length, 0, 0]
+                        let bulletTexture = new NinjaAbility2TextureFactory().getTexture();
+                        let bulletOrigin = BULLET_ORIGIN.BOSS;
+                        let bulletTag = BULLET_TAG.REGULAR_SHOT;
+                        let trailAlpha = BULLET_TRAIL_ALPHAS.POINT8;
+                        new Bullet(boss.x, boss.y, bulletTexture, bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, lifetime);
                     }
 
                     function trajectory() {
@@ -194,16 +206,12 @@ export const ninabil = {
                 "deactivate": function () {
 
                 },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
                 "coolDown": 3, //in seconds
                 "duration": 0, //in seconds
                 "arrived": false,
 
                 "abilityName": "Shuriken",
-                "description": "Those Shurikens will annihalate your targets, if you can aim it",
+                "description": "Those Shurikens will annihalate your targets, if you can aim it!",
                 "iconUrl": "img/bg.png",
             },
             "ability3": {
@@ -265,10 +273,6 @@ export const ninabil = {
                     this.originalBossCoords = [];
                     boss.canBeControlled = true;
                 },
-                "bulletVisuals": {
-                    "radius": 4,
-                    "color": "white"
-                },
                 "coolDown": 5, //in seconds
                 "duration": 0.3, //in seconds
 
@@ -276,7 +280,7 @@ export const ninabil = {
                 "path": [],
 
                 "abilityName": "Dash",
-                "description": "Relocate yourself with this dash",
+                "description": "Change Yourself with DASH!",
                 "iconUrl": "img/bg.png",
             },
         },
@@ -303,9 +307,12 @@ export const ninabil = {
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
                         x = boss.x - Math.sin(angle) / stretchFactor,
                         y = boss.y - Math.cos(angle) / stretchFactor,
-                        trajectoryAttributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0],
-                        bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
-                    allBullets.push(bullet);
+                        attributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0];
+                    let bulletTexture = new NinjaPassiveTextureFactory().getTexture();
+                    let bulletOrigin = BULLET_ORIGIN.BOSS;
+                    let bulletTag = BULLET_TAG.REGULAR_SHOT;
+                    let trailAlpha = BULLET_TRAIL_ALPHAS.POINT8;
+                    new Bullet(x, y, bulletTexture, bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, lifetime);
                 }
 
                 function trajectory() {
@@ -358,10 +365,6 @@ export const ninabil = {
                     return [x, y];
                 }
             },
-            "bulletVisuals": {
-                "radius": 7,
-                "color": "white"
-            },
             "frequency": 1.75, //in seconds
 
             "abilityName": "Passive",
@@ -391,9 +394,12 @@ export const ninabil = {
                         stretchFactor = (Math.cos(angle - lastVertex) * Math.sqrt(Math.sin(lastVertex) ** 2 + Math.cos(lastVertex) ** 2)),
                         x = Math.sin(angle) / stretchFactor + boss.x,
                         y = Math.cos(angle) / stretchFactor + boss.y,
-                        trajectoryAttributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0, 0],
-                        bullet = new Bullet(x, y, bulletTexture, EXAMPLE_BULLET_PROPERTIES, trajectory, trajectoryAttributes, lifetime);
-                    allBullets.push(bullet);
+                        attributes = [i, bulletAmount, angle, lastVertex, 1, 0, amplitude, 0, 0];
+                        let bulletTexture = new NinjaEnrageTextureFactory().getTexture();
+                        let bulletOrigin = BULLET_ORIGIN.BOSS;
+                        let bulletTag = BULLET_TAG.REGULAR_SHOT;
+                        let trailAlpha = BULLET_TRAIL_ALPHAS.POINT8;
+                        new Bullet(x, y, bulletTexture, bulletOrigin, bulletTag, trailAlpha, trajectory, attributes, lifetime);
                 }
 
                 function trajectory() {
@@ -452,10 +458,6 @@ export const ninabil = {
                     return [x, y];
                 }
             },
-            "bulletVisuals": {
-                "radius": 10,
-                "color": "white"
-            },
             "frequency": 1.2, //in seconds
 
             "abilityName": "Passive",
@@ -464,3 +466,84 @@ export const ninabil = {
         },
     }
 };
+
+
+let loadNinjaAbility1TextureOnFirstCall = true;
+let NinjaAbility1Texture;
+class NinjaAbility1TextureFactory {
+    constructor() {
+        if (loadNinjaAbility1TextureOnFirstCall) {
+            NinjaAbility1Texture = createBulletTexture({
+                radius: 8,
+                mainColor: "#ffffff",
+                outerBorderColor: "#c5d0e766",
+                outerBorderWidth: 3,
+                innerBorderColor: "#7f7ca8",
+                innerborderWidth: 3,
+            });
+        }
+    }
+    getTexture() {
+        return NinjaAbility1Texture;
+    }
+}
+
+let loadNinjaAbility2TextureOnFirstCall = true;
+let NinjaAbility2Texture;
+class NinjaAbility2TextureFactory {
+    constructor() {
+        if (loadNinjaAbility2TextureOnFirstCall) {
+            NinjaAbility2Texture = createBulletTexture({
+                radius: 8,
+                mainColor: "#ffffff",
+                outerBorderColor: "#c5d0e766",
+                outerBorderWidth: 3,
+                innerBorderColor: "#7f7ca8",
+                innerborderWidth: 3,
+            });
+        }
+    }
+    getTexture() {
+        return NinjaAbility2Texture;
+    }
+}
+
+let loadNinjaPassiveTextureOnFirstCall = true;
+let NinjaPassiveTexture;
+class NinjaPassiveTextureFactory {
+    constructor() {
+        if (loadNinjaPassiveTextureOnFirstCall) {
+            NinjaPassiveTexture = createBulletTexture({
+                radius: 8,
+                mainColor: "#ffffff",
+                outerBorderColor: "#c5d0e766",
+                outerBorderWidth: 3,
+                innerBorderColor: "#7f7ca8",
+                innerborderWidth: 3,
+            });
+        }
+    }
+    getTexture() {
+        return NinjaPassiveTexture;
+    }
+}
+
+let loadNinjaEnrageTextureOnFirstCall = true;
+let NinjaEnrageTexture;
+class NinjaEnrageTextureFactory {
+    constructor() {
+        if (loadNinjaEnrageTextureOnFirstCall) {
+            NinjaEnrageTexture = createBulletTexture({
+                radius: 8,
+                mainColor: "#ffffff",
+                outerBorderColor: "#c5d0e766",
+                outerBorderWidth: 3,
+                innerBorderColor: "#7f7ca8",
+                innerborderWidth: 3,
+            });
+        }
+    }
+    getTexture() {
+        return NinjaEnrageTexture;
+    }
+}

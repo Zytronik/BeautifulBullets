@@ -6,7 +6,7 @@ import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./gameElements/match.js";
 import { BULLET_SPAWN_PROTECTION_FRAMES, FPS, GRACE_RANGE_SQUARED } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
-import { allBullets, BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./gameElements/bullet.js";
+import { allBullets, BULLET_ORIGIN } from "./gameElements/bullet.js";
 import { SpriteLoader } from "./view/spriteLoader.js";
 import { allHitableCircles } from "./gameElements/hitableObjects.js";
 import { sounds } from "./sound/sound.js";
@@ -20,7 +20,6 @@ export let gamePaused = true;
 export let player1Canvas;
 export let player2Canvas;
 export let spriteLoader;
-export let bulletTexture;
 
 export let currentFPS = 0;
 export let canvasRenderTime = 0;
@@ -39,12 +38,11 @@ export function main_loadGame([character1, character2], onLoad) {
         loadOnFirstCall = false;
         spriteLoader = new SpriteLoader(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
         match = new Match(CHARACTER_DATA[character1], CHARACTER_DATA[character2]);
-        spriteLoader.preloadAllTextures(()=>{
+        spriteLoader.preloadAllTextures(() => {
             challenger = new Challenger(match.player1Character.challenger);
             boss = new Boss(match.player2Character.boss);
             player1Canvas = new GameCanvas(document.querySelector(".player1Canvas"));
             player2Canvas = new GameCanvas(document.querySelector(".player2Canvas"));
-            bulletTexture = createBulletTexture(EXAMPLE_BULLET_TEXTURE_PROPERTIES);
             onLoad();
         });
     } else {
@@ -215,20 +213,16 @@ export function setTime() {
 // ===================================
 
 function hitDetectionChallenger() {
-    const challengerX = challenger.x;
-    const challengerX2 = challenger.x * challenger.x;
-    const challengerY = challenger.y;
-    const challengerY2 = challenger.y * challenger.y;
     let challengerDied = false;
-    allBullets.forEach(function (bullet, index) {
-        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.origin === BULLET_ORIGIN.BOSS) {
-            let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * challengerX) + challengerX2;
-            let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * challengerY) + challengerY2;
-            let hitRange = Math.pow((challenger.radius + bullet.radius), 2);
+    for (let i = allBullets.length - 1; i >= 0; i--) {
+        if (!challengerDied && allBullets[i].framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && allBullets[i].origin === BULLET_ORIGIN.BOSS) {
+            let xDiffSquared = Math.pow((allBullets[i].logicX - challenger.x), 2)
+            let yDiffSquared = Math.pow((allBullets[i].logicY - challenger.y), 2)
+            let hitRange = Math.pow((challenger.radius + allBullets[i].radius), 2);
             if (xDiffSquared + yDiffSquared < hitRange) {
-                allBullets.splice(index, 1);
-                player1Canvas.removeBullet(bullet);
-                player2Canvas.removeBullet(bullet);
+                player1Canvas.removeBullet(allBullets[i]);
+                player2Canvas.removeBullet(allBullets[i]);
+                allBullets.splice(i, 1);
                 challengerDied = challenger.takeDamageAndCheckDead();
                 if (challengerDied) {
                     main_challengerDeath();
@@ -238,57 +232,53 @@ function hitDetectionChallenger() {
                 challenger.gainGraceCharge();
             }
         }
-    });
+    }
 }
 
 function hitDetectionBoss() {
-    const bossX = boss.x;
-    const bossX2 = boss.x * boss.x;
-    const bossY = boss.y;
-    const bossY2 = boss.y * boss.y;
     let bossDied = false;
-    allBullets.forEach(function (bullet, index) {
-        if (!bossDied && bullet.origin === BULLET_ORIGIN.CHALLENGER) {
-            let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * bossX) + bossX2;
-            let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * bossY) + bossY2;
-            let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
+    for (let i = allBullets.length - 1; i >= 0; i--) {
+        if (!bossDied && allBullets[i].origin === BULLET_ORIGIN.CHALLENGER) {
+            let xDiffSquared = Math.pow((allBullets[i].logicX - boss.x), 2)
+            let yDiffSquared = Math.pow((allBullets[i].logicY - boss.y), 2)
+            let hitRange = Math.pow((boss.radius + allBullets[i].radius), 2);
             if (xDiffSquared + yDiffSquared < hitRange) {
-                allBullets.splice(index, 1);
-                player1Canvas.removeBullet(bullet);
-                player2Canvas.removeBullet(bullet);
+                player1Canvas.removeBullet(allBullets[i]);
+                player2Canvas.removeBullet(allBullets[i]);
+                allBullets.splice(i, 1);
                 bossDied = boss.takeDamageAndCheckDead(challenger.bulletDamage);
                 if (bossDied) {
                     goToState(GAMESTATE.BOSS_DEATH_CUTSCENE);
                 }
             }
         }
-    });
+    }
 }
 
 function hitDetectionObjectsRound() {
-    allHitableCircles.forEach(function (hitable, i) {
+    allHitableCircles.forEach(function (hitable) {
         hitable.tick();
         const hitableX = hitable.x;
         const hitableX2 = hitable.x * hitable.x;
         const hitableY = hitable.y;
         const hitableY2 = hitable.y * hitable.y;
         let hitableDestroyed = false;
-        allBullets.forEach(function (bullet, j) {
-            let canBeHitByTag =  hitable.hitableByTags.includes(bullet.tag);
-            let canBeHitByOrigin =  hitable.hitableByOrigin.includes(bullet.origin);
+        for (let i = allBullets.length - 1; i >= 0; i--) {
+            let canBeHitByTag = hitable.hitableByTags.includes(allBullets[i].tag);
+            let canBeHitByOrigin = hitable.hitableByOrigin.includes(allBullets[i].origin);
             if (!hitableDestroyed && canBeHitByTag && canBeHitByOrigin) {
-                let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * hitableX) + hitableX2;
-                let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * hitableY) + hitableY2;
-                let hitRange = (hitable.radius + bullet.radius) * (hitable.radius + bullet.radius);
+                let xDiffSquared = allBullets[i].logicX * allBullets[i].logicX - (2 * allBullets[i].logicX * hitableX) + hitableX2;
+                let yDiffSquared = allBullets[i].logicY * allBullets[i].logicY - (2 * allBullets[i].logicY * hitableY) + hitableY2;
+                let hitRange = (hitable.radius + allBullets[i].radius) * (hitable.radius + allBullets[i].radius);
                 if (xDiffSquared + yDiffSquared < hitRange) {
-                    allBullets.splice(j, 1);
-                    player1Canvas.removeBullet(bullet);
-                    player2Canvas.removeBullet(bullet);
+                    player1Canvas.removeBullet(allBullets[i]);
+                    player2Canvas.removeBullet(allBullets[i]);
+                    allBullets.splice(i, 1);
                     if (!hitableDestroyed) {
                         hitableDestroyed = hitable.takeDamageAndCheckDestroyed();
                     }
                 }
             }
-        });
+        };
     });
 }

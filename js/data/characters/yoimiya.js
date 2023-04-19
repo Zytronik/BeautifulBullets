@@ -1,5 +1,5 @@
 import { challenger, boss } from "../../main.js";
-import { Bullet, BULLET_ORIGIN, BULLET_TAG, BULLET_TRAIL_ALPHAS, createBulletTexture } from "../../gameElements/bullet.js";
+import { Bullet, BULLET_ORIGIN, BULLET_TAG, BULLET_TRAIL_ALPHAS, createBulletTexture, destroyBulletsAt } from "../../gameElements/bullet.js";
 import { BOARD_HEIGHT, BOARD_WIDTH, FPS } from "../../settings/gameSettings.js";
 import { convertMouseCoordinatesToCanvasCoordinates } from "../../view/canvas.js";
 import { sounds } from "../../sound/sound.js";
@@ -36,7 +36,7 @@ export const yoimiya = {
         "spriteScaling": 110,
         "radius": 8,
         "hitboxTextureProperties": {
-            radius: 9,
+            radius: 10,
             mainColor: "#ed6363",
             outerBorderColor: "#f98b54",
             outerBorderWidth: 3,
@@ -54,7 +54,7 @@ export const yoimiya = {
 
         // S T A T S 
         "stats": {
-            "health": -3,
+            "health": 3,
             "homing": 1.3,
             "fireRate": 12, // Bullets per Second
             "bulletDamage": 2.3,
@@ -68,10 +68,16 @@ export const yoimiya = {
             "use": function () {
                 challenger.bullets = 4;
                 challenger.bulletDamage = 1.4;
+                if (this.once) {
+                    destroyBulletsAt(challenger.x, challenger.y, 200)
+                    this.once = false;
+                }
             },
+            "once": true,
             "deactivate": function () {
                 challenger.bullets = 1;
-                challenger.bulletDamage = this.stats.bulletDamage;
+                challenger.bulletDamage = 1.4;
+                this.once = true;
             },
             "chargeRequired": 25,
             "graceChargeSpeed": 30, // Charge per second in grace
