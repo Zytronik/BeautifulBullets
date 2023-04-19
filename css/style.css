@@ -53,6 +53,16 @@ button::after {
 	src: url(../fonts/VCR_OSD_MONO_1.001.ttf);
 }
 
+@font-face {
+	font-family: kanjiFont;
+	src: url(../fonts/nagayama_kai08.otf);
+}
+
+@font-face {
+	font-family: digitalClock;
+	src: url(../fonts/digital-7-mono.ttf);
+}
+
 main {
 	height: 100%;
 }
@@ -114,6 +124,156 @@ article.hidePage {
 }
 
 /* Title Screen */
+
+article.titleScreen {
+	position: relative;
+}
+
+article.titleScreen .title {
+	position: absolute;
+	top: 0%;
+	left: 50%;
+	width: 100%;
+	transform: translateX(-50%);
+	pointer-events: none;
+	z-index: 2;
+}
+
+article.titleScreen .portal {
+	position: absolute;
+	top: 0%;
+	left: 50%;
+	width: 100%;
+	transform: translateX(-50%);
+	pointer-events: none;
+	z-index: 2;
+}
+
+
+article.titleScreen #config {
+	position: absolute;
+	right: 30px;
+	bottom: 30px;
+	height: 45px;
+	width: 45px;
+	z-index: 10;
+	cursor: pointer;
+}
+
+article.titleScreen #config img {
+	height: 100%;
+	object-fit: contain;
+}
+
+article.titleScreen #credits {
+	position: absolute;
+	right: calc(30px * 2 + 45px);
+	bottom: 30px;
+	height: 45px;
+	width: 45px;
+	z-index: 10;
+	cursor: pointer;
+}
+
+article.titleScreen #credits img {
+	height: 100%;
+	object-fit: contain;
+}
+
+.whiteOverlay {
+	background-color: white;
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 3;
+	opacity: 0;
+}
+
+article.titleScreen section::after {
+	background-color: rgba(0, 0, 0, 0.5);
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	content: "";
+}
+
+article.titleScreen section {
+	position: relative;
+}
+
+article.titleScreen section {
+	background-image: url("../img/startscreen/bg.png");
+	background-size: cover;
+	height: 100%;
+}
+
+article.titleScreen section.night {
+	background-image: url("../img/startscreen/bg_night.png");
+	background-size: cover;
+	height: 100%;
+}
+
+article.titleScreen .clouds .cloud {
+	animation-timing-function: linear;
+	animation-iteration-count: infinite;
+	position: absolute;
+	left: 120%;
+	z-index: 3;
+	height: 120%;
+	pointer-events: none;
+}
+
+article.titleScreen .clouds .cloud1 {
+	animation: drift 70s;
+	animation-delay: 10s;
+	bottom: -45%;
+}
+
+article.titleScreen .clouds .cloud2 {
+	animation: drift 75s;
+	animation-delay: 20s;
+	z-index: 1;
+	bottom: -50%;
+}
+
+article.titleScreen .clouds .cloud3 {
+	animation: drift 80s;
+	z-index: 1;
+	animation-delay: 35s;
+	bottom: -52%;
+}
+
+article.titleScreen .clouds .cloud5 {
+	bottom: -58%;
+	left: -13%;
+}
+
+article.titleScreen .clouds .cloud6 {
+	bottom: -49%;
+	right: -14%;
+	left: unset;
+}
+
+@keyframes drift {
+	from {
+		left: 110%;
+	}
+
+	to {
+		left: -20%;
+	}
+}
+
+/*
 article.titleScreen {
 	display: flex;
 	justify-content: center;
@@ -159,11 +319,21 @@ article.titleScreen .menu-wrapper {
 }
 
 article.titleScreen h1 {
-	font-size: 130px;
+	font-size: 153px;
 	margin-top: unset;
 	margin-bottom: 30px;
 	text-align: center;
+	position: relative;
+	font-family: kanjiFont;
 }
+
+article.titleScreen h1 span {
+	font-size: 15%;
+	position: absolute;
+	bottom: 5%;
+	left: 50%;
+	transform: translateX(-50%);
+}*/
 
 /* Game */
 article.game .characterCanvas {
@@ -207,6 +377,7 @@ article.game #gameTimer {
 
 article.game #gameTimer span {
 	font-size: 60px;
+	font-family: digitalClock;
 }
 
 article.game section {

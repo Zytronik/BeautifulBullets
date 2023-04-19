@@ -28,4 +28,7 @@ export function loadSounds(){
     sounds["fireworkFuse"] = new Howl({
         src: ['sounds/fireworkFuse.mp3']
     });
+    sounds["soundtrack"] = new Howl({
+        src: ['sounds/soundtrack.wav']
+    });
 }

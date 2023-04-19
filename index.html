@@ -3,8 +3,9 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>BeautifulBullets</title>
-	<script defer src='js/view/pixi.min.js'></script>
+	<title>Bullet Heaven</title>
+	<script defer src='js/view/pixi/pixi.min.js'></script>
+	<script defer src='js/view/pixi/pixiLayers.js'></script>
 	<script type="module" src='js/main.js'></script>
 	<script type="module" src='js/data/characters.js'></script>
 	<script type="module" src='js/gameElements/boss.js'></script>
@@ -14,13 +15,13 @@
 	<script type="module" src='js/settings/gameSettings.js'></script>
 	<script type="module" src='js/settings/inputSettings.js'></script>
 	<script type="module" src='js/sound/howler.min.js'></script><!-- https://github.com/goldfire/howler.js#documentation -->
+	<script type="module" src='js/view/page/characterSelectionPage.js'></script>
+	<script type="module" src='js/view/page/configPage.js'></script>
+	<script type="module" src='js/view/page/gamePage.js'></script>
+	<script type="module" src='js/view/page/mainMenuPage.js'></script>
+	<script type="module" src='js/view/page/pageHandler.js'></script>
 	<script type="module" src='js/view/canvas.js'></script>
-	<script type="module" src='js/view/cutScenes.js'></script>
-	<script type="module" src='js/view/frontend.js'></script>
-	<script type="module" src='js/view/mainMenuPage.js'></script>
-	<script type="module" src='js/view/gamePage.js'></script>
-	<script type="module" src='js/view/configPage.js'></script>
-	<script type="module" src='js/view/characterSelectionPage.js'></script>
+	<script type="module" src='js/view/cutscene.js'></script>
 	<script type="module" src='js/view/windowOnLoad.js'></script>
 	<script type="module" src='js/view/windowOnResize.js'></script>
 	<link href='css/style.css' rel='stylesheet' />
@@ -29,10 +30,24 @@
 <body>
 	<main>
 		<article class="titleScreen">
-			<section>
+			<div class="whiteOverlay"></div>
+			<a id="config" title="Settings"><img src="img/startscreen/config.png" alt="config"></a>
+			<a id="credits" target="_blank" href="https://youtu.be/dQw4w9WgXcQ" title="Credits"><img src="img/startscreen/credits.png" alt="credits"></a>
+			<div class="clouds">
+				<img class="cloud cloud1" src="img/startscreen/cloud1.png">
+				<img class="cloud cloud2" src="img/startscreen/cloud2.png">
+				<img class="cloud cloud3" src="img/startscreen/cloud1.png">
+				<img class="cloud cloud4" src="img/startscreen/cloud2.png">
+				<img class="cloud cloud5" src="img/startscreen/cloud1.png">
+				<img class="cloud cloud6" src="img/startscreen/cloud2.png">
+			</div>
+			<section class="">
+				<img class="title" src="img/startscreen/titel.png">
+				<img class="portal" src="img/startscreen/portal.png">
+				<!-- 
 				<div class="menu-wrapper">
 					<div class="title">
-						<h1>B-Bullets</h1>
+						<h1>Bullet Heaven<span>弾丸天国</span></h1>
 					</div>
 					<div class="menu">
 						<div class="menu-point">
@@ -45,7 +60,7 @@
 					<div class="footer">
 						<a href="#">Credits</a>
 					</div>
-				</div>
+				</div> -->
 			</section>
 		</article>
 		<article class="characterSelection hidePage">

@@ -1,15 +1,15 @@
 import { CHARACTER_DATA } from "./data/characters.js";
 import { GameCanvas } from "./view/canvas.js";
-import { updateGameUI } from "./view/gamePage.js";
+import { updateGameUI } from "./view/page/gamePage.js";
 import { Boss } from "./gameElements/boss.js";
 import { Challenger } from "./gameElements/challenger.js";
 import { Match } from "./gameElements/match.js";
 import { BULLET_SPAWN_PROTECTION_FRAMES, FPS, GRACE_RANGE_SQUARED } from "./settings/gameSettings.js";
 import { currentGameState, GAMESTATE, goToState } from "./gameStateManager.js";
-import { allBullets } from "./gameElements/bullet.js";
-import { BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./data/bulletPresets.js";
-import {SpriteLoader} from "./view/spriteLoader.js";
+import { allBullets, BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./gameElements/bullet.js";
+import { SpriteLoader } from "./view/spriteLoader.js";
 import { allHitableCircles } from "./gameElements/hitableObjects.js";
+import { sounds } from "./sound/sound.js";
 
 export let challenger;
 export let boss;
@@ -67,6 +67,7 @@ export function main_startGame() {
     isGameStateEnraged = false;
     gamePaused = false;
     gameLoop();
+    sounds["soundtrack"].play();
 }
 
 let previousFrameAt = 0;
@@ -125,11 +126,13 @@ function gameLogic() {
 
 export function main_pauseGameLogic() {
     gamePaused = true;
+    sounds["soundtrack"].pause();
 }
 
 export function main_unpauseGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
+    sounds["soundtrack"].play();
 }
 
 export function main_clearAllBullets() {
@@ -176,6 +179,7 @@ export function main_closeGameLoop() {
     main_clearAllBullets();
     isGameStateEnraged = false;
     gamePaused = true;
+    sounds["soundtrack"].stop();
 }
 
 // ===================================
@@ -217,7 +221,7 @@ function hitDetectionChallenger() {
     const challengerY2 = challenger.y * challenger.y;
     let challengerDied = false;
     allBullets.forEach(function (bullet, index) {
-        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.bulletProperties.origin === BULLET_ORIGIN.BOSS) {
+        if (!challengerDied && bullet.framesAlive > BULLET_SPAWN_PROTECTION_FRAMES && bullet.origin === BULLET_ORIGIN.BOSS) {
             let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * challengerX) + challengerX2;
             let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * challengerY) + challengerY2;
             let hitRange = Math.pow((challenger.radius + bullet.radius), 2);
@@ -244,7 +248,7 @@ function hitDetectionBoss() {
     const bossY2 = boss.y * boss.y;
     let bossDied = false;
     allBullets.forEach(function (bullet, index) {
-        if (!bossDied && bullet.bulletProperties.origin === BULLET_ORIGIN.CHALLENGER) {
+        if (!bossDied && bullet.origin === BULLET_ORIGIN.CHALLENGER) {
             let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * bossX) + bossX2;
             let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * bossY) + bossY2;
             let hitRange = (boss.radius + bullet.radius) * (boss.radius + bullet.radius);
@@ -270,8 +274,8 @@ function hitDetectionObjectsRound() {
         const hitableY2 = hitable.y * hitable.y;
         let hitableDestroyed = false;
         allBullets.forEach(function (bullet, j) {
-            let canBeHitByTag =  hitable.hitableByTags.includes(bullet.bulletProperties.tag);
-            let canBeHitByOrigin =  hitable.hitableByOrigin.includes(bullet.bulletProperties.origin);
+            let canBeHitByTag =  hitable.hitableByTags.includes(bullet.tag);
+            let canBeHitByOrigin =  hitable.hitableByOrigin.includes(bullet.origin);
             if (!hitableDestroyed && canBeHitByTag && canBeHitByOrigin) {
                 let xDiffSquared = bullet.logicX * bullet.logicX - (2 * bullet.logicX * hitableX) + hitableX2;
                 let yDiffSquared = bullet.logicY * bullet.logicY - (2 * bullet.logicY * hitableY) + hitableY2;

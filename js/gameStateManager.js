@@ -1,8 +1,8 @@
-import { frontend_showPage, PAGES } from "./view/frontend.js";
-import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/gamePage.js";
-import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/characterSelectionPage.js";
+import { view_showPage, PAGES, view_mainScreenTransition } from "./view/page/pageHandler.js";
+import { frontend_closeGameOverScreen, frontend_gameOverAnimation, frontend_gameOverScreen, challengerDeathCutsceneToBlack, challengerDeathCutscene, fadeInUI, frontend_setupGameUI, frontend_showPauseScreen, frontend_closePauseScreen, frontend_showRoundEndScreen, frontend_switchSidesAnimations } from "./view/page/gamePage.js";
+import { frontend_resetRdyUps, frontend_getSelectedCharacters, } from "./view/page/characterSelectionPage.js";
 import { main_swapSides, main_closeGameLoop, main_loadGame, match, main_pauseGameLogic, main_unpauseGameLogic, main_setGameStateEnraged, main_clearAllBullets, main_startGame } from "./main.js";
-import { playGameStartCutscene } from "./view/cutScenes.js";
+import { playGameStartCutscene } from "./view/cutscene.js";
 
 export let currentGameState;
 export const GAMESTATE = {
@@ -77,7 +77,7 @@ function mainMenuToSettings() {
             - close main menu screen
             - show settings screen
     */
-    frontend_showPage(PAGES.CONFIG);
+    view_showPage(PAGES.CONFIG);
 }
 
 function mainMenuToCharacterSelection() {
@@ -90,7 +90,7 @@ function mainMenuToCharacterSelection() {
             - reset ready buttons
     */
     frontend_resetRdyUps();
-    frontend_showPage(PAGES.CHARACTER_SELECTION);
+    view_mainScreenTransition();
 }
 
 function settingsToMainMenu() {
@@ -101,7 +101,7 @@ function settingsToMainMenu() {
             - close settings screen
             - show main menu screen
     */
-    frontend_showPage(PAGES.MAIN_MENU);
+    view_showPage(PAGES.MAIN_MENU);
 }
 
 function characterSelectionToMainMenu() {
@@ -112,7 +112,7 @@ function characterSelectionToMainMenu() {
             - close character selection screen
             - show main menu screen
     */
-    frontend_showPage(PAGES.MAIN_MENU);
+    view_showPage(PAGES.MAIN_MENU);
 }
 
 function characterSelectionToGameStartCutscene() {
@@ -131,7 +131,7 @@ function characterSelectionToGameStartCutscene() {
             - play intro cutscene
             - go to GAMEPLAY_REGULAR after cutscene
     */
-    frontend_showPage(PAGES.GAMEPLAY);
+    view_showPage(PAGES.GAMEPLAY);
     main_loadGame(frontend_getSelectedCharacters(), ()=>{
         playGameStartCutscene();
         frontend_setupGameUI();
@@ -246,7 +246,7 @@ function pauseScreenToMainMenu() {
     */
     frontend_closePauseScreen();
     main_closeGameLoop();
-    frontend_showPage("titleScreen");
+    view_showPage("titleScreen");
 }
 
 function gameplayToChallengerDeath() {
@@ -407,7 +407,7 @@ function resultScreenToCharacterSelection() {
     main_closeGameLoop();
     frontend_closeGameOverScreen();
     setTimeout(() => {
-        frontend_showPage(PAGES.CHARACTER_SELECTION);
+        view_showPage(PAGES.CHARACTER_SELECTION);
     }, 200 * 7);
 }
 
@@ -422,6 +422,6 @@ function resultScreenToMainMenu() {
     main_closeGameLoop();
     frontend_closeGameOverScreen();
     setTimeout(() => {
-        frontend_showPage(PAGES.MAIN_MENU);
+        view_showPage(PAGES.MAIN_MENU);
     }, 200 * 7);
 }
