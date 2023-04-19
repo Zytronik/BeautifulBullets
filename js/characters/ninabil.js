@@ -137,7 +137,7 @@ export const ninabil = {
                     "radius": 4,
                     "color": "white"
                 },
-                "coolDown": 2, //in seconds
+                "coolDown": 3, //in seconds
                 "duration": 0.8, //in seconds
                 "path": [],
 
@@ -199,7 +199,7 @@ export const ninabil = {
                     "radius": 4,
                     "color": "white"
                 },
-                "coolDown": 2, //in seconds
+                "coolDown": 3, //in seconds
                 "duration": 0, //in seconds
                 "arrived": false,
 
@@ -270,7 +270,7 @@ export const ninabil = {
                     "radius": 4,
                     "color": "white"
                 },
-                "coolDown": 2, //in seconds
+                "coolDown": 5, //in seconds
                 "duration": 0.3, //in seconds
 
                 "originalBossCoords": [],

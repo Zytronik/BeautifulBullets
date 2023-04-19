@@ -178,6 +178,8 @@ export function main_closeGameLoop() {
     gamePaused = true;
 }
 
+// ===================================
+// Cheaty section
 export function cheats() {
     if (currentGameState === GAMESTATE.GAMEPLAY_REGULAR || currentGameState === GAMESTATE.GAMEPLAY_ENRAGED) {
         challenger.currentHealth = -1;
@@ -206,6 +208,7 @@ export function setTime() {
         console.log("Timer set to " + match.elapsedTimeInFrames / FPS + " Seconds");
     }
 }
+// ===================================
 
 function hitDetectionChallenger() {
     const challengerX = challenger.x;

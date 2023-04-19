@@ -1,4 +1,5 @@
 import { BOARD_HEIGHT, BOARD_WIDTH } from "../settings/gameSettings.js";
+import { sounds } from "../sound/sound.js";
 
 export let allHitableCircles = [];
 export class HitableCircle {
@@ -46,6 +47,7 @@ export class HitableCircle {
         let border = this.radius * 2;
         let outsideX = this.x <= -border || this.x >= BOARD_WIDTH + border;
         let outsideY = this.y <= -border || this.y >= BOARD_HEIGHT + border;
+        // sounds["fireworkFuse"].stop();
         return outsideX || outsideY;
     }
 }
