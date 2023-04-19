@@ -35,7 +35,7 @@ export const ninabil = {
         "spriteScaling": 95,
         "radius": 5,
         "hitboxTextureProperties": {
-            radius: 9,
+            radius: 10,
             mainColor: "#ed6363",
             outerBorderColor: "#f95454",
             outerBorderWidth: 3,
