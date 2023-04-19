@@ -1,5 +1,5 @@
 import { FPS, BOARD_HEIGHT, BOARD_WIDTH } from "../settings/gameSettings.js";
-import { playCountDown, showCutSceneBars} from "./gamePage.js";
+import { playCountDown, showCutSceneBars} from "./page/gamePage.js";
 import { boss, challenger, player1Canvas, player2Canvas } from "../main.js"; 
 
 export function playGameStartCutscene(){

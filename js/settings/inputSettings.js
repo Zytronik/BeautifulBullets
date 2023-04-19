@@ -1,5 +1,5 @@
 import { cheats, lowerChallengerHealth, lowerBossHealth, setTime, main_setGameStateEnraged, main_handleGoBackButton } from "../main.js";
-import { updateConfigPage } from "../view/configPage.js";
+import { updateConfigPage } from "../view/page/configPage.js";
 
 export function updateSetting(key, code, isBoss){
     console.log(key, code, isBoss);
