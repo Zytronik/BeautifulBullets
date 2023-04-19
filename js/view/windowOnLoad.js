@@ -1,5 +1,5 @@
 import { isGameStateEnraged } from "../main.js";
-import { goToState, GAMESTATE } from "../gameStateManager.js";
+import { goToState, GAMESTATE, currentGameState } from "../gameStateManager.js";
 import { loadCharacterSelectionScreen, rdyUpPlayer1, rdyUpPlayer2, getHighestStats } from "./page/characterSelectionPage.js";
 import { setupConfigPage } from "./page/configPage.js";
 import { sounds, loadSounds } from "../sound/sound.js";
@@ -26,7 +26,7 @@ function prepareFrontendButtons() {
         goToState(GAMESTATE.CHARACTER_SELECTION);
     }); */ 
     document.body.addEventListener('keypress', ()=>{
-        if(GAMESTATE.MAIN_MENU){
+        if(currentGameState == GAMESTATE.MAIN_MENU){
             goToState(GAMESTATE.CHARACTER_SELECTION);
         }
     });
