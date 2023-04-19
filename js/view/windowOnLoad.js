@@ -10,6 +10,7 @@ export let highestStats;
 export let mouseCoordinates = [];
 
 window.onload = function () {
+    mainScreenBackground();
     loadSounds();
     prepareFrontendButtons();
     prepareCharacterSelectionData();
@@ -19,10 +20,15 @@ window.onload = function () {
 
 //https://stackoverflow.com/questions/1223764/how-to-trap-double-key-press-in-javascript in game leave
 function prepareFrontendButtons() {
-    document.querySelector("#play").addEventListener("click", function (e) {
+    /* document.querySelector("#play").addEventListener("click", function (e) {
         e.preventDefault();
         sounds["clickSound"].play();
         goToState(GAMESTATE.CHARACTER_SELECTION);
+    }); */ 
+    document.body.addEventListener('keypress', ()=>{
+        if(GAMESTATE.MAIN_MENU){
+            goToState(GAMESTATE.CHARACTER_SELECTION);
+        }
     });
     document.querySelector("#config").addEventListener("click", function (e) {
         e.preventDefault();
@@ -80,5 +86,12 @@ function addMouseCoordinateEventListener() {
     document.onmousemove = (event) => {
         mouseCoordinates = [event.clientX, event.clientY];
         updateBossCursor();
+    }
+}
+
+function mainScreenBackground(){
+    var now = new Date();
+    if(now.getHours() > 20 || now.getHours() < 8){
+        document.querySelector("article.titleScreen > section").classList.add("night");
     }
 }

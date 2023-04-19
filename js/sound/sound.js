@@ -13,4 +13,7 @@ export function loadSounds(){
     sounds["challengerShotSound"] = new Howl({
         src: ['sounds/challengerShotSound.mp3']
     });
+    sounds["soundtrack"] = new Howl({
+        src: ['sounds/soundtrack.wav']
+    });
 }

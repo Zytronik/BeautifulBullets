@@ -10,6 +10,7 @@ import { allBullets } from "./gameElements/bullet.js";
 import { BULLET_ORIGIN, createBulletTexture, EXAMPLE_BULLET_TEXTURE_PROPERTIES } from "./data/bulletPresets.js";
 import {SpriteLoader} from "./view/spriteLoader.js";
 import { allHitableCircles } from "./gameElements/hitableObjects.js";
+import { sounds } from "./sound/sound.js";
 
 export let challenger;
 export let boss;
@@ -67,6 +68,7 @@ export function main_startGame() {
     isGameStateEnraged = false;
     gamePaused = false;
     gameLoop();
+    sounds["soundtrack"].play();
 }
 
 let previousFrameAt = 0;
@@ -125,11 +127,13 @@ function gameLogic() {
 
 export function main_pauseGameLogic() {
     gamePaused = true;
+    sounds["soundtrack"].pause();
 }
 
 export function main_unpauseGameLogic() {
     gamePaused = false;
     requestAnimationFrame(gameLoop);
+    sounds["soundtrack"].play();
 }
 
 export function main_clearAllBullets() {
@@ -176,6 +180,7 @@ export function main_closeGameLoop() {
     main_clearAllBullets();
     isGameStateEnraged = false;
     gamePaused = true;
+    sounds["soundtrack"].stop();
 }
 
 export function cheats() {
