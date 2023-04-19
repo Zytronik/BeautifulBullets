@@ -35,7 +35,14 @@ export const yoimiya = {
         },
         "spriteScaling": 110,
         "radius": 8,
-        "hitboxColor": "black",
+        "hitboxTextureProperties": {
+            radius: 9,
+            mainColor: "#ed6363",
+            outerBorderColor: "#f98b54",
+            outerBorderWidth: 3,
+            innerBorderColor: "#ff7300",
+            innerborderWidth: 3,
+        },
         "bulletTextureProperties": {
             radius: 5,
             mainColor: "#edc163",
