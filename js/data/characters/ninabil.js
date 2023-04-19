@@ -120,7 +120,7 @@ export const ninabil = {
         "abilities": {
             "ability1": {
                 "use": function () {
-                    if (boss.ability2ActiveFor % (this.duration * FPS / 3) < 1) {
+                    if (boss.ability1ActiveFor % (this.duration * FPS / 3) < 1) {
                         let lifetime = 10;
                         let coords = convertMouseCoordinatesToCanvasCoordinates();
                         let attributes = [coords, boss.x, boss.y]
