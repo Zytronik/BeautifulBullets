@@ -1,35 +1,189 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> 
+
+<head>
 	<meta charset="utf-8">
 	<title>BeautifulBullets</title>
 	<script type="module" src='js/main.js'></script>
-	<script type="module" src='js/canvas.js'></script>
-	<script type="module" src='js/boss.js'></script>
-	<script type="module" src='js/challenger.js'></script>
-	<script type="module" src='js/bullet.js'></script>
-	<script type="module" src='js/bulletFunctions.js'></script>
-	<script type="module" src='js/gameSettings.js'></script>
-	<script type="module" src='js/level.js'></script>
-	<script type="module" src='js/spriteSettings.js'></script>
-	<script type="module" src='js/inputSettings.js'></script>
+	<script type="module" src='js/data/match.js'></script>
+	<script type="module" src='js/data/characters.js'></script>
+	<script type="module" src='js/gameElements/boss.js'></script>
+	<script type="module" src='js/gameElements/bullet.js'></script>
+	<script type="module" src='js/gameElements/challenger.js'></script>
+	<script type="module" src='js/settings/gameSettings.js'></script>
+	<script type="module" src='js/settings/graphicSettings.js'></script>
+	<script type="module" src='js/settings/inputSettings.js'></script>
+	<script type="module" src='js/sound/howler.min.js'></script><!-- https://github.com/goldfire/howler.js#documentation -->
+	<script type="module" src='js/view/canvas.js'></script>
+	<script type="module" src='js/view/cutScenes.js'></script>
+	<script type="module" src='js/view/frontend.js'></script>
+	<script type="module" src='js/view/mainMenuPage.js'></script>
+	<script type="module" src='js/view/gamePage.js'></script>
+	<script type="module" src='js/view/configPage.js'></script>
+	<script type="module" src='js/view/characterSelectionPage.js'></script>
+	<script type="module" src='js/view/windowOnLoad.js'></script>
+	<script type="module" src='js/view/windowOnResize.js'></script>
 	<link href='css/style.css' rel='stylesheet' />
 </head>
 
 <body>
 	<main>
-		<article>
+		<article class="titleScreen">
+			<section>
+				<div class="menu-wrapper">
+					<div class="title">
+						<h1>B-Bullets</h1>
+					</div>
+					<div class="menu">
+						<div class="menu-point">
+							<button id="play">Play</button>
+						</div>
+						<div class="menu-point">
+							<button id="config">Config</button>
+						</div>
+					</div>
+					<div class="footer">
+						<a target="_blank" href="https://blog.hslu.ch/games/">Credits</a>
+					</div>
+				</div>
+			</section>
+		</article>
+		<article class="characterSelection hidePage">
+			<section>
+				<div class="pageBack">
+					<img src="img/undo.png">
+					<span>Back</span>
+				</div>
+				<div class="player" id="player1">
+					<a href="#" class="control_next">
+						<img src="img/next_w.png">
+					</a>
+					<a href="#" class="control_prev"><img src="img/prev_w.png"></a>
+					<div class="characters"></div>
+					<button id="rdyButton1" class="rdyButton">Ready</button>
+				</div>
+				<div class="player" id="player2">
+					<a href="#" class="control_next">
+						<img src="img/next_w.png">
+					</a>
+					<a href="#" class="control_prev">
+						<img src="img/prev_w.png">
+					</a>
+					<div class="characters"></div>
+					<button id="rdyButton2" class="rdyButton">Ready</button>
+				</div>
+			</section>
+		</article>
+		<article class="config hidePage">
+			<section>
+				<div class="pageBack">
+					<img src="img/undo.png">
+					<span>Back</span>
+				</div>
+				<h2>Settings</h2>
+				<div class="player">
+					<div class="playerSettings-wrapper"></div>
+				</div>
+				<div class="choosingKey">Press Any Key</div>
+			</section>
+		</article>
+		<article class="game hidePage">
+			<div id="debug">
+				<div id="currentFPS"><span>0</span> :FPS</div>
+				<div id="canvasRenderTime"><span>0</span> :canvasRender</div>
+				<div id="gameLogicTime"><span>0</span> :gameLogic</div>
+				<div id="totalJSTime"><span>0</span> :totalJS</div>
+				<div id="nonJSTime"><span>0</span> :nonJS</div>
+				<div id="totalBulletsOnScreen"><span>0</span> :Bullets</div>
+			</div>
+			<section class="pauseScreen">
+				<div class="pauseScreen-wrapper">
+					<h3>Game Paused</h3>
+					<button id="resumeGame">Resume</button>
+					<button id="quitGame">Quit</button>
+				</div>
+			</section>
+			<section class="roundEndScreen">
+				<div class="roundEndScreen-wrapper">
+					<div class="generalStats">
+						<h3>Round End</h3>
+						<span></span>
+					</div>
+					<div class="roundStatsPlayer1">
+						<h4></h4>
+						<span class="score">0</span>
+					</div>
+					<div class="roundStatsPlayer2">
+						<h4></h4>
+						<span class="score">0</span>
+					</div>
+				</div>
+			</section>
+			<section class="infoScreen">
+				<h3 class="switchingSides">Switching<br>Sides</h3>
+				<h3 class="matchOver">Match<br>Over</h3>
+			</section>
+			<section class="resultScreen">
+				<div class="matchOverInfo">
+					<h3>Match Over</h3>
+					<span></span>
+				</div>
+				<div class="resultScreen-wrapper">
+					<div class="matchStatsPlayer1 matchStatsPlayer">
+						<span class="score">0</span>
+						<p class="roundsInfo">Rounds:</p>
+						<div class="matchStatsRounds"></div>
+					</div>
+					<div class="matchStatsPlayer2 matchStatsPlayer">
+						<span class="score">0</span>
+						<p class="roundsInfo">Rounds:</p>
+						<div class="matchStatsRounds"></div>
+					</div>
+				</div>
+				<div class="menu-wrapper">
+					<h3>Game Over</h3>
+					<button class="retry">Retry</button>
+					<button class="changeCharacters">Change Character</button>
+					<button class="quitGame">Quit</button>
+				</div>
+			</section>
+			<section class="cutSceneBars"></section>
 			<section>
 				<div class="challenger player">
-					<div class="challengerCanvas canvas"></div>
+					<div class="player-wrapper">
+						<div class="challenger-healthbar fadeOut"></div>
+						<div class="boss-healthbar fadeOut"></div>
+						<div class="challenger-abilitie fadeOut">
+							<div class="grace-bar">
+								<div></div>
+							</div>
+						</div>
+						<div class="boss-abilities fadeOut"></div>
+						<div class="player1Canvas canvas"></div>
+					</div>
+					<div class="gameCountDown"></div>
 				</div>
 			</section>
 			<section>
 				<div class="boss player">
-					<div class="bossCanvas canvas"></div>
-					<button id="attack">Do the thing</button>
+					<div class="player-wrapper">
+						<div class="challenger-healthbar fadeOut"></div>
+						<div class="boss-healthbar fadeOut"></div>
+						<div class="challenger-abilitie fadeOut">
+							<div class="grace-bar">
+								<div></div>
+							</div>
+						</div>
+						<div class="boss-abilities fadeOut"></div>
+						<div class="player2Canvas canvas"></div>
+					</div>
+					<div class="gameCountDown"></div>
 				</div>
 			</section>
+			<div id="gameTimer">
+				<span></span>
+			</div>
+			<img id="bossCursor" src="img/cursor.png">
 		</article>
 	</main>
 </body>

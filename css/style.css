@@ -1,53 +1,1430 @@
 /* General */
 body,
 html {
-	background-color: grey;
+	background-color: rgb(28, 28, 28);
 	color: white;
 	height: 100vh;
 	padding: 0;
 	margin: 0;
+	font-size: 18px;
+	font-family: pixelatedFont;
+	overflow: hidden;
+}
+
+body.hideCursor {
+	cursor: none;
+}
+
+button {
+	font-family: pixelatedFont;
+	position: relative;
+	background: rgb(226, 226, 226);
+	z-index: 1;
+	font-weight: bold;
+	cursor: pointer;
+}
+
+button::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 10px;
+	bottom: 10px;
+	left: -10px;
+	right: -10px;
+	background: rgb(226, 226, 226);
+	z-index: -1;
+}
+
+button::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 4px;
+	bottom: 4px;
+	left: -6px;
+	right: -6px;
+	background: rgb(226, 226, 226);
+	z-index: -1;
+}
+
+@font-face {
+	font-family: pixelatedFont;
+	src: url(../fonts/VCR_OSD_MONO_1.001.ttf);
 }
 
 main {
 	height: 100%;
 }
 
+article {
+	height: 100vh;
+	width: 100vw;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	transition: 300ms;
+}
+
+a,
+a:hover,
+a:active,
+a:focus {
+	color: white;
+}
+
+p {
+	margin: unset;
+}
+
+article.hidePage {
+	visibility: hidden;
+	pointer-events: none;
+	opacity: 0;
+	z-index: 10;
+}
+
+#debug {
+	position: fixed;
+	right: 30px;
+	top: 30px;
+	z-index: 9999;
+	text-align: right;
+}
+
+.fadeIn {
+	visibility: visible !important;
+	opacity: 1 !important;
+	pointer-events: auto !important;
+}
+
+.fadeOut {
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
 /* Variables */
 :root {
-	/* --spawnHeight: 0;
-	--boardBorderWidth: 5px; */
+	--heartWidth: 25px;
+	--bossChallengerHealthX: 0;
+	--bossChallengerHealthY: 0;
+}
+
+/* Title Screen */
+article.titleScreen {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.titleScreen>section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.titleScreen .footer {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 30px;
+}
+
+article.titleScreen .menu {
+	gap: 30px;
+	display: flex;
+	flex-direction: column;
+}
+
+article.titleScreen .menu-point {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.titleScreen .menu-point button {
+	width: 85%;
+	padding: 15px 0;
+	font-size: 40px;
+	cursor: pointer;
+}
+
+article.titleScreen .menu-wrapper {
+	width: 40%;
+}
+
+article.titleScreen h1 {
+	font-size: 130px;
+	margin-top: unset;
+	margin-bottom: 30px;
+	text-align: center;
 }
 
 /* Game */
-
-canvas {
+article.game .characterCanvas {
 	display: block;
-	border: 1px solid red;
+	position: relative;
+	z-index: 2;
 }
 
-article {
+article.game .bulletCanvas {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	z-index: 1;
+}
+
+article.game {
 	display: flex;
 	flex-direction: row;
-	height: 100%;
 }
 
-article section {
+article.game #gameTimer {
+	position: absolute;
+	left: 50%;
+	top: 3%;
+	transform: translateX(-50%);
+	margin-top: -10px;
+}
+
+article.game #gameTimer span {
+	font-size: 60px;
+}
+
+article.game section {
 	width: 50%;
 	height: 100%;
+	position: relative;
 }
 
-article section:last-of-type {
+article.game section:last-of-type::before {
+	content: "";
+	position: absolute;
+	height: 70%;
+	left: 0;
+	top: 15%;
 	border-left: 2px dotted white;
 }
 
-.player {
+article.game #bossCursor {
+	width: 20px;
+	object-fit: contain;
+	display: none;
+	position: absolute;
+	top: 0;
+	left: 0;
+	transform: translate(-50%, -50%);
+}
+
+article.game #bossCursor.active {
+	display: block;
+}
+
+article.game .player {
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
 
-.player .canvas {
-	height: 90%;
+article.game .player .canvas {
+	height: 100%;
+	position: relative;
+	background-image: url("../img/bg.png");
+	background-repeat: repeat;
+	background-size: 10%;
+	overflow: hidden;
 }
 
+article.game::before {
+	background-color: black;
+	content: "";
+	position: absolute;
+	opacity: 0;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100;
+	z-index: 5;
+	height: 100%;
+	transition: opacity 800ms;
+}
+
+article.game.hideContent::before {
+	background-color: black;
+	content: "";
+	position: absolute;
+	opacity: 1;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100;
+	z-index: 5;
+	height: 100%;
+}
+
+article.game .player .canvas>canvas {
+	transition: 1.5s;
+}
+
+article.game .player .canvas::after {
+	content: "";
+	background-color: rgba(0, 0, 0, 0.8);
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+}
+
+article.game .resultScreen {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -9999;
+}
+
+article.game .resultScreen.active {
+	z-index: 10;
+}
+
+article.game .resultScreen-wrapper {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+}
+
+article.game .resultScreen .matchOverInfo {
+	text-align: center;
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+article.game .resultScreen .matchStatsPlayer {
+	width: 30%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	padding-bottom: 5%;
+	padding-right: 5%;
+	padding-left: 5%;
+}
+
+article.game .resultScreen .matchStatsPlayer1 {
+	padding-right: 15%;
+}
+
+article.game .resultScreen .matchStatsPlayer2 {
+	padding-left: 15%;
+	align-items: flex-end;
+}
+
+article.game .resultScreen .matchStatsPlayer1 .score {
+	text-align: right;
+}
+
+article.game .resultScreen .matchStatsPlayer .score {
+	font-size: 200px;
+	width: 100%;
+	text-align: center;
+	padding-bottom: 15px;
+}
+
+article.game .resultScreen .characterWrapper.winner {
+	left: 50%;
+	height: 85%;
+	transform: translateX(-50%);
+	position: absolute;
+	bottom: 0;
+}
+
+article.game .resultScreen .menu-wrapper {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+article.game .resultScreen .menu-wrapper.active {
+	opacity: 1;
+	visibility: visible;
+	z-index: 100;
+	pointer-events: auto;
+}
+
+article.game .resultScreen .menu-wrapper h3 {
+	font-size: 50px;
+	margin-bottom: 15px;
+}
+
+article.game .resultScreen .menu-wrapper button {
+	font-size: 35px;
+	padding: 5px;
+	width: 25%;
+	margin-bottom: 15px;
+}
+
+article.game .resultScreen .characterWrapper.winner img {
+	height: 100%;
+	object-fit: contain;
+}
+
+article.game .resultScreen .characterWrapper.loser .dialogText,
+article.game .resultScreen .characterWrapper.loser {
+	display: none;
+}
+
+article.game .resultScreen .matchStatsPlayer1 .characterWrapper.winner .dialogText {
+	left: 50%;
+}
+
+article.game .resultScreen .matchStatsPlayer2 .characterWrapper.winner .dialogText {
+	left: 50%;
+}
+
+article.game .resultScreen .characterWrapper.winner .dialogText {
+	position: absolute;
+	transform: translateX(-50%);
+	bottom: 14%;
+	height: 10%;
+	width: 130%;
+}
+
+article.game .resultScreen .characterWrapper.winner .dialogText>p.name {
+	margin-bottom: 5px;
+}
+
+article.game .resultScreen .characterWrapper.winner .dialogText>p.text {
+	border: 2px solid white;
+	padding: 10px 15px;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+}
+
+article.game .resultScreen .matchOverInfo h3 {
+	font-size: 45px;
+	margin-bottom: 10px;
+}
+
+article.game .resultScreen .matchOverInfo span {
+	font-size: 35px;
+}
+
+article.game .resultScreen .matchStatsPlayer .matchStatsRounds {
+	width: 100%;
+	margin-top: -20px;
+	position: relative;
+	--scrollbar-width: 8px;
+	--mask-height: 20px;
+	overflow-y: auto;
+	height: 20%;
+	padding-bottom: var(--mask-height);
+	padding-top: var(--mask-height);
+	--mask-image-content: linear-gradient(to bottom,
+			transparent,
+			black var(--mask-height),
+			black calc(100% - var(--mask-height)),
+			transparent);
+	--mask-size-content: calc(100% - var(--scrollbar-width)) 100%;
+	--mask-image-scrollbar: linear-gradient(black, black);
+	--mask-size-scrollbar: var(--scrollbar-width) 100%;
+	mask-image: var(--mask-image-content), var(--mask-image-scrollbar);
+	mask-size: var(--mask-size-content), var(--mask-size-scrollbar);
+	mask-position: 0 0, 100% 0;
+	mask-repeat: no-repeat, no-repeat;
+}
+
+article.game .resultScreen .matchStatsPlayer .matchStatsRounds>div {
+	display: flex;
+	flex-direction: row;
+	border: 2px solid white;
+	padding: 10px;
+	width: calc(100% - 24px);
+	position: relative;
+	justify-content: space-evenly;
+	margin-top: 10px;
+}
+
+article.game .resultScreen .matchOverInfo,
+article.game .resultScreen .matchStatsPlayer .score,
+article.game .resultScreen .matchStatsPlayer .matchStatsRounds>*,
+article.game .resultScreen .matchStatsPlayer .matchStatsRounds,
+article.game .resultScreen .matchStatsPlayer .roundsInfo,
+article.game .resultScreen .matchStatsPlayer .characterWrapper>*,
+article.game .resultScreen .menu-wrapper {
+	opacity: 0;
+	visibility: hidden;
+	transition: 1s;
+	pointer-events: none;
+}
+
+article.game .resultScreen .matchStatsPlayer .roundsInfo {
+	width: 100%;
+}
+
+article.game .resultScreen .matchStatsPlayer1 .roundsInfo {
+	text-align: left;
+}
+
+article.game .infoScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+	transition: 1000ms;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.game .cutSceneBars {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 5;
+}
+
+article.game .cutSceneBars.active::before,
+article.game .cutSceneBars.active::after {
+	height: 10%;
+}
+
+article.game .cutSceneBars::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	background-color: black;
+	z-index: 2;
+	width: 100%;
+	height: 0%;
+	transition: 800ms;
+}
+
+article.game .cutSceneBars::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: black;
+	z-index: 2;
+	width: 100%;
+	height: 0%;
+	transition: 800ms;
+}
+
+article.game .infoScreen.switchingSidesActive h3.switchingSides {
+	font-size: 65px;
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+article.game .infoScreen.matchOverActive h3.matchOver {
+	font-size: 65px;
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+}
+
+article.game .infoScreen h3 {
+	font-size: 10px;
+	transition: 800ms;
+	text-align: center;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+article.game .roundEndScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -100;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
+article.game .roundEndScreen.active,
+article.game .infoScreen.switchingSidesActive,
+article.game .infoScreen.matchOverActive {
+	z-index: 100;
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+}
+
+@keyframes roundEndScreenWidth {
+	0% {
+		width: 0%;
+	}
+
+	100% {
+		width: 50%;
+	}
+}
+
+@keyframes roundEndScreenOpacity {
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
+}
+
+article.game .roundEndScreen.active .roundStatsPlayer1,
+article.game .roundEndScreen.active .roundStatsPlayer2 {
+	animation: roundEndScreenWidth 600ms ease-in-out forwards;
+}
+
+article.game .roundEndScreen.active .generalStats>*,
+article.game .roundEndScreen.active .roundStatsPlayer1>*,
+article.game .roundEndScreen.active .roundStatsPlayer2>* {
+	animation: roundEndScreenOpacity 0.5s ease-in-out 0.2s forwards;
+}
+
+/* .removeRoundEndScreenWidth{
+	animation: roundEndScreenWidth 1s ease-in-out 1s backwards !important;
+}
+.removeRoundEndScreenOpacity{
+	animation: roundEndScreenOpacity 3s ease-in-out backwards !important;
+} */
+
+article.game .roundEndScreen .roundEndScreen-wrapper {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: space-between;
+}
+
+article.game .roundEndScreen .generalStats {
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+article.game .roundEndScreen .generalStats h3 {
+	font-size: 45px;
+	opacity: 0;
+	margin-bottom: 10px;
+}
+
+article.game .roundEndScreen .generalStats span {
+	opacity: 0;
+	font-size: 35px;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1,
+article.game .roundEndScreen .roundStatsPlayer2 {
+	width: 0%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1 h4,
+article.game .roundEndScreen .roundStatsPlayer2 h4 {
+	font-size: 45px;
+	opacity: 0;
+	margin-bottom: unset;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1 span,
+article.game .roundEndScreen .roundStatsPlayer2 span {
+	font-size: 400px;
+	opacity: 0;
+}
+
+article.game .roundEndScreen .roundStatsPlayer1 {
+	background-color: rgba(13, 13, 13, 1);
+}
+
+article.game .roundEndScreen .roundStatsPlayer2 {
+	background-color: rgba(28, 28, 28, 1);
+}
+
+article.game .pauseScreen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.7);
+	z-index: -100;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+}
+
+article.game .pauseScreen.paused {
+	z-index: 100;
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+}
+
+article.game .pauseScreen>div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	gap: 15px
+}
+
+article.game .pauseScreen>div button {
+	font-size: 35px;
+	padding: 5px 5%;
+}
+
+article.game .pauseScreen>div h3 {
+	font-size: 50px;
+	margin-bottom: 15px;
+
+}
+
+article.game .player-wrapper {
+	height: 90%;
+	position: relative;
+}
+
+article.game .challenger .boss-abilities {
+	display: none;
+	transition: 1000ms;
+}
+
+article.game .boss-abilities {
+	position: absolute;
+	left: 100%;
+	bottom: 0;
+	width: 15%;
+	margin-left: 15px;
+	transition: all 1000ms;
+	transition-property: opacity, visibility;
+}
+
+article.game .boss-abilities .ability-wrapper {
+	margin-top: 15px;
+	position: relative;
+}
+
+article.game .boss-abilities .ability-wrapper .overlay {
+	width: 100%;
+	height: 100%;
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+article.game .boss-abilities .ability-wrapper .overlay>div {
+	background-color: red;
+	height: 0%;
+	bottom: 0;
+	position: absolute;
+	width: 100%;
+}
+
+article.game .boss-abilities .ability-wrapper>img {
+	object-fit: contain;
+	width: 100%;
+	background-color: white;
+}
+
+article.game .challenger-abilitie {
+	width: 20px;
+	height: 80%;
+	position: absolute;
+	left: -20px;
+	background-color: white;
+	bottom: 0;
+	transition: all 1000ms;
+	transition-property: opacity, visibility;
+}
+
+article.game .boss .challenger-abilitie {
+	display: none;
+}
+
+article.game .challenger-abilitie .grace-bar {
+	height: 100%;
+	width: 100%;
+}
+
+article.game .challenger-abilitie .grace-bar>div {
+	width: 100%;
+	height: 0%;
+	background-color: blue;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+article.game .challenger-abilitie .grace-bar>span {
+	display: block;
+	width: 100%;
+	border-top: 2px solid black;
+	z-index: 1;
+	position: relative;
+}
+
+article.game .challenger-abilitie .grace-bar>span:first-of-type {
+	border: none;
+}
+
+article.game .boss .boss-healthbar {
+	top: 100%;
+	transition: all 1000ms;
+	transition-property: opacity, visibility;
+}
+
+article.game .boss-healthbar {
+	position: absolute;
+	left: 50%;
+	top: 0;
+	transform: translate(-50%, -50%);
+	width: 75%;
+	z-index: 3;
+	height: 50px;
+	transition: all 1000ms;
+	transition-property: opacity, visibility;
+}
+
+article.game .boss-healthbar .boss-desc {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	position: absolute;
+	justify-content: space-between;
+	z-index: 1;
+	width: 100%;
+}
+
+article.game .boss-healthbar .boss-desc>div {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+article.game .boss-healthbar .boss-desc>span {
+	margin-right: 15px;
+}
+
+article.game .boss-healthbar .boss-desc img {
+	margin-right: 5%;
+	border-radius: 50%;
+	height: 50px;
+	object-fit: contain;
+}
+
+article.game .boss-healthbar .life-bar {
+	height: 25px;
+	border: 1px solid white;
+	top: 50%;
+	left: 45px;
+	position: absolute;
+	width: calc(100% - 50px);
+	transform: translateY(-50%);
+}
+
+article.game .boss-healthbar .life-bar>div {
+	width: 0%;
+	height: 100%;
+	position: absolute;
+	background-color: green;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}
+
+article.game .challenger-healthbar {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	margin-top: 10px;
+	display: flex;
+}
+
+article.game .boss .challenger-healthbar {
+	position: absolute;
+	left: var(--bossChallengerHealthX);
+	top: var(--bossChallengerHealthY);
+	z-index: 1;
+	opacity: 0.4;
+	transform: translate(-50%, 15px) scale(0.7);
+}
+
+article.game .challenger-healthbar .heart {
+	position: relative;
+	width: var(--heartWidth);
+	height: calc(var(--heartWidth) / 10 * 9);
+	margin-right: calc(var(--heartWidth) / 5);
+}
+
+article.game .challenger-healthbar .heart:last-of-type {
+	margin-right: unset;
+}
+
+article.game .challenger-healthbar .heart.life::before,
+article.game .challenger-healthbar .heart.life::after {
+	background: red;
+}
+
+article.game .challenger-healthbar .heart::before,
+article.game .challenger-healthbar .heart::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	width: calc(var(--heartWidth) / 2);
+	height: calc(var(--heartWidth) / 10 * 8);
+	border-radius: 50px 50px 0 0;
+	background: white;
+}
+
+article.game .challenger-healthbar .heart::before {
+	left: calc(var(--heartWidth) / 2);
+	transform: rotate(-45deg);
+	transform-origin: 0 100%;
+}
+
+article.game .challenger-healthbar .heart::after {
+	left: 0;
+	transform: rotate(45deg);
+	transform-origin: 100% 100%;
+}
+
+article.game .gameCountDown {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	font-size: 70px;
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+	transform: translate(-50%, -50%);
+	transition: 500ms;
+}
+
+article.game .gameCountDown.active {
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* Character Selection */
+article.characterSelection section {
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+}
+
+article.characterSelection .player {
+	position: relative;
+	overflow: hidden;
+	width: 50%;
+	height: 100%;
+}
+
+article.characterSelection .rdyButton {
+	position: absolute;
+	bottom: 5%;
+	font-size: 35px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 0.5% 25%;
+	cursor: pointer;
+	transition: 300ms;
+	box-shadow: none;
+	background: #242424;
+	border: 0;
+	color: white;
+}
+
+article.characterSelection .rdyButton::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 10px;
+	bottom: 10px;
+	transition: 300ms;
+	left: -10px;
+	right: -10px;
+	background: #242424;
+	z-index: -1;
+}
+
+article.characterSelection .rdyButton::after {
+	content: "";
+	display: block;
+	position: absolute;
+	transition: 300ms;
+	top: 4px;
+	bottom: 4px;
+	left: -6px;
+	right: -6px;
+	background: #242424;
+	z-index: -1;
+}
+
+article.characterSelection .rdyButton.ready,
+article.characterSelection .rdyButton.ready::before,
+article.characterSelection .rdyButton.ready::after {
+	background-color: rgb(226, 226, 226);
+	color: black;
+}
+
+article .pageBack {
+	position: absolute;
+	z-index: 10;
+	display: block;
+	cursor: pointer;
+	padding: 1%
+}
+
+article .pageBack img {
+	width: 15px;
+}
+
+article.characterSelection .characters {
+	position: relative;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	left: 0;
+}
+
+article.characterSelection .character {
+	position: relative;
+	display: flex;
+	float: left;
+	margin: 0;
+	padding: 0;
+	width: 50vw;
+	height: 100%;
+	justify-content: center;
+	align-items: center;
+}
+
+article.characterSelection h3 {
+	margin: unset;
+	height: 10%;
+	font-size: 60px;
+}
+
+article.characterSelection .character-wrapper {
+	width: 85%;
+	height: 90%;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+article.characterSelection .character-desc {
+	width: 85%;
+	background-color: black;
+	color: white;
+	padding: 1% 3%;
+	height: 34%;
+	display: flex;
+	position: relative;
+	z-index: 2;
+}
+
+article.characterSelection .character-desc::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 15px;
+	bottom: 15px;
+	left: -15px;
+	right: -15px;
+	background: black;
+	z-index: -1;
+}
+
+article.characterSelection .character-desc::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 6px;
+	bottom: 6px;
+	left: -9px;
+	right: -9px;
+	background: black;
+	z-index: -1;
+}
+
+article.characterSelection .character-desc>div {
+	width: 50%;
+}
+
+article.characterSelection .character-desc h4 {
+	margin-top: 15px;
+	margin-bottom: 10px;
+	font-size: 120%;
+}
+
+article.characterSelection .stat p {
+	font-size: 60%;
+	text-transform: uppercase;
+}
+
+article.characterSelection .character-desc h5 {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+article.characterSelection .stat-bar {
+	height: 6px;
+	border-radius: 5px;
+	width: 80%;
+	border: 1px solid white;
+	margin-top: 5px;
+	margin-bottom: 10px;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	overflow: hidden;
+}
+
+article.characterSelection .stat-bar>span {
+	position: relative;
+	width: calc(20% - 2px);
+	border-right: 2px solid gray;
+	height: 100%;
+}
+
+article.characterSelection .stat-bar>span:last-of-type {
+	border: none;
+}
+
+article.characterSelection .stat-bar>div {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	background-color: white;
+}
+
+article.characterSelection .img-wrapper {
+	height: 45%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+article.characterSelection .challengerSpecial p {
+	font-size: 80%;
+}
+
+article.characterSelection .player img.icon {
+	height: 100%;
+	padding: unset;
+	background-color: white;
+	border: 2px solid gray;
+	cursor: pointer;
+	max-width: unset;
+}
+
+article.characterSelection .player img.icon:hover+.ability,
+article.characterSelection .player img.icon:active+.ability,
+article.characterSelection .player img.icon:focus+.ability,
+article.characterSelection .player img.icon+.ability:hover,
+article.characterSelection .player img.icon+.ability:active,
+article.characterSelection .player img.icon+.ability:focus,
+article.characterSelection .player img.icon:hover+.passive,
+article.characterSelection .player img.icon:active+.passive,
+article.characterSelection .player img.icon:focus+.passive,
+article.characterSelection .player img.icon+.passive:hover,
+article.characterSelection .player img.icon+.passive:active,
+article.characterSelection .player img.icon+.passive:focus {
+	visibility: visible;
+	opacity: 1;
+}
+
+article.characterSelection .player img.icon:hover,
+article.characterSelection .player img.icon:active,
+article.characterSelection .player img.icon:focus {
+	opacity: 0.9;
+}
+
+article.characterSelection .player .abilty-wrapper {
+	position: relative;
+	width: 15%;
+}
+
+article.characterSelection .player .icon-wrapper {
+	display: flex;
+	margin-top: 30px;
+	gap: 20px;
+	height: 20%;
+}
+
+article.characterSelection .player img.icon+.ability,
+article.characterSelection .player img.icon+.passive {
+	position: absolute;
+	left: 50%;
+	top: calc(100% + 0px);
+	visibility: hidden;
+	opacity: 0;
+	color: black;
+	background-color: white;
+	border: 2px solid gray;
+	width: 400%;
+	z-index: 5;
+	transform: translateX(-50%);
+	padding: 10% 20%;
+	font-size: 16px;
+}
+
+article.characterSelection .player img.icon+.ability h5,
+article.characterSelection .player img.icon+.passive h5 {
+	margin-top: unset;
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+
+article.characterSelection .player img {
+	max-width: 100%;
+	height: 100%;
+	object-fit: contain;
+}
+
+article.characterSelection #player1 {
+	background-color: #0d0d0d;
+}
+
+article.characterSelection #player2 {
+	background-color: transparent;
+}
+
+article.characterSelection a.control_prev,
+article.characterSelection a.control_next {
+	position: absolute;
+	top: 40%;
+	z-index: 999;
+	display: block;
+	padding: 5%;
+	width: auto;
+	height: auto;
+	color: #fff;
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 18px;
+	opacity: 0.8;
+	cursor: pointer;
+}
+
+article.characterSelection a.control_next>img,
+article.characterSelection a.control_prev>img {
+	width: 40%;
+	object-fit: contain;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+}
+
+article.characterSelection a.control_prev:hover,
+article.characterSelection a.control_next:hover {
+	opacity: 1;
+	transition: all 0.2s ease;
+}
+
+article.characterSelection a.control_prev {
+	border-radius: 0 2px 2px 0;
+}
+
+article.characterSelection a.control_next {
+	right: 0;
+	border-radius: 2px 0 0 2px;
+}
+
+article.config section {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	position: relative;
+}
+
+article.config h2 {
+	top: 2%;
+	left: 50%;
+	position: absolute;
+	margin: unset;
+	font-size: 40px;
+	transform: translateX(-50%);
+}
+
+article.config .player {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+article.config .player>div {
+	width: 60%;
+	height: 90%;
+	display: flex;
+	justify-content: space-evenly;
+	flex-direction: column;
+}
+
+article.config .player .setting {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	width: 100%;
+	padding: 5px 0;
+}
+
+article.config .player h3 {
+	margin-top: unset;
+}
+
+article.config .player .settings {
+	background-color: black;
+	padding: 3% 5%;
+	position: relative;
+	z-index: 1;
+}
+
+article.config .player .settings::after {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 6px;
+	bottom: 6px;
+	left: -9px;
+	right: -9px;
+	background: black;
+	z-index: -1;
+}
+
+article.config .player .settings::before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 15px;
+	bottom: 15px;
+	left: -15px;
+	right: -15px;
+	background: black;
+	z-index: -1;
+}
+
+article.config .player .setting>div:last-of-type {
+	background-color: #343434;
+	padding: 5px 0;
+	width: 20%;
+	cursor: pointer;
+	text-align: center;
+}
+
+article.config .player .setting>div:last-of-type:hover {
+	opacity: 0.6;
+}
+
+article.config .choosingKey {
+	visibility: hidden;
+	opacity: 0;
+	pointer-events: none;
+	z-index: -2;
+	position: absolute;
+}
+
+article.config .choosingKey.active {
+	visibility: visible;
+	opacity: 1;
+	pointer-events: auto;
+	z-index: 100;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	font-size: 80px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.deadAnimation {
+	animation: deadAnimation 150ms 3 linear;
+}
+
+@keyframes deadAnimation {
+	0% {
+		opacity: 1;
+		filter: brightness(0%);
+	}
+
+	50% {
+		opacity: 0;
+	}
+}
