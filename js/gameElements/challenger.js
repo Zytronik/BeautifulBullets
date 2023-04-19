@@ -1,7 +1,7 @@
 import { BOARD_HEIGHT, BOARD_WIDTH, CHALLENGER_I_FRAMES, FPS } from "../settings/gameSettings.js";
 import { INPUTS_CHALLENGER } from "../settings/inputSettings.js";
 import { allBullets, Bullet, BULLET_ORIGIN, BULLET_TAG, BULLET_TRAIL_ALPHAS, createBulletTexture } from "./bullet.js";
-import { boss, isGameStateEnraged, spriteLoader } from "../main.js";
+import { boss, isGameStateEnraged, player1Canvas, player2Canvas, spriteLoader } from "../main.js";
 import { sounds } from "../sound/sound.js";
 import { SPRITE_STATES } from "../view/spriteLoader.js";
 import { SpriteAnimator } from "../view/spriteAnimator.js";
@@ -81,6 +81,7 @@ export class Challenger {
         this.x = BOARD_WIDTH / 2;
         this.y = BOARD_HEIGHT * 5 / 6;
         this.currentHealth = this.maxHealth;
+        this.hitboxTexture = null;
         this.isInvincible = false;
         this.iFramesCounter = 0;
         this.fireRateTracker = 0;
@@ -89,11 +90,18 @@ export class Challenger {
         this.specialActive = false;
         this.timeInGraceInFrames = 0;
     }
+    getCurrentSpriteState(){
+        if(INPUTS_CHALLENGER.left === true && INPUTS_CHALLENGER.right === false){
+            return SPRITE_STATES.LEFT;
+        }
+        if(INPUTS_CHALLENGER.right === true && INPUTS_CHALLENGER.left === false){
+            return SPRITE_STATES.RIGHT;
+        }
+        return SPRITE_STATES.IDLE;
+    }
     #move() {
-        if (this.hitboxTexture === undefined) {
-            this.hitboxTexture = createBulletTexture(this.hitboxTextureProperties);
-            // this.hitboxTexture.x = -100
-            // this.hitboxTexture.y = -100
+        if (this.hitboxTexture === undefined && this.hitboxTextureProperties != undefined) {
+            this.#createChallengerHitboxTexture();
         }
 
         let xSpeed = 0;
@@ -174,10 +182,6 @@ export class Challenger {
             return [x, y - 20]
         }
     }
-    /* TODO
-    Special Ability with constant charge use and initial activation cost
-    onDeactivate()
-    */
     #specialAbility() {
         if (this.specialCoolDown <= this.specialCoolDownRequired) {
             this.specialCoolDown++;
@@ -202,13 +206,42 @@ export class Challenger {
             this.isInvincible = (this.iFramesCounter < CHALLENGER_I_FRAMES);
         }
     }
-    getCurrentSpriteState(){
-        if(INPUTS_CHALLENGER.left === true && INPUTS_CHALLENGER.right === false){
-            return SPRITE_STATES.LEFT;
-        }
-        if(INPUTS_CHALLENGER.right === true && INPUTS_CHALLENGER.left === false){
-            return SPRITE_STATES.RIGHT;
-        }
-        return SPRITE_STATES.IDLE;
+    #createChallengerHitboxTexture() {
+        let radius = this.hitboxTextureProperties.radius;
+        let bOuterWidth = this.hitboxTextureProperties.outerBorderWidth;
+        let bOuterColor = this.hitboxTextureProperties.outerBorderColor;
+        let bInnerBWidth = this.hitboxTextureProperties.innerborderWidth;
+        let bInnerColor = this.hitboxTextureProperties.innerBorderColor;
+        const heartGraphics = new PIXI.Graphics()
+            .lineStyle({ width: bOuterWidth, color: bOuterColor, alignment: 1 })
+            .beginFill("FFFFFF00")
+            .drawCircle(0, 0, radius - bOuterWidth)
+            .lineStyle({ width: bInnerBWidth, color: bInnerColor, alignment: 1 })
+            .beginFill(this.hitboxTextureProperties.mainColor)
+            .drawCircle(0, 0, (radius - bOuterWidth) - bInnerBWidth);
+    
+        const renderTexture1 = PIXI.RenderTexture.create({
+            width: heartGraphics.width,
+            height: heartGraphics.height,
+        });
+        player1Canvas.characterApp.renderer.render(heartGraphics, {
+            renderTexture: renderTexture1,
+            transform: new PIXI.Matrix(1, 0, 0, 1, heartGraphics.width / 2, heartGraphics.height / 2)
+        });
+        const renderTexture2 = PIXI.RenderTexture.create({
+            width: heartGraphics.width,
+            height: heartGraphics.height,
+        });
+        player2Canvas.characterApp.renderer.render(heartGraphics, {
+            renderTexture: renderTexture2,
+            transform: new PIXI.Matrix(1, 0, 0, 1, heartGraphics.width / 2, heartGraphics.height / 2)
+        });
+    
+        heartGraphics.destroy(true)
+        let sprite1 = new PIXI.Sprite(renderTexture1);
+        let sprite2 = new PIXI.Sprite(renderTexture2);
+        player1Canvas.characterApp.stage.addChild(sprite1);
+        player2Canvas.characterApp.stage.addChild(sprite2);
+        this.hitboxTexture = [sprite1, sprite2]
     }
 }

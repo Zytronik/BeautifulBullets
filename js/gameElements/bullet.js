@@ -66,6 +66,19 @@ export function getBulletsByTag(TAG) {
     return filtered;
 }
 
+export function destroyBulletsAt(x, y, radius) {
+    for (let i = allBullets.length - 1; i >= 0; i--) {
+        let xDiffSquared = Math.pow((allBullets[i].logicX - x), 2)
+        let yDiffSquared = Math.pow((allBullets[i].logicY - y), 2)
+        let range = Math.pow((radius + allBullets[i].radius), 2);
+        if (xDiffSquared + yDiffSquared < range) {
+            player1Canvas.removeBullet(allBullets[i]);
+            player2Canvas.removeBullet(allBullets[i]);
+            allBullets.splice(i, 1);
+        }
+    }
+}
+
 export const BULLET_TRAIL_ALPHAS = {
     ZERO: 0,
     POINT3: 0.3,
