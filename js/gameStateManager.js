@@ -90,12 +90,7 @@ function mainMenuToCharacterSelection() {
             - reset ready buttons
     */
     frontend_resetRdyUps();
-<<<<<<< HEAD
     frontend_mainScreenTransition();
-    //frontend_showPage(PAGES.CHARACTER_SELECTION);
-=======
-    view_showPage(PAGES.CHARACTER_SELECTION);
->>>>>>> 1f714f7c6f2c7e1740cd2155e63db2b50af053ba
 }
 
 function settingsToMainMenu() {
