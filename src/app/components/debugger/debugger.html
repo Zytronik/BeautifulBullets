@@ -2,12 +2,12 @@
   <div class="debug-stats">
     <div>
       <span>Time:</span>
-      <strong>{{ elapsedTime().toFixed(2) }}s</strong>
+      <strong>{{ gameService.getElapsedTime().toFixed(2) }}s</strong>
     </div>
 
     <div>
       <span>FPS:</span>
-      <strong>{{ fps().toFixed() }}</strong>
+      <strong>{{ gameService.getFps().toFixed(0) }}</strong>
     </div>
   </div>
 

@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Graphics, Application } from 'pixi.js';
 import { PLAYER_CONFIG } from '../player/player.config';
 import { PlayerService } from './player.service';
@@ -13,7 +13,7 @@ export class GameService {
 
   private playerGraphics?: Graphics;
 
-  private elapsedTime = 0;
+  readonly elapsedTime = signal(0);
   private playing = true;
 
   initialize(app: Application): void {
@@ -62,7 +62,7 @@ export class GameService {
   }
 
   getElapsedTime(): number {
-    return this.elapsedTime;
+    return this.elapsedTime();
   }
 
   getFps(): number {
@@ -76,7 +76,9 @@ export class GameService {
 
     const deltaSeconds = this.app.ticker.deltaMS / 1000;
 
-    this.elapsedTime += deltaSeconds;
+    this.elapsedTime.update(
+      (time) => time + deltaSeconds,
+    );
 
     const movement = this.inputService.getMovement();
 
