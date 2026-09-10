@@ -1,14 +1,14 @@
-export type PlayerPosition = {
+export interface PlayerPosition {
     x: number;
     y: number;
-};
+}
 
-export type PlayerMovement = {
+export interface PlayerMovement {
     x: number;
     y: number;
-};
+}
 
-export type PlayerConfig = {
+export interface PlayerConfig {
     radius: number;
     speed: number;
-};
+}

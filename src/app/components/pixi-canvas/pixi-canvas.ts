@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, ViewChild } from '@angular/core';
 import { Application } from 'pixi.js';
 import { GAME_CONFIG } from '../../core/game/game.config';
-import { Game } from '../../core/game/game';
+import { GameService } from '../../core/services/game.service';
 
 @Component({
   selector: 'app-pixi-canvas',
@@ -13,8 +13,9 @@ export class PixiCanvas implements AfterViewInit, OnDestroy {
   @ViewChild('canvasContainer', { static: true })
   private canvasContainer!: ElementRef<HTMLDivElement>;
 
+  private readonly gameService = inject(GameService);
+
   private app?: Application;
-  private game?: Game;
   private resizeObserver?: ResizeObserver;
 
   async ngAfterViewInit(): Promise<void> {
@@ -26,15 +27,15 @@ export class PixiCanvas implements AfterViewInit, OnDestroy {
       width: size.width,
       height: size.height,
       antialias: GAME_CONFIG.antialias,
-      background: '#1e1e1e',
+      background: '#000000',
     });
 
     this.canvasContainer.nativeElement.appendChild(
       this.app.canvas,
     );
 
-    this.game = new Game(this.app);
-    this.game.start();
+    this.gameService.initialize(this.app);
+    this.gameService.start();
 
     this.resizeObserver = new ResizeObserver(() => {
       this.resizeCanvas();
@@ -84,7 +85,7 @@ export class PixiCanvas implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.game?.stop();
+    this.gameService?.stop();
 
     this.resizeObserver?.disconnect();
 

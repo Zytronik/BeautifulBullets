@@ -1,1 +1,18 @@
-<p>debugger works!</p>
+<div class="debug">
+  <div class="debug-stats">
+    <div>
+      <span>Time:</span>
+      <strong>{{ elapsedTime().toFixed(2) }}s</strong>
+    </div>
+
+    <div>
+      <span>FPS:</span>
+      <strong>{{ fps().toFixed() }}</strong>
+    </div>
+  </div>
+
+  <div class="debug-controls">
+    <app-button [disabled]="isPlaying" (click)="play()">Play</app-button>
+    <app-button [disabled]="!isPlaying" (click)="pause()">Stop</app-button>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+:host {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 1;
+}
+
+.debug {
+  padding: 15px;
+  background: black;
+  color: white;
+}
+
+.debug-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.debug-stats div {
+  display: flex;
+  gap: 10px;
+}
+
+.debug-controls {
+  display: flex;
+  gap: 10px;
+}
