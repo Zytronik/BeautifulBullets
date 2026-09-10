@@ -11,4 +11,7 @@ export interface PlayerMovement {
 export interface PlayerConfig {
     radius: number;
     speed: number;
+    heightRatio: number;
 }
+
+export type PlayerDirection = 'idle' | 'left' | 'right';

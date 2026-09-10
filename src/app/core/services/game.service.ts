@@ -1,8 +1,9 @@
 import { inject, Injectable, signal } from '@angular/core';
-import { Graphics, Application } from 'pixi.js';
+import { Graphics, Application, Assets } from 'pixi.js';
 import { PLAYER_CONFIG } from '../player/player.config';
 import { PlayerService } from './player.service';
 import { InputService } from './input.service';
+import { PlayerSprite } from '../player/player-sprite';
 
 @Injectable()
 export class GameService {
@@ -12,11 +13,12 @@ export class GameService {
   private readonly playerService = inject(PlayerService);
 
   private playerGraphics?: Graphics;
+  private playerSprite?: PlayerSprite;
 
   readonly elapsedTime = signal(0);
   private playing = true;
 
-  initialize(app: Application): void {
+  async initialize(app: Application): Promise<void> {
     this.app = app;
 
     this.playerService.initialize({
@@ -26,8 +28,17 @@ export class GameService {
 
     this.playerGraphics = new Graphics()
       .circle(0, 0, PLAYER_CONFIG.radius)
-      .fill(0xffffff);
+      .fill(0xff0008);
 
+    const texture = await Assets.load('/sprites/player.png');
+
+    this.playerSprite = new PlayerSprite(texture);
+
+    this.playerSprite.setHeight(
+      app.screen.height * PLAYER_CONFIG.heightRatio,
+    );
+
+    app.stage.addChild(this.playerSprite.sprite);
     app.stage.addChild(this.playerGraphics);
   }
 
@@ -91,6 +102,7 @@ export class GameService {
       },
     );
 
+    this.syncPlayerSprite();
     this.syncPlayerGraphics();
   };
 
@@ -105,5 +117,21 @@ export class GameService {
       position.x,
       position.y,
     );
+  }
+
+  private syncPlayerSprite(): void {
+    if (!this.playerSprite) {
+      return;
+    }
+
+    const position = this.playerService.getPosition();
+    const direction = this.playerService.getDirection();
+
+    this.playerSprite.setPosition(
+      position.x,
+      position.y,
+    );
+
+    this.playerSprite.setDirection(direction);
   }
 }

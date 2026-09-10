@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  PlayerDirection,
   PlayerMovement,
   PlayerPosition,
 } from '../types/player.types';
@@ -12,10 +13,14 @@ export class PlayerService {
     y: 0,
   };
 
+  private direction: PlayerDirection = 'idle';
+
   initialize(position: PlayerPosition): void {
     this.position = {
       ...position,
     };
+
+    this.direction = 'idle';
   }
 
   update(
@@ -32,7 +37,14 @@ export class PlayerService {
     );
 
     if (length === 0) {
+      this.direction = 'idle';
       return;
+    }
+
+    if (movement.x < 0) {
+      this.direction = 'left';
+    } else if (movement.x > 0) {
+      this.direction = 'right';
     }
 
     const directionX = movement.x / length;
@@ -55,6 +67,10 @@ export class PlayerService {
     return {
       ...this.position,
     };
+  }
+
+  getDirection(): PlayerDirection {
+    return this.direction;
   }
 
   private clampToBounds(bounds: {
