@@ -15,19 +15,17 @@ import { EnemyService } from './enemy.service';
 import { InputService } from './input.service';
 import { PlayerSprite } from '../player/player-sprite';
 import { EnemySprite } from '../enemy/enemy-sprite';
+import { BulletPatternService } from './bullet-pattern.service';
+import { STAR_PATTERN } from '../patterns/star';
 
 @Injectable()
 export class GameService {
   private app?: Application;
 
-  private readonly inputService =
-    inject(InputService);
-
-  private readonly playerService =
-    inject(PlayerService);
-
-  private readonly enemyService =
-    inject(EnemyService);
+  private readonly inputService = inject(InputService);
+  private readonly playerService = inject(PlayerService);
+  private readonly enemyService = inject(EnemyService);
+  private readonly bulletPatternService = inject(BulletPatternService);
 
   private playerGraphics?: Graphics;
   private playerSprite?: PlayerSprite;
@@ -43,6 +41,10 @@ export class GameService {
     app: Application,
   ): Promise<void> {
     this.app = app;
+
+    this.bulletPatternService.initialize(
+      app.stage,
+    );
 
     this.playerService.initialize({
       x: app.screen.width * 0.5,
@@ -86,6 +88,11 @@ export class GameService {
       x: app.screen.width * 0.5,
       y: app.screen.height * 0.1,
     });
+
+    this.bulletPatternService.trigger(
+      STAR_PATTERN,
+      () => this.enemyService.getPosition(),
+    );
 
     const enemyRadius =
       app.screen.height *
@@ -158,6 +165,16 @@ export class GameService {
     this.playing = false;
   }
 
+  getActivePatternCount(): number {
+    return this.bulletPatternService
+      .getActivePatternCount();
+  }
+
+  getActiveBulletCount(): number {
+    return this.bulletPatternService
+      .getActiveBulletCount();
+  }
+
   isPlaying(): boolean {
     return this.playing;
   }
@@ -223,6 +240,10 @@ export class GameService {
     this.enemyService.update(
       deltaSeconds,
       bounds,
+    );
+
+    this.bulletPatternService.update(
+      deltaSeconds,
     );
 
     this.resolvePlayerEnemyCollision();

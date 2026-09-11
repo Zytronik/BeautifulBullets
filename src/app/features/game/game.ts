@@ -5,6 +5,7 @@ import { GameService } from '../../core/services/game.service';
 import { PlayerService } from '../../core/services/player.service';
 import { InputService } from '../../core/services/input.service';
 import { EnemyService } from '../../core/services/enemy.service';
+import { BulletPatternService } from '../../core/services/bullet-pattern.service';
 
 @Component({
   selector: 'app-game',
@@ -15,7 +16,8 @@ import { EnemyService } from '../../core/services/enemy.service';
     GameService,
     PlayerService,
     InputService,
-    EnemyService
+    EnemyService,
+    BulletPatternService
   ]
 })
 export class Game { }

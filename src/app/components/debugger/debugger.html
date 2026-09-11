@@ -9,6 +9,20 @@
       <span>FPS:</span>
       <strong>{{ gameService.getFps().toFixed(0) }}</strong>
     </div>
+
+    <div>
+      <span>Patterns:</span>
+      <strong>
+        {{ gameService.getActivePatternCount() }}
+      </strong>
+    </div>
+
+    <div>
+      <span>Bullets:</span>
+      <strong>
+        {{ gameService.getActiveBulletCount() }}
+      </strong>
+    </div>
   </div>
 
   <div class="debug-controls">
