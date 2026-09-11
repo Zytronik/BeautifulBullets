@@ -1,19 +1,29 @@
-import { Injectable } from '@angular/core';
+import {
+  inject,
+  Injectable,
+} from '@angular/core';
 import {
   PlayerDirection,
-  PlayerMovement,
   PlayerPosition,
 } from '../types/player.types';
 import { PLAYER_CONFIG } from '../player/player.config';
+import { InputService } from './input.service';
 
 @Injectable()
 export class PlayerService {
+  private readonly inputService =
+    inject(InputService);
+
   private position: PlayerPosition = {
     x: 0,
     y: 0,
   };
 
-  private direction: PlayerDirection = 'idle';
+  private direction: PlayerDirection =
+    'idle';
+
+  private inputEnabled =
+    PLAYER_CONFIG.inputEnabled;
 
   initialize(position: PlayerPosition): void {
     this.position = {
@@ -23,19 +33,21 @@ export class PlayerService {
     this.direction = 'idle';
   }
 
-  moveBy(x: number, y: number): void {
-    this.position.x += x;
-    this.position.y += y;
-  }
-
   update(
-    movement: PlayerMovement,
     deltaSeconds: number,
     bounds: {
       width: number;
       height: number;
     },
   ): void {
+    if (!this.inputEnabled) {
+      this.direction = 'idle';
+      return;
+    }
+
+    const movement =
+      this.inputService.getPlayerMovement();
+
     const length = Math.hypot(
       movement.x,
       movement.y,
@@ -46,11 +58,7 @@ export class PlayerService {
       return;
     }
 
-    if (movement.x < 0) {
-      this.direction = 'left';
-    } else if (movement.x > 0) {
-      this.direction = 'right';
-    }
+    this.updateDirection(movement);
 
     const directionX =
       movement.x / length;
@@ -71,6 +79,20 @@ export class PlayerService {
     this.clampToBounds(bounds);
   }
 
+  setInputEnabled(
+    enabled: boolean,
+  ): void {
+    this.inputEnabled = enabled;
+
+    if (!enabled) {
+      this.direction = 'idle';
+    }
+  }
+
+  isInputEnabled(): boolean {
+    return this.inputEnabled;
+  }
+
   getPosition(): PlayerPosition {
     return {
       ...this.position,
@@ -81,10 +103,33 @@ export class PlayerService {
     return this.direction;
   }
 
-  private clampToBounds(bounds: {
-    width: number;
-    height: number;
-  }): void {
+  moveBy(
+    x: number,
+    y: number,
+  ): void {
+    this.position.x += x;
+    this.position.y += y;
+  }
+
+  private updateDirection(
+    movement: {
+      x: number;
+      y: number;
+    },
+  ): void {
+    if (movement.x < 0) {
+      this.direction = 'left';
+    } else if (movement.x > 0) {
+      this.direction = 'right';
+    }
+  }
+
+  private clampToBounds(
+    bounds: {
+      width: number;
+      height: number;
+    },
+  ): void {
     const radius =
       bounds.height *
       PLAYER_CONFIG.radiusRatio;

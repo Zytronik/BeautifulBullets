@@ -61,9 +61,10 @@ export class GameService {
       )
       .fill(0xff0008);
 
-    const playerTexture = await Assets.load(
-      '/sprites/player.png',
-    );
+    const playerTexture =
+      await Assets.load(
+        '/sprites/player.png',
+      );
 
     this.playerSprite =
       new PlayerSprite(playerTexture);
@@ -98,9 +99,10 @@ export class GameService {
       )
       .fill(0x00ff00);
 
-    const enemyTexture = await Assets.load(
-      '/sprites/enemy.png',
-    );
+    const enemyTexture =
+      await Assets.load(
+        '/sprites/enemy.png',
+      );
 
     this.enemySprite =
       new EnemySprite(enemyTexture);
@@ -168,6 +170,30 @@ export class GameService {
     return this.app?.ticker.FPS ?? 0;
   }
 
+  setPlayerInputEnabled(
+    enabled: boolean,
+  ): void {
+    this.playerService.setInputEnabled(
+      enabled,
+    );
+  }
+
+  isPlayerInputEnabled(): boolean {
+    return this.playerService.isInputEnabled();
+  }
+
+  setEnemyInputEnabled(
+    enabled: boolean,
+  ): void {
+    this.enemyService.setInputEnabled(
+      enabled,
+    );
+  }
+
+  isEnemyInputEnabled(): boolean {
+    return this.enemyService.isInputEnabled();
+  }
+
   private readonly update = (): void => {
     if (
       !this.app ||
@@ -184,16 +210,19 @@ export class GameService {
         time + deltaSeconds,
     );
 
-    const movement =
-      this.inputService.getMovement();
+    const bounds = {
+      width: this.app.screen.width,
+      height: this.app.screen.height,
+    };
 
     this.playerService.update(
-      movement,
       deltaSeconds,
-      {
-        width: this.app.screen.width,
-        height: this.app.screen.height,
-      },
+      bounds,
+    );
+
+    this.enemyService.update(
+      deltaSeconds,
+      bounds,
     );
 
     this.resolvePlayerEnemyCollision();
@@ -280,24 +309,29 @@ export class GameService {
       playerPosition.y -
       enemyPosition.y;
 
-    const distance = Math.hypot(dx, dy);
+    const distance = Math.hypot(
+      dx,
+      dy,
+    );
 
     const minimumDistance =
       playerRadius + enemyRadius;
 
-    if (distance >= minimumDistance) {
-      return;
-    }
-
-    if (distance === 0) {
+    if (
+      distance >= minimumDistance ||
+      distance === 0
+    ) {
       return;
     }
 
     const overlap =
       minimumDistance - distance;
 
-    const normalX = dx / distance;
-    const normalY = dy / distance;
+    const normalX =
+      dx / distance;
+
+    const normalY =
+      dy / distance;
 
     this.playerService.moveBy(
       normalX * overlap,

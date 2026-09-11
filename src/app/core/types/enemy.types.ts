@@ -11,4 +11,6 @@ export interface EnemyPosition {
 export interface EnemyConfig {
     radiusRatio: number;
     heightRatio: number;
+    speed: number;
+    inputEnabled: boolean;
 }

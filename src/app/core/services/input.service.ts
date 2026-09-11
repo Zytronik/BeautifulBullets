@@ -3,18 +3,25 @@ import { KeyboardKey } from '../types/input.types';
 
 @Injectable()
 export class InputService {
-  private readonly keys = new Set<KeyboardKey>();
+  private readonly keys =
+    new Set<KeyboardKey>();
 
-  private readonly onKeyDown = (event: KeyboardEvent): void => {
-    const key = this.toKeyboardKey(event.key);
+  private readonly onKeyDown = (
+    event: KeyboardEvent,
+  ): void => {
+    const key =
+      this.toKeyboardKey(event.key);
 
     if (key) {
       this.keys.add(key);
     }
   };
 
-  private readonly onKeyUp = (event: KeyboardEvent): void => {
-    const key = this.toKeyboardKey(event.key);
+  private readonly onKeyUp = (
+    event: KeyboardEvent,
+  ): void => {
+    const key =
+      this.toKeyboardKey(event.key);
 
     if (key) {
       this.keys.delete(key);
@@ -47,7 +54,10 @@ export class InputService {
     this.keys.clear();
   }
 
-  getMovement(): { x: number; y: number } {
+  getPlayerMovement(): {
+    x: number;
+    y: number;
+  } {
     let x = 0;
     let y = 0;
 
@@ -70,6 +80,32 @@ export class InputService {
     return { x, y };
   }
 
+  getEnemyMovement(): {
+    x: number;
+    y: number;
+  } {
+    let x = 0;
+    let y = 0;
+
+    if (this.keys.has('arrowleft')) {
+      x -= 1;
+    }
+
+    if (this.keys.has('arrowright')) {
+      x += 1;
+    }
+
+    if (this.keys.has('arrowup')) {
+      y -= 1;
+    }
+
+    if (this.keys.has('arrowdown')) {
+      y += 1;
+    }
+
+    return { x, y };
+  }
+
   private toKeyboardKey(
     key: string,
   ): KeyboardKey | null {
@@ -80,6 +116,15 @@ export class InputService {
       key === 'd'
     ) {
       return key;
+    }
+
+    if (
+      key === 'ArrowUp' ||
+      key === 'ArrowDown' ||
+      key === 'ArrowLeft' ||
+      key === 'ArrowRight'
+    ) {
+      return key.toLowerCase() as KeyboardKey;
     }
 
     return null;
