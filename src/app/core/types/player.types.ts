@@ -9,7 +9,7 @@ export interface PlayerMovement {
 }
 
 export interface PlayerConfig {
-    radius: number;
+    radiusRatio: number;
     speed: number;
     heightRatio: number;
 }

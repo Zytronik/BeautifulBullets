@@ -4,12 +4,12 @@ import {
     Texture,
 } from 'pixi.js';
 
-import { PlayerDirection } from '../types/player.types';
+import { EnemyDirection } from '../types/enemy.types';
 
-const FRAME_HEIGHT = 53;
+const FRAME_HEIGHT = 88;
 
-const IDLE_FRAME_WIDTH = 32;
-const MOVEMENT_FRAME_WIDTH = 32;
+const IDLE_FRAME_WIDTH = 64;
+const MOVEMENT_FRAME_WIDTH = 71;
 
 const FRAME_GAP_X = 0;
 const FRAME_GAP_Y = 0;
@@ -18,16 +18,16 @@ const ROW_IDLE = 0;
 const ROW_LEFT = 1;
 const ROW_RIGHT = 2;
 
-const IDLE_FRAME_COUNT = 4;
-const MOVEMENT_FRAME_COUNT = 4;
+const IDLE_FRAME_COUNT = 8;
+const MOVEMENT_FRAME_COUNT = 3;
 
 const ANIMATION_SPEED = 0.1;
 
-export class PlayerSprite {
+export class EnemySprite {
     readonly sprite: AnimatedSprite;
 
     private readonly animations: Record<
-        PlayerDirection,
+        EnemyDirection,
         Texture[]
     >;
 
@@ -54,32 +54,26 @@ export class PlayerSprite {
                 MOVEMENT_FRAME_WIDTH,
             ),
         };
-
         this.sprite = new AnimatedSprite(
             this.animations.idle,
         );
-
         this.sprite.anchor.set(0.5);
-
         this.sprite.animationSpeed =
             ANIMATION_SPEED;
-
         this.sprite.loop = true;
-
         this.sprite.play();
     }
 
-    setDirection(direction: PlayerDirection): void {
+    setDirection(direction: EnemyDirection): void {
         const textures =
             this.animations[direction];
 
         if (this.sprite.textures === textures) {
             return;
         }
-
         this.sprite.textures = textures;
-
-        this.sprite.loop = direction === 'idle';
+        this.sprite.loop =
+            direction === 'idle';
 
         this.sprite.gotoAndPlay(0);
     }
@@ -113,16 +107,12 @@ export class PlayerSprite {
             (_, column) =>
                 new Texture({
                     source: texture.source,
-
                     frame: new Rectangle(
                         column *
                         (frameWidth + FRAME_GAP_X),
-
                         row *
                         (FRAME_HEIGHT + FRAME_GAP_Y),
-
                         frameWidth,
-
                         FRAME_HEIGHT,
                     ),
                 }),

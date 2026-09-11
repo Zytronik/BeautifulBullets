@@ -4,6 +4,7 @@ import { Debugger } from "../../components/debugger/debugger";
 import { GameService } from '../../core/services/game.service';
 import { PlayerService } from '../../core/services/player.service';
 import { InputService } from '../../core/services/input.service';
+import { EnemyService } from '../../core/services/enemy.service';
 
 @Component({
   selector: 'app-game',
@@ -13,7 +14,8 @@ import { InputService } from '../../core/services/input.service';
   providers: [
     GameService,
     PlayerService,
-    InputService
+    InputService,
+    EnemyService
   ]
 })
 export class Game { }

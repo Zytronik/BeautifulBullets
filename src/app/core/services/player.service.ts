@@ -23,6 +23,11 @@ export class PlayerService {
     this.direction = 'idle';
   }
 
+  moveBy(x: number, y: number): void {
+    this.position.x += x;
+    this.position.y += y;
+  }
+
   update(
     movement: PlayerMovement,
     deltaSeconds: number,
@@ -47,8 +52,11 @@ export class PlayerService {
       this.direction = 'right';
     }
 
-    const directionX = movement.x / length;
-    const directionY = movement.y / length;
+    const directionX =
+      movement.x / length;
+
+    const directionY =
+      movement.y / length;
 
     this.position.x +=
       directionX *
@@ -77,7 +85,9 @@ export class PlayerService {
     width: number;
     height: number;
   }): void {
-    const radius = PLAYER_CONFIG.radius;
+    const radius =
+      bounds.height *
+      PLAYER_CONFIG.radiusRatio;
 
     this.position.x = Math.max(
       radius,
