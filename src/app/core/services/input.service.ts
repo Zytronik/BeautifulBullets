@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { KeyboardKey } from '../types/input.types';
 
 @Injectable()
@@ -106,16 +107,29 @@ export class InputService {
     return { x, y };
   }
 
+  isShiftPressed(): boolean {
+    return (
+      this.keys.has('shift')
+    );
+  }
+
   private toKeyboardKey(
     key: string,
   ): KeyboardKey | null {
+    const normalizedKey =
+      key.toLowerCase();
+
     if (
-      key === 'w' ||
-      key === 'a' ||
-      key === 's' ||
-      key === 'd'
+      normalizedKey === 'w' ||
+      normalizedKey === 'a' ||
+      normalizedKey === 's' ||
+      normalizedKey === 'd'
     ) {
-      return key;
+      return normalizedKey;
+    }
+
+    if (normalizedKey === 'shift') {
+      return 'shift';
     }
 
     if (
@@ -124,7 +138,7 @@ export class InputService {
       key === 'ArrowLeft' ||
       key === 'ArrowRight'
     ) {
-      return key.toLowerCase() as KeyboardKey;
+      return normalizedKey as KeyboardKey;
     }
 
     return null;

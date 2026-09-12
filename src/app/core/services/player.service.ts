@@ -66,17 +66,26 @@ export class PlayerService {
     const directionY =
       movement.y / length;
 
+    const speed =
+      this.inputService.isShiftPressed()
+        ? PLAYER_CONFIG.precisionSpeed
+        : PLAYER_CONFIG.speed;
+
     this.position.x +=
       directionX *
-      PLAYER_CONFIG.speed *
+      speed *
       deltaSeconds;
 
     this.position.y +=
       directionY *
-      PLAYER_CONFIG.speed *
+      speed *
       deltaSeconds;
 
     this.clampToBounds(bounds);
+  }
+
+  isPrecisionMode(): boolean {
+    return this.inputService.isShiftPressed();
   }
 
   setInputEnabled(
@@ -121,6 +130,8 @@ export class PlayerService {
       this.direction = 'left';
     } else if (movement.x > 0) {
       this.direction = 'right';
+    } else {
+      this.direction = 'idle';
     }
   }
 

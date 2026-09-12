@@ -11,6 +11,7 @@ export interface PlayerMovement {
 export interface PlayerConfig {
     radiusRatio: number;
     speed: number;
+    precisionSpeed: number;
     heightRatio: number;
     inputEnabled: boolean;
 }

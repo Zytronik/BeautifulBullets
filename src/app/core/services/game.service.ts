@@ -63,6 +63,8 @@ export class GameService {
       )
       .fill(0xff0008);
 
+    this.playerGraphics.visible = false;
+
     const playerTexture =
       await Assets.load(
         '/sprites/player.png',
@@ -279,6 +281,8 @@ export class GameService {
       position.x,
       position.y,
     );
+
+    this.playerGraphics.visible = this.playerService.isPrecisionMode();
   }
 
   private syncEnemy(): void {
