@@ -35,6 +35,7 @@ export interface BulletPattern {
     loop: boolean;
     repetitions?: number;
     speedMultiplier?: number;
+    sprites?: BulletSpriteConfig[];
     createTrajectoryState?: (
         index: number,
         amount: number,
@@ -55,4 +56,11 @@ export interface ActivePattern {
 
 export interface BulletConfig {
     simulationFps: number;
+}
+
+export interface BulletSpriteConfig {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
 }

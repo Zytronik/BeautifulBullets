@@ -1,19 +1,25 @@
 import { Injectable } from '@angular/core';
-import { Container } from 'pixi.js';
+import { Assets, Container, Texture } from 'pixi.js';
 import { BulletPatternRunner } from '../bullet/bullet-pattern-runner';
 import { ActivePattern, BulletPattern, BulletPosition } from '../types/bullet.types';
 
 @Injectable()
 export class BulletPatternService {
     private container?: Container;
+    private bulletTexture?: Texture;
 
     private readonly patterns:
         ActivePattern[] = [];
 
-    initialize(
+    async initialize(
         container: Container,
-    ): void {
+    ): Promise<void> {
         this.container = container;
+
+        this.bulletTexture =
+            await Assets.load(
+                '/sprites/bullets.png',
+            );
     }
 
     trigger(
@@ -165,7 +171,10 @@ export class BulletPatternService {
     private spawn(
         activePattern: ActivePattern,
     ): void {
-        if (!this.container) {
+        if (
+            !this.container ||
+            !this.bulletTexture
+        ) {
             return;
         }
 
@@ -173,6 +182,7 @@ export class BulletPatternService {
             new BulletPatternRunner(
                 activePattern.pattern,
                 this.container,
+                this.bulletTexture,
                 activePattern.getOrigin(),
             );
 

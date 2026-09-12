@@ -3,11 +3,36 @@ import { BulletPattern } from "../types/bullet.types";
 
 export const STAR_PATTERN: BulletPattern = {
     bulletAmount: 100,
-    bulletSize: 4,
+    bulletSize: 10,
     frequency: 1.75,
     loop: true,
     lifetime: 20,
-
+    sprites: [
+        {
+            x: 8,
+            y: 262,
+            width: 56,
+            height: 56,
+        },
+        {
+            x: 72,
+            y: 262,
+            width: 56,
+            height: 56,
+        },
+        {
+            x: 136,
+            y: 262,
+            width: 56,
+            height: 56,
+        },
+        {
+            x: 200,
+            y: 262,
+            width: 56,
+            height: 56,
+        }
+    ],
     createTrajectoryState(
         index,
         amount,

@@ -1,5 +1,5 @@
-import { Container } from "pixi.js";
-import { Bullet } from "./bullet-sprite";
+import { Container, Rectangle, Texture } from "pixi.js";
+import { Bullet } from "./bullet";
 import { BulletState, BulletPattern, BulletPatternContext, BulletPosition } from "../types/bullet.types";
 
 export class BulletPatternRunner {
@@ -13,6 +13,7 @@ export class BulletPatternRunner {
     constructor(
         private readonly pattern: BulletPattern,
         private readonly container: Container,
+        private readonly bulletTexture: Texture,
         origin: BulletPosition,
     ) {
         this.origin = {
@@ -126,14 +127,33 @@ export class BulletPatternRunner {
                         ) ?? {},
             };
 
+            const spriteConfig =
+                this.pattern.sprites?.[
+                index %
+                this.pattern.sprites.length
+                ];
+
+            const texture = spriteConfig
+                ? new Texture({
+                    source: this.bulletTexture.source,
+                    frame: new Rectangle(
+                        spriteConfig.x,
+                        spriteConfig.y,
+                        spriteConfig.width,
+                        spriteConfig.height,
+                    ),
+                })
+                : undefined;
+
             const bullet =
                 new Bullet(
                     this.pattern.bulletSize,
                     state.position,
+                    texture,
                 );
 
             this.container.addChild(
-                bullet.graphics,
+                bullet.displayObject,
             );
 
             this.bullets.push({
