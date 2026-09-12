@@ -108,6 +108,9 @@ export class GameService {
       )
       .fill(0x00ff00);
 
+    this.enemyGraphics.visible = false;
+    this.enemyGraphics.zIndex = 2;
+
     const enemyTexture =
       await Assets.load(
         '/sprites/enemy.png',
@@ -115,6 +118,8 @@ export class GameService {
 
     this.enemySprite =
       new EnemySprite(enemyTexture);
+
+    this.enemySprite.sprite.zIndex = 1;
 
     this.enemySprite.setHeight(
       app.screen.height *
