@@ -6,10 +6,11 @@ import { PlayerService } from '../../core/services/player.service';
 import { InputService } from '../../core/services/input.service';
 import { EnemyService } from '../../core/services/enemy.service';
 import { BulletPatternService } from '../../core/services/bullet-pattern.service';
+import { PlayerHealth } from '../../components/player-health/player-health';
 
 @Component({
   selector: 'app-game',
-  imports: [PixiCanvas, Debugger],
+  imports: [PixiCanvas, Debugger, PlayerHealth],
   templateUrl: './game.html',
   styleUrl: './game.css',
   providers: [

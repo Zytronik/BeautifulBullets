@@ -100,6 +100,58 @@ export class BulletPatternRunner {
         this.bullets.length = 0;
     }
 
+    checkCollision(
+        position: BulletPosition,
+        radius: number,
+    ): number {
+        let hits = 0;
+
+        for (
+            let index =
+                this.bullets.length - 1;
+            index >= 0;
+            index--
+        ) {
+            const entry =
+                this.bullets[index];
+
+            const dx =
+                entry.state.position.x -
+                position.x;
+
+            const dy =
+                entry.state.position.y -
+                position.y;
+
+            const distanceSquared =
+                dx * dx +
+                dy * dy;
+
+            const bulletRadius =
+                this.pattern.bulletSize;
+
+            const collisionRadius =
+                radius + bulletRadius;
+
+            if (
+                distanceSquared <=
+                collisionRadius *
+                collisionRadius
+            ) {
+                entry.bullet.destroy();
+
+                this.bullets.splice(
+                    index,
+                    1,
+                );
+
+                hits++;
+            }
+        }
+
+        return hits;
+    }
+
     private spawn(): void {
         const amount =
             this.pattern.bulletAmount;

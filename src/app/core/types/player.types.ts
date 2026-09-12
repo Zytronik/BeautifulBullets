@@ -14,6 +14,7 @@ export interface PlayerConfig {
     precisionSpeed: number;
     heightRatio: number;
     inputEnabled: boolean;
+    health: number;
 }
 
 export type PlayerDirection = 'idle' | 'left' | 'right';

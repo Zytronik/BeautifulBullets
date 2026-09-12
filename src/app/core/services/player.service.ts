@@ -1,6 +1,7 @@
 import {
   inject,
   Injectable,
+  signal,
 } from '@angular/core';
 import {
   PlayerDirection,
@@ -13,6 +14,8 @@ import { InputService } from './input.service';
 export class PlayerService {
   private readonly inputService =
     inject(InputService);
+
+  readonly health = signal(PLAYER_CONFIG.health);
 
   private position: PlayerPosition = {
     x: 0,
@@ -31,6 +34,7 @@ export class PlayerService {
     };
 
     this.direction = 'idle';
+    this.health.set(PLAYER_CONFIG.health);
   }
 
   update(
@@ -82,6 +86,25 @@ export class PlayerService {
       deltaSeconds;
 
     this.clampToBounds(bounds);
+  }
+
+  getHealth(): number {
+    return this.health();
+  }
+
+  getMaxHealth(): number {
+    return PLAYER_CONFIG.health;
+  }
+
+  takeDamage(amount: number): void {
+    this.health.update(
+      (health) =>
+        Math.max(0, health - amount),
+    );
+  }
+
+  isAlive(): boolean {
+    return this.health() > 0;
   }
 
   isPrecisionMode(): boolean {

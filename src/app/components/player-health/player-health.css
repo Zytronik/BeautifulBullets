@@ -1,0 +1,17 @@
+:host {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 1;
+}
+
+.health {
+  display: flex;
+  gap: 5px;
+}
+
+.heart {
+  font-size: 24px;
+  line-height: 1;
+  color: red;
+}

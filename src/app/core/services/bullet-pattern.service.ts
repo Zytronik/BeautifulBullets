@@ -71,6 +71,29 @@ export class BulletPatternService {
         );
     }
 
+    checkCollision(
+        position: BulletPosition,
+        radius: number,
+    ): number {
+        let hits = 0;
+
+        for (
+            const pattern of this.patterns
+        ) {
+            for (
+                const runner of pattern.runners
+            ) {
+                hits +=
+                    runner.checkCollision(
+                        position,
+                        radius,
+                    );
+            }
+        }
+
+        return hits;
+    }
+
     update(
         deltaSeconds: number,
     ): void {

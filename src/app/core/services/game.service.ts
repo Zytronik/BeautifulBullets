@@ -42,7 +42,7 @@ export class GameService {
   ): Promise<void> {
     this.app = app;
 
-    this.bulletPatternService.initialize(
+    await this.bulletPatternService.initialize(
       app.stage,
     );
 
@@ -253,6 +253,7 @@ export class GameService {
       deltaSeconds,
     );
 
+    this.resolvePlayerBulletCollision();
     this.resolvePlayerEnemyCollision();
 
     this.syncPlayer();
@@ -310,6 +311,29 @@ export class GameService {
       position.x,
       position.y,
     );
+  }
+
+  private resolvePlayerBulletCollision(): void {
+    if (!this.app) {
+      return;
+    }
+
+    const playerPosition =
+      this.playerService.getPosition();
+
+    const playerRadius =
+      this.app.screen.height *
+      PLAYER_CONFIG.radiusRatio;
+
+    const hits =
+      this.bulletPatternService.checkCollision(
+        playerPosition,
+        playerRadius,
+      );
+
+    if (hits > 0) {
+      this.playerService.takeDamage(hits);
+    }
   }
 
   private resolvePlayerEnemyCollision(): void {
