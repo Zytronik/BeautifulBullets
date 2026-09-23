@@ -79,6 +79,14 @@ export class EnemyService {
     return this.inputEnabled;
   }
 
+  setPosition(
+    x: number,
+    y: number,
+  ): void {
+    this.position.x = x;
+    this.position.y = y;
+  }
+
   getPosition(): EnemyPosition {
     return {
       ...this.position,

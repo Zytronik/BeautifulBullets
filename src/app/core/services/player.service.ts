@@ -135,6 +135,14 @@ export class PlayerService {
     return this.direction;
   }
 
+  setPosition(
+    x: number,
+    y: number,
+  ): void {
+    this.position.x = x;
+    this.position.y = y;
+  }
+
   moveBy(
     x: number,
     y: number,

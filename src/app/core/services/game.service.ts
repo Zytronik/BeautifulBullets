@@ -14,9 +14,12 @@ import { PlayerService } from './player.service';
 import { EnemyService } from './enemy.service';
 import { InputService } from './input.service';
 import { PlayerSprite } from '../player/player-sprite';
+
 import { EnemySprite } from '../enemy/enemy-sprite';
 import { BulletPatternService } from './bullet-pattern.service';
-import { STAR_PATTERN } from '../patterns/star';
+import { SequenceRunner } from '../game/sequence-runner';
+import { createEnemySequence } from '../enemy/enemy-sequence';
+import { createPlayerSequence } from '../player/player-sequence';
 
 @Injectable()
 export class GameService {
@@ -35,6 +38,9 @@ export class GameService {
 
   readonly elapsedTime = signal(0);
 
+  private enemySequence?: SequenceRunner;
+  private playerSequence?: SequenceRunner;
+
   private playing = true;
 
   async initialize(
@@ -48,8 +54,19 @@ export class GameService {
 
     this.playerService.initialize({
       x: app.screen.width * 0.5,
-      y: app.screen.height * 0.9,
+      y: app.screen.height * 1,
     });
+
+    this.playerSequence =
+      createPlayerSequence(
+        this.playerService,
+        () => ({
+          width: this.app!.screen.width,
+          height: this.app!.screen.height,
+        }),
+      );
+
+    this.playerSequence.start();
 
     const playerRadius =
       app.screen.height *
@@ -88,13 +105,20 @@ export class GameService {
 
     this.enemyService.initialize({
       x: app.screen.width * 0.5,
-      y: app.screen.height * 0.1,
+      y: app.screen.height * 0,
     });
 
-    this.bulletPatternService.trigger(
-      STAR_PATTERN,
-      () => this.enemyService.getPosition(),
-    );
+    this.enemySequence =
+      createEnemySequence(
+        this.enemyService,
+        this.bulletPatternService,
+        () => ({
+          width: this.app!.screen.width,
+          height: this.app!.screen.height,
+        }),
+      );
+
+    this.enemySequence.start();
 
     const enemyRadius =
       app.screen.height *
@@ -247,6 +271,14 @@ export class GameService {
     this.enemyService.update(
       deltaSeconds,
       bounds,
+    );
+
+    this.playerSequence?.update(
+      deltaSeconds,
+    );
+
+    this.enemySequence?.update(
+      deltaSeconds,
     );
 
     this.bulletPatternService.update(
